@@ -2,7 +2,7 @@ import datetime
 import json
 import random
 
-from controllers.customer_controller import create_customer
+from application.controllers.customer_controller import create_customer
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
