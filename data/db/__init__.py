@@ -1,6 +1,13 @@
-def main():
-    pass
+import sqlalchemy
+from sqlalchemy.orm import sessionmaker, declarative_base
+from .db_config import *
 
+engine = sqlalchemy.create_engine(
+    f"mysql+mysqlconnector://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
+)
 
-if __name__ == '__main__':
-    main()
+Base = declarative_base()
+Session = sessionmaker()
+Session.configure(bind=engine)
+session = Session()
+
