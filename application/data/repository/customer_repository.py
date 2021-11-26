@@ -1,5 +1,5 @@
-from data.db import session
-from data.models.customer import Customer
+from application.data.db import session
+from application.data.models.customer import Customer
 
 
 def create_customer(customer):
