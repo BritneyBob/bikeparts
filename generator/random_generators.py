@@ -2,11 +2,19 @@ import datetime
 import json
 import random
 
-from application.controllers.customer_controller import create_customer
+# from application.controllers.customer_controller import create_customer
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
 phone_numbers = [line.strip() for line in open("data_files/20k_swedish_phonenumbers.txt", "r", encoding="utf-8")]
+adjectives = [line.strip() for line in open("data_files/adjectives.txt", "r", encoding="utf-8")]
+customer_second_parts = [line.strip() for line in open("data_files/company_customers.txt", "r", encoding="utf-8")]
+supplier_second_parts = [line.strip() for line in open("data_files/suppliers_names.txt", "r", encoding="utf-8")]
+swedish_cities = [line.strip() for line in open("data_files/swedish_cities.txt", "r", encoding="utf-8")]
+danish_cities = [line.strip() for line in open("data_files/danish_cities.txt", "r", encoding="utf-8")]
+norwegian_cities = [line.strip() for line in open("data_files/norwegian_cities.txt", "r", encoding="utf-8")]
+finnish_cities = [line.strip() for line in open("data_files/finnish_cities.txt", "r", encoding="utf-8")]
+
 
 with open("data_files/postcodes.json", "r", encoding="utf-8") as postcode_file:
     postcodes = json.load(postcode_file)
@@ -24,9 +32,16 @@ def random_last_name():
     return random.choice(last_names)
 
 
-def random_customer_name():
-    # TODO: Fixa lista på typ adjektiv och substantiv, randomisera in None
-    return None
+def random_adjective():
+    return random.choice(adjectives)
+
+
+def random_customer_second_part():
+    return random.choice(customer_second_parts)
+
+
+def random_supplier_second_part():
+    return random.choice(supplier_second_parts)
 
 
 def random_address():
@@ -35,6 +50,22 @@ def random_address():
 
 def random_phone_number():
     return random.choice(phone_numbers)
+
+
+def random_swedish_cities():
+    return random.choice(swedish_cities)
+
+
+def random_danish_cities():
+    return random.choice(danish_cities)
+
+
+def random_norwegian_cities():
+    return random.choice(norwegian_cities)
+
+
+def random_finnish_cities():
+    return random.choice(finnish_cities)
 
 
 def random_model_year(start_date, end_date):
@@ -73,7 +104,9 @@ def generate_random_customer():
 
     last_name = random_last_name()
 
-    customer_name = random_customer_name()
+    company_name = (random_adjective() + " " + random_customer_second_part()).capitalize()
+
+    customer_name = random.choice([None, company_name])
 
     phone_number = random_phone_number()
 
@@ -88,7 +121,26 @@ def generate_random_customer():
     }
 
 
-def generate_random_address():
+def generate_random_supplier():
+    first_name = random_first_name()
+
+    last_name = random_last_name()
+
+    company_name = (random_adjective() + " " + random_supplier_second_part()).capitalize()
+
+    phone_number = random_phone_number()
+
+    email = generate_random_email(first_name, last_name)
+
+    return {
+        "company_name": company_name,
+        "contact_last_name": last_name,
+        "contact_phone_number": phone_number,
+        "contact_email": email,
+    }
+
+
+def random_street_address_postcode():
     address = random_address()
     if "Street/Box No." not in address:
         street_no = ""
@@ -101,21 +153,53 @@ def generate_random_address():
                 start_no, end_no = street_no.split(" - ")
                 street_no = str(random.choice(list(range(int(start_no), int(end_no) + 1))))
 
-    address["Street Name"] += " " + street_no
+    return address["Street Name"] + " " + street_no, address["Postcode"]
 
-    country = random.choice(["Sweden", "Denmark", "Norway", "Finland"])
+
+def generate_random_address():
+    address_line1, postcode = random_street_address_postcode()
+    address_line2 = random.choice([None, random_street_address_postcode()[0]])
+
+    country = random.choice(["Sweden", "Sweden", "Sweden", "Denmark", "Norway", "Finland"])
+    city = ""
+
+    match country:
+        case "Sweden":
+            city = random_swedish_cities()
+        case "Denmark":
+            city = random_danish_cities()
+        case "Norway":
+            city = random_norwegian_cities()
+        case "Finland":
+            city = random_finnish_cities()
 
     return {
-        "street_address": address["Street Name"],
-        "zip_code": address["Postcode"],
+        "address_line1": address_line1,
+        "address_line2": address_line2,
+        "zip_code": postcode,
+        "city": city,
         "country": country,
     }
 
 
 def main():
+    customers = []
+    suppliers = []
+    addresses = []
     for _ in range(100):
-        customer = generate_random_customer()
-        create_customer(customer)
+        customers.append(generate_random_customer())
+        suppliers.append(generate_random_supplier())
+        # create_customer(customer)
+
+    for _ in range(200):
+        addresses.append(generate_random_address())
+
+    for customer in customers:
+        print(customer)
+    for supplier in suppliers:
+        print(supplier)
+    for address in addresses:
+        print(address)
 
 
 if __name__ == "__main__":

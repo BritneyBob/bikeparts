@@ -1,0 +1,25 @@
+workshop
+works
+shop
+garage
+service station
+car workshop
+car works
+car shop
+car garage
+car service station
+auto workshop
+auto works
+auto shop
+auto garage
+auto service station
+automobile workshop
+automobile works
+automobile shop
+automobile garage
+automobile service station
+motorcar workshop
+motorcar works
+motorcar shop
+motorcar garage
+motorcar service station
