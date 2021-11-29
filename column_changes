@@ -1,3 +1,11 @@
+* Decide whether we should name our classes in singular or plural.
+* Add relationships where missing.
+
+addresses:
+address_type_id -> fk and nn
+company_id -> fk and nn
+In our db, address_line 1 and 2 are nullable but not in the code. Discuss how we want this and make corresponding changes.
+
 companies:
 add foreign key address_id
 (contact -> contact_first_name and contact_last_name??)
@@ -17,3 +25,4 @@ description varchar(250) -> varchar(45)
 
 suppliers:
 supplier_id -> add auto_increment
+company_id -> fk
