@@ -1,3 +1,9 @@
 In spare_parts:
 product_number -> add auto_increment (fk constraints)
 description varchar(250) -> varchar(45)
+
+customer_cars:
+license_number INT -> VARCHAR(6)
+
+companies:
+add foreign key address_id
