@@ -1,14 +1,14 @@
 import json
 import random
 
-# from application.controllers.customer_controller import create_customer
+from application.controllers.car_model_controller import create_car_model
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
 phone_numbers = [line.strip() for line in open("data_files/20k_swedish_phonenumbers.txt", "r", encoding="utf-8")]
 adjectives = [line.strip().capitalize() for line in open("data_files/adjectives.txt", "r", encoding="utf-8")]
 customer_second_parts = [line.strip() for line in open("data_files/company_customers.txt", "r", encoding="utf-8")]
-supplier_second_parts = [line.strip() for line in open("data_files/suppliers_names.txt", "r", encoding="utf-8")]
+company_second_parts = [line.strip() for line in open("data_files/companies_names.txt", "r", encoding="utf-8")]
 swedish_cities = [line.strip() for line in open("data_files/swedish_cities.txt", "r", encoding="utf-8")]
 danish_cities = [line.strip() for line in open("data_files/danish_cities.txt", "r", encoding="utf-8")]
 norwegian_cities = [line.strip() for line in open("data_files/norwegian_cities.txt", "r", encoding="utf-8")]
@@ -106,8 +106,8 @@ def random_customer_second_part():
     return random.choice(customer_second_parts)
 
 
-def random_supplier_second_part():
-    return random.choice(supplier_second_parts)
+def random_company_second_part():
+    return random.choice(company_second_parts)
 
 
 def random_address():
@@ -158,14 +158,18 @@ def generate_random_customer():
 
     phone_number = random_phone_number()
 
-    email = generate_random_email(first_name, last_name)
+    is_company = True
+    if customer_name is None:
+        is_company = False
+
+    # email = generate_random_email(first_name, last_name)
 
     return {
-        "first_name": first_name,
-        "last_name": last_name,
         "customer_name": customer_name,
-        "email": email,
-        "phone_number": phone_number,
+        "contact_last_name": last_name,
+        "contact_first_name": first_name,
+        "phonenumber": phone_number,
+        "is_company": is_company
     }
 
 
@@ -183,12 +187,12 @@ def generate_random_employee():
     }
 
 
-def generate_random_supplier():
+def generate_random_company():
     first_name = random_first_name()
 
     last_name = random_last_name()
 
-    company_name = (random_adjective() + " " + random_supplier_second_part())
+    company_name = (random_adjective() + " " + random_company_second_part())
 
     phone_number = random_phone_number()
 
@@ -196,9 +200,9 @@ def generate_random_supplier():
 
     return {
         "company_name": company_name,
-        "contact_last_name": last_name,
-        "contact_phone_number": phone_number,
-        "contact_email": email,
+        "contact": last_name,
+        "contact_phonenumber": phone_number,
+        "contact_email": email
     }
 
 
@@ -266,41 +270,24 @@ def generate_random_car():
 
 
 def main():
-    # customers = []
-    # suppliers = []
-    # addresses = []
-    _car_models = []
-    cars = []
-    employees = []
     # for _ in range(100):
-    #     customers.append(generate_random_customer())
-    #     suppliers.append(generate_random_supplier())
-    #     # create_customer(customer)
+        # customer = generate_random_customer()
+        # customers.append(customer)
+        # company = (generate_random_company())
+        # create_company(company)
     #
     # for _ in range(200):
     #     addresses.append(generate_random_address())
     #
-    # for _ in range(100):
-    #     _car_models.append(generate_random_car_model())
-    #
+    for _ in range(200):
+        car_model = generate_random_car_model()
+        create_car_model(car_model)
+
     # for _ in range(200):
     #     cars.append(generate_random_car())
     #
-    for _ in range(200):
-        employees.append(generate_random_employee())
-
-    # for customer in customers:
-    #     print(customer)
-    # for supplier in suppliers:
-    #     print(supplier)
-    # for address in addresses:
-    #     print(address)
-    # for car in _car_models:
-    #     print(car)
-    # for car in cars:
-    #     print(car)
-    for employee in employees:
-        print(employee)
+    # for _ in range(200):
+    #     employees.append(generate_random_employee())
 
 
 if __name__ == "__main__":

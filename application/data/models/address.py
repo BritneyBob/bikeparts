@@ -3,11 +3,14 @@ from sqlalchemy import Integer, String, Column
 from application.data.db import Base
 
 
-class Employee(Base):
-    __tablename__ = "employees"  # den här håller koll på vilken tabell vi matchar
+class Address(Base):
+    __tablename__ = "addresses"
 
-    employee_id = Column(Integer, primary_key=True, autoincrement=True)
-    store_id = Column(Integer, foreign_key)
-    first_name = Column(String(60), nullable=False)
-    last_name = Column(String(60), nullable=False)
-    email = Column(String(100), nullable=False)
+    address_id = Column(Integer, primary_key=True, autoincrement=True)
+    address_type_id = Column(Integer, foreign_key)
+    company_id = Column(Integer, foreign_key)
+    address_line1 = Column(String(100), nullable=True)
+    address_line2 = Column(String(100), nullable=True)
+    zip_code = Column(String(15), nullable=False)
+    city_name = Column(String(60), nullable=False)
+    country_name = Column(String(45), nullable=False)

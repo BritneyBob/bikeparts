@@ -3,11 +3,10 @@ from sqlalchemy import Integer, String, Column
 from application.data.db import Base
 
 
-class Employee(Base):
-    __tablename__ = "employees"  # den här håller koll på vilken tabell vi matchar
+class CarModel(Base):
+    __tablename__ = "car_models"  # den här håller koll på vilken tabell vi matchar
 
-    employee_id = Column(Integer, primary_key=True, autoincrement=True)
-    store_id = Column(Integer, foreign_key)
-    first_name = Column(String(60), nullable=False)
-    last_name = Column(String(60), nullable=False)
-    email = Column(String(100), nullable=False)
+    car_model_id = Column(Integer, primary_key=True, autoincrement=True)
+    manufacturer = Column(String(45), nullable=False)
+    model = Column(String(45), nullable=False)
+    year = Column(String(4), nullable=False)
