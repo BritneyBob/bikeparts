@@ -1,0 +1,3 @@
+In spare_parts:
+product_number -> add auto_increment (fk constraints)
+description varchar(250) -> varchar(45)
