@@ -1,11 +1,11 @@
-car spare parts
-auto spare parts
-car replacement parts
-car parts
-auto replacements parts
-automobile spare parts
-automobile replacements parts
-motorcar spare parts
-motorcar replacement parts
-wheels spare parts
-wheels replacement parts
+Car Spare Parts
+Auto Spare Parts
+Car Replacement Parts
+Car Parts
+Auto Replacement Parts
+Automobile Spare Parts
+Automobile Replacement Parts
+Motorcar Spare Parts
+Motorcar Replacement Parts
+Wheels Spare Parts
+Wheels Replacement Parts
