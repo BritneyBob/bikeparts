@@ -7,7 +7,7 @@ license_number INT -> VARCHAR(6)
 
 companies:
 add foreign key address_id
-contact -> contact_first_name and contact_last_name??
+(contact -> contact_first_name and contact_last_name??)
 
 customers:
 add email address?
