@@ -1,0 +1,19 @@
+companies:
+add foreign key address_id
+(contact -> contact_first_name and contact_last_name??)
+
+customers:
+add email address?
+
+customer_cars:
+license_number INT -> VARCHAR(6) - DONE!
+
+manufacturers:
+manufacturer_id -> add auto_increment
+
+spare_parts:
+product_number -> add auto_increment (fk constraints)
+description varchar(250) -> varchar(45)
+
+suppliers:
+supplier_id -> add auto_increment
