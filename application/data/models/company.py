@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, String, Column
+from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
@@ -11,3 +12,4 @@ class Company(Base):
     contact = Column(String(100), nullable=False)
     contact_phonenumber = Column(String(20), nullable=False)
     contact_email = Column(String(100), nullable=False)
+    manufacturers = relationship("Manufacturer", back_populates="companies")

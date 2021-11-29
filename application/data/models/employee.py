@@ -4,7 +4,7 @@ from application.data.db import Base
 
 
 class Employee(Base):
-    __tablename__ = "employees"  # den här håller koll på vilken tabell vi matchar
+    __tablename__ = "employees"
 
     employee_id = Column(Integer, primary_key=True, autoincrement=True)
     store_id = Column(Integer, ForeignKey("stores.store_id"))
