@@ -1,12 +1,86 @@
-import datetime
 import json
 import random
 
-from application.controllers.customer_controller import create_customer
+from application.controllers.customer_car_controller import create_customer_car
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
 phone_numbers = [line.strip() for line in open("data_files/20k_swedish_phonenumbers.txt", "r", encoding="utf-8")]
+adjectives = [line.strip().capitalize() for line in open("data_files/adjectives.txt", "r", encoding="utf-8")]
+customer_second_parts = [line.strip() for line in open("data_files/company_customers.txt", "r", encoding="utf-8")]
+company_second_parts = [line.strip() for line in open("data_files/companies_names.txt", "r", encoding="utf-8")]
+swedish_cities = [line.strip() for line in open("data_files/swedish_cities.txt", "r", encoding="utf-8")]
+danish_cities = [line.strip() for line in open("data_files/danish_cities.txt", "r", encoding="utf-8")]
+norwegian_cities = [line.strip() for line in open("data_files/norwegian_cities.txt", "r", encoding="utf-8")]
+finnish_cities = [line.strip() for line in open("data_files/finnish_cities.txt", "r", encoding="utf-8")]
+car_manufacturers = [
+  "Abarth",
+  "Alfa Romeo",
+  "Aston Martin",
+  "Audi",
+  "Bentley",
+  "BMW",
+  "Bugatti",
+  "Cadillac",
+  "Chevrolet",
+  "Chrysler",
+  "Citroën",
+  "Dacia",
+  "Daewoo",
+  "Daihatsu",
+  "Dodge",
+  "Donkervoort",
+  "DS",
+  "Ferrari",
+  "Fiat",
+  "Fisker",
+  "Ford",
+  "Honda",
+  "Hummer",
+  "Hyundai",
+  "Infiniti",
+  "Iveco",
+  "Jaguar",
+  "Jeep",
+  "Kia",
+  "KTM",
+  "Lada",
+  "Lamborghini",
+  "Lancia",
+  "Land Rover",
+  "Landwind",
+  "Lexus",
+  "Lotus",
+  "Maserati",
+  "Maybach",
+  "Mazda",
+  "McLaren",
+  "Mercedes-Benz",
+  "MG",
+  "Mini",
+  "Mitsubishi",
+  "Morgan",
+  "Nissan",
+  "Opel",
+  "Peugeot",
+  "Porsche",
+  "Renault",
+  "Rolls-Royce",
+  "Rover",
+  "Saab",
+  "Seat",
+  "Skoda",
+  "Smart",
+  "SsangYong",
+  "Subaru",
+  "Suzuki",
+  "Tesla",
+  "Toyota",
+  "Volkswagen",
+  "Volvo"
+]
+car_models = [line.strip() for line in open("data_files/car_model_names.txt", "r", encoding="utf-8")]
+
 
 with open("data_files/postcodes.json", "r", encoding="utf-8") as postcode_file:
     postcodes = json.load(postcode_file)
@@ -24,9 +98,16 @@ def random_last_name():
     return random.choice(last_names)
 
 
-def random_customer_name():
-    # TODO: Fixa lista på typ adjektiv och substantiv, randomisera in None
-    return None
+def random_adjective():
+    return random.choice(adjectives)
+
+
+def random_customer_second_part():
+    return random.choice(customer_second_parts)
+
+
+def random_company_second_part():
+    return random.choice(company_second_parts)
 
 
 def random_address():
@@ -37,30 +118,28 @@ def random_phone_number():
     return random.choice(phone_numbers)
 
 
-def random_model_year(start_date, end_date):
-    """
-    Generates a random date between start_date and end_date
-    :param start_date: str in format YYYY-mm-dd
-    :param end_date: str in format YYYY-mm-dd
-    :return: datetime.date()
-    """
-    # Checking the data
-    if len(start_date.split("-")) != 3 and len(end_date.split("-")) != 3:
-        raise ValueError("Dates must be a str given in the format YYYY-mm-dd")
+def random_swedish_cities():
+    return random.choice(swedish_cities)
 
-    start_year, start_month, start_day = start_date.split("-")
-    end_year, end_month, end_day = end_date.split("-")
-    for d in (start_year, start_month, start_day, end_year, end_month, end_day):
-        if not d.isdigit():
-            raise ValueError("Dates must be a str given in the format YYYY-mm-dd")
 
-    start_date = datetime.date(int(start_year), int(start_month), int(start_day))
-    end_date = datetime.date(int(end_year), int(end_month), int(end_day))
+def random_danish_cities():
+    return random.choice(danish_cities)
 
-    time_between_dates = end_date - start_date
-    days_between_dates = time_between_dates.days
-    random_number_of_days = random.randrange(days_between_dates)
-    return start_date + datetime.timedelta(days=random_number_of_days)
+
+def random_norwegian_cities():
+    return random.choice(norwegian_cities)
+
+
+def random_finnish_cities():
+    return random.choice(finnish_cities)
+
+
+def random_license_number():
+    letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    numbers = "0123456789"
+
+    return random.choice(letters) + random.choice(letters) + random.choice(letters) + random.choice(numbers) + \
+           random.choice(numbers) + random.choice(numbers)
 
 
 def generate_random_email(first_name, last_name):
@@ -73,22 +152,61 @@ def generate_random_customer():
 
     last_name = random_last_name()
 
-    customer_name = random_customer_name()
+    company_name = (random_adjective() + " " + random_customer_second_part())
+
+    customer_name = random.choice([None, company_name])
 
     phone_number = random_phone_number()
+
+    is_company = True
+    if customer_name is None:
+        is_company = False
+
+    # email = generate_random_email(first_name, last_name)
+
+    return {
+        "customer_name": customer_name,
+        "contact_last_name": last_name,
+        "contact_first_name": first_name,
+        "phonenumber": phone_number,
+        "is_company": is_company
+    }
+
+
+def generate_random_employee():
+    first_name = random_first_name()
+
+    last_name = random_last_name()
 
     email = generate_random_email(first_name, last_name)
 
     return {
         "first_name": first_name,
         "last_name": last_name,
-        "customer_name": customer_name,
         "email": email,
-        "phone_number": phone_number,
     }
 
 
-def generate_random_address():
+def generate_random_company():
+    first_name = random_first_name()
+
+    last_name = random_last_name()
+
+    company_name = (random_adjective() + " " + random_company_second_part())
+
+    phone_number = random_phone_number()
+
+    email = generate_random_email(first_name, last_name)
+
+    return {
+        "company_name": company_name,
+        "contact": last_name,
+        "contact_phonenumber": phone_number,
+        "contact_email": email
+    }
+
+
+def random_street_address_postcode():
     address = random_address()
     if "Street/Box No." not in address:
         street_no = ""
@@ -101,21 +219,80 @@ def generate_random_address():
                 start_no, end_no = street_no.split(" - ")
                 street_no = str(random.choice(list(range(int(start_no), int(end_no) + 1))))
 
-    address["Street Name"] += " " + street_no
+    return address["Street Name"] + " " + street_no, address["Postcode"]
 
-    country = random.choice(["Sweden", "Denmark", "Norway", "Finland"])
+
+def generate_random_address():
+    address_line1, postcode = random_street_address_postcode()
+    address_line2 = random.choice([None, random_street_address_postcode()[0]])
+
+    country = random.choice(["Sweden", "Sweden", "Sweden", "Denmark", "Norway", "Finland"])
+    city = ""
+
+    match country:
+        case "Sweden":
+            city = random_swedish_cities()
+        case "Denmark":
+            city = random_danish_cities()
+        case "Norway":
+            city = random_norwegian_cities()
+        case "Finland":
+            city = random_finnish_cities()
 
     return {
-        "street_address": address["Street Name"],
-        "zip_code": address["Postcode"],
-        "country": country,
+        "address_line1": address_line1,
+        "address_line2": address_line2,
+        "zip_code": postcode,
+        "city": city,
+        "country": country
+    }
+
+
+def generate_random_car_model():
+    manufacturer = random.choice(car_manufacturers)
+    model = random.choice(car_models)
+    year = str(random.choice(range(1970, 2022)))
+
+    return {
+        "manufacturer": manufacturer,
+        "model": model,
+        "year": year
+    }
+
+
+def generate_random_car():
+    license_number = random_license_number()
+    customer_id = random.choice(range(1, 201))
+    car_model_id = random.choice(range(1, 211))
+    color = random.choice(["Blue", "Red", "Green", "Yellow", "Black", "White", "Gold", "Silver", "Orange", "Purple"])
+    return {
+        "license_number": license_number,
+        "customer_id": customer_id,
+        "car_model_id": car_model_id,
+        "color": color
     }
 
 
 def main():
-    for _ in range(100):
-        customer = generate_random_customer()
-        create_customer(customer)
+    # for _ in range(100):
+    #   customer = generate_random_customer()
+    #   customers.append(customer)
+    #   company = (generate_random_company())
+    #   create_company(company)
+    #
+    # for _ in range(200):
+    #     addresses.append(generate_random_address())
+    #
+    # for _ in range(10):
+    #     car_model = generate_random_car_model()
+    #     create_car_model(car_model)
+
+    for _ in range(300):
+        car = generate_random_car()
+        create_customer_car(car)
+
+    # for _ in range(200):
+    #     employees.append(generate_random_employee())
 
 
 if __name__ == "__main__":
