@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, String, Column, Boolean
 
-from application.data.db import Base
+from bikeparts.application.data.db import Base
 
 
 class Customer(Base):
