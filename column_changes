@@ -6,7 +6,7 @@ customers:
 add email address?
 
 customer_cars:
-license_number INT -> VARCHAR(6)
+license_number INT -> VARCHAR(6) - DONE!
 
 manufacturers:
 manufacturer_id -> add auto_increment
