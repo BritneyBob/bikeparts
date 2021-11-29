@@ -10,7 +10,5 @@ class Customer(Base):
     customer_name = Column(String(60), nullable=True)
     contact_first_name = Column(String(60), nullable=False)
     contact_last_name = Column(String(60), nullable=False)
-
-    email = Column(String(45), nullable=False)
     phonenumber = Column(String(45), nullable=False)
     is_company = Column(Boolean, nullable=False)
