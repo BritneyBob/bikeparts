@@ -1,7 +1,7 @@
 import json
 import random
 
-from application.controllers.car_model_controller import create_car_model
+from application.controllers.customer_car_controller import create_customer_car
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -262,30 +262,35 @@ def generate_random_car_model():
 
 def generate_random_car():
     license_number = random_license_number()
+    customer_id = random.choice(range(1, 201))
+    car_model_id = random.choice(range(1, 211))
     color = random.choice(["Blue", "Red", "Green", "Yellow", "Black", "White", "Gold", "Silver", "Orange", "Purple"])
     return {
         "license_number": license_number,
+        "customer_id": customer_id,
+        "car_model_id": car_model_id,
         "color": color
     }
 
 
 def main():
     # for _ in range(100):
-        # customer = generate_random_customer()
-        # customers.append(customer)
-        # company = (generate_random_company())
-        # create_company(company)
+    #   customer = generate_random_customer()
+    #   customers.append(customer)
+    #   company = (generate_random_company())
+    #   create_company(company)
     #
     # for _ in range(200):
     #     addresses.append(generate_random_address())
     #
-    for _ in range(200):
-        car_model = generate_random_car_model()
-        create_car_model(car_model)
+    # for _ in range(10):
+    #     car_model = generate_random_car_model()
+    #     create_car_model(car_model)
 
-    # for _ in range(200):
-    #     cars.append(generate_random_car())
-    #
+    for _ in range(300):
+        car = generate_random_car()
+        create_customer_car(car)
+
     # for _ in range(200):
     #     employees.append(generate_random_employee())
 
