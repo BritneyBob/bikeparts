@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, String, Column, Boolean
 from sqlalchemy.orm import relationship
 
-from application.data.db import Base
+from bikeparts.application.data.db import Base
 
 
 class Customer(Base):
