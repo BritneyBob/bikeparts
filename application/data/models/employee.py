@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, String, Column, ForeignKey
+from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
@@ -11,4 +12,5 @@ class Employee(Base):
     first_name = Column(String(60), nullable=False)
     last_name = Column(String(60), nullable=False)
     email = Column(String(100), nullable=False)
+    customer_orders = relationship("CustomerOrder")
 
