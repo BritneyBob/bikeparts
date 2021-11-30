@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, Column, ForeignKey, DateTime, Date, String, Text
+from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
@@ -13,3 +14,4 @@ class CustomerOrder(Base):
     shipped_date = Column(Date)
     status = Column(String(45), nullable=False)
     comments = Column(Text)
+    spare_parts = relationship("OrderDetail", back_populates="customer_orders")

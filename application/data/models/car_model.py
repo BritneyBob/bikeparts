@@ -13,4 +13,5 @@ class CarModel(Base):
     manufacturer = Column(String(45), nullable=False)
     model = Column(String(45), nullable=False)
     year = Column(String(4), nullable=False)
-    customers = relationship("CustomerCar", back_populates="car_model")
+    customers = relationship("CustomerCar", back_populates="car_models")
+    spare_parts = relationship("CarModelSparePart", back_populates="car_models")
