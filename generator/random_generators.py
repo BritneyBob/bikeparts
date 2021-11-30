@@ -1,7 +1,8 @@
 import json
 import random
 
-from application.controllers.customer_car_controller import create_customer_car
+from application.controllers.manufacturer_controller import create_manufacturer
+from application.controllers.supplier_controller import create_supplier
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -287,9 +288,17 @@ def main():
     #     car_model = generate_random_car_model()
     #     create_car_model(car_model)
 
-    for _ in range(300):
-        car = generate_random_car()
-        create_customer_car(car)
+    # for _ in range(300):
+    #     car = generate_random_car()
+    #     create_customer_car(car)
+
+    for i in range(1, 40):
+        manufacturer = {"company_id": i}
+        create_manufacturer(manufacturer)
+
+    # for i in range(20, 101):
+    #     supplier = {"company_id": i}
+    #     create_supplier(supplier)
 
     # for _ in range(200):
     #     employees.append(generate_random_employee())

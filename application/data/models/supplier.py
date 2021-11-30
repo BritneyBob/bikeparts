@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.company import Company
+from application.data.models.spare_part_supplier import SparePartSupplier
+
 
 class Supplier(Base):
     __tablename__ = "suppliers"

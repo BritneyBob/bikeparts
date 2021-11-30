@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.spare_part import SparePart
+
 
 class SparePartManufacturer(Base):
     __tablename__ = "spare_parts_have_manufacturers"

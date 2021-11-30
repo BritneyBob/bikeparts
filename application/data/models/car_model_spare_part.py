@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.car_model import CarModel
+
 
 # Should this rather be an association table, and not a class?
 class CarModelSparePart(Base):

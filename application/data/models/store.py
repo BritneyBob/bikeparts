@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.employee import Employee
+from application.data.models.spare_part_in_store import SparePartInStore
+
 
 class Store(Base):
     __tablename__ = "stores"

@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+#from application.data.models.address import Address
+
 
 # Should this be an association table instead of a class?
 class CustomerAddress(Base):
