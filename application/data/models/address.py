@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.store import Store
+from application.data.models.customer_address import CustomerAddress
+
 
 class Address(Base):
     __tablename__ = "addresses"
@@ -10,8 +13,8 @@ class Address(Base):
     address_id = Column(Integer, primary_key=True, autoincrement=True)
     address_type_id = Column(Integer, ForeignKey("address_types.address_type_id"))
     company_id = Column(Integer, ForeignKey("companies.company_id"))
-    address_line1 = Column(String(100), nullable=True)
-    address_line2 = Column(String(100), nullable=True)
+    address_line1 = Column(String(100))
+    address_line2 = Column(String(100))
     zip_code = Column(String(15), nullable=False)
     city_name = Column(String(60), nullable=False)
     country_name = Column(String(45), nullable=False)

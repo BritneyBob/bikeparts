@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
+from application.data.models.order_detail import OrderDetail
+
 
 class CustomerOrder(Base):
     __tablename__ = "customer_orders"

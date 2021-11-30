@@ -3,11 +3,11 @@ from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
-#from application.data.models.customer_car import CustomerCar
+from application.data.models.customer_car import CustomerCar
 
 
 class CarModel(Base):
-    __tablename__ = "car_models"  # den här håller koll på vilken tabell vi matchar
+    __tablename__ = "car_models"
 
     car_model_id = Column(Integer, primary_key=True, autoincrement=True)
     manufacturer = Column(String(45), nullable=False)
