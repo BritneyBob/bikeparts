@@ -1,12 +1,16 @@
+************************************************************
+DO NOT ERASE TASKS THAT HAS BEEN DONE BEFORE CHANGING IN DB!
+************************************************************
+
 "If a scalar is desired where normally a list would be present, such as a bi-directional one-to-one relationship, set relationship.uselist to False." 
 This is the case in the Company class with the relations to Supplier and Manufacturer. I do not know what that means. :) What is a scalar and why do we want it instead of a list? /Johanna
 
 addresses:
-address_type_id -> fk and nn Done!
-company_id -> fk and nn Done!
+address_type_id -> fk and nn DONE
+company_id -> fk and nn DONE
 
 companies:
-add foreign key address_id Done! (Added corresponding relationship in Address)
+add foreign key address_id DONE (Added corresponding relationship in Address)
 (contact -> contact_first_name and contact_last_name??)
 
 customers:
@@ -16,12 +20,12 @@ customer_cars:
 license_number INT -> VARCHAR(6) - DONE (but not shared in a dump yet)!
 
 manufacturers:
-manufacturer_id -> add auto_increment
+manufacturer_id -> add auto_increment DONE
 
 spare_parts:
 product_number -> add auto_increment (fk constraints)
-description varchar(250) -> varchar(45)
+description varchar(250) -> varchar(45) DONE
 
 suppliers:
 supplier_id -> add auto_increment
-company_id -> fk
+company_id -> fk DONE
