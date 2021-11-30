@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, String, Column, ForeignKey
+from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
@@ -14,3 +15,4 @@ class Address(Base):
     zip_code = Column(String(15), nullable=False)
     city_name = Column(String(60), nullable=False)
     country_name = Column(String(45), nullable=False)
+    stores = relationship("Store", back_populates="addresses")

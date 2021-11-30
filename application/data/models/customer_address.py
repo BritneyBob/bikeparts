@@ -4,10 +4,11 @@ from sqlalchemy.orm import relationship
 from application.data.db import Base
 
 
+# Should this be an association table instead of a class?
 class CustomerAddress(Base):
     __tablename__ = "customers_have_addresses"
 
     customer_id = Column(Integer, ForeignKey('customers.customer_id'), primary_key=True, nullable=False)
     address_id = Column(Integer, ForeignKey('addresses.address_id'), primary_key=True, nullable=False)
-    customer = relationship("Customer", back_populates="addresses")
-    address = relationship("Address", back_populates="customers")
+    customers = relationship("Customer", back_populates="addresses")
+    addresses = relationship("Address", back_populates="customers")

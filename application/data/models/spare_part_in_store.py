@@ -1,4 +1,5 @@
 from sqlalchemy import Integer, Column, ForeignKey, String
+from sqlalchemy.orm import relationship
 
 from application.data.db import Base
 
@@ -12,3 +13,5 @@ class SparePartInStore(Base):
     quantity_in_stock = Column(Integer, nullable=False)
     lowest_index = Column(Integer, nullable=False)
     quantity_to_order = Column(Integer, nullable=False)
+    spare_parts = relationship("SparePart", back_populates="stores")
+    stores = relationship("Store", back_populates="spare_parts")

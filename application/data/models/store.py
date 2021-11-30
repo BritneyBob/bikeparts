@@ -10,3 +10,5 @@ class Store(Base):
     store_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     address_id = Column(Integer, ForeignKey('addresses.address_id'), nullable=False)
     employees = relationship("Employee")
+    addresses = relationship("Address", back_populates="stores")
+    spare_parts = relationship("SparePartInStore", back_populates="stores")
