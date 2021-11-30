@@ -1,6 +1,3 @@
-* Decide whether we should name our classes in singular or plural.
-* Add relationships where missing.
-
 addresses:
 address_type_id -> fk and nn
 company_id -> fk and nn
@@ -14,7 +11,7 @@ customers:
 add email address?
 
 customer_cars:
-license_number INT -> VARCHAR(6) - DONE!
+license_number INT -> VARCHAR(6) - DONE (but not shared in a dump yet)!
 
 manufacturers:
 manufacturer_id -> add auto_increment
