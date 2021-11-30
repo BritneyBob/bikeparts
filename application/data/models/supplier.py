@@ -9,4 +9,5 @@ class Supplier(Base):
 
     supplier_id = Column(Integer, primary_key=True, autoincrement=True)
     company_id = Column(Integer, ForeignKey("companies.company_id"))
-    company = relationship("Company", back_populates="suppliers")
+    companies = relationship("Company", back_populates="suppliers")
+    spare_parts = relationship("SparePart", back_populates="suppliers")
