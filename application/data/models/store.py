@@ -12,3 +12,4 @@ class Store(Base):
     employees = relationship("Employee")
     addresses = relationship("Address", back_populates="stores")
     spare_parts = relationship("SparePartInStore", back_populates="stores")
+    # TODO: Add relation to customer_orders
