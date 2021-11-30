@@ -16,3 +16,5 @@ class Address(Base):
     city_name = Column(String(60), nullable=False)
     country_name = Column(String(45), nullable=False)
     stores = relationship("Store", back_populates="addresses")
+    customers = relationship("CustomerAdress", back_populates="addresses")
+    # One-to-many: Address is parent - no need to add relationships to address_types and companies

@@ -11,3 +11,4 @@ class Supplier(Base):
     company_id = Column(Integer, ForeignKey("companies.company_id"))
     companies = relationship("Company", back_populates="suppliers")
     spare_parts = relationship("SparePartSupplier", back_populates="suppliers")
+    # TODO: Add relation to auto_orders

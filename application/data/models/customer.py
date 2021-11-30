@@ -15,3 +15,4 @@ class Customer(Base):
     is_company = Column(Boolean, nullable=False)
     car_models = relationship("CustomerCar", back_populates="customers")
     customer_orders = relationship("CustomerOrder")
+    addresses = relationship("CustomerAddress", back_populates="customers")

@@ -13,3 +13,5 @@ class Company(Base):
     contact_phonenumber = Column(String(20), nullable=False)
     contact_email = Column(String(100), nullable=False)
     manufacturers = relationship("Manufacturer", back_populates="companies")
+    suppliers = relationship("Supplier", back_populates="companies")
+    # TODO: Add address_id FK and relation to addresses
