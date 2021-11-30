@@ -15,3 +15,4 @@ class SparePartInStore(Base):
     quantity_to_order = Column(Integer, nullable=False)
     spare_parts = relationship("SparePart", back_populates="stores")
     stores = relationship("Store", back_populates="spare_parts")
+    # TODO: Add relation to auto_orders

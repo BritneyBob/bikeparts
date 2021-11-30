@@ -13,3 +13,5 @@ class AutoOrder(Base):
     arrival_date = Column(Date)
     ordered_quantity = Column(Integer, nullable=False)
     price_each = Column(Numeric, nullable=False)
+    # TODO: Add relation to suppliers
+    # TODO: Add relation to spare_parts_in_stores

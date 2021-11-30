@@ -15,3 +15,6 @@ class CustomerOrder(Base):
     status = Column(String(45), nullable=False)
     comments = Column(Text)
     spare_parts = relationship("OrderDetail", back_populates="customer_orders")
+    # TODO: Add relation to customers
+    # TODO: Add relation to stores
+    # TODO: Add relation to employees
