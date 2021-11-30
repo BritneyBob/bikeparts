@@ -14,3 +14,4 @@ class Customer(Base):
     phonenumber = Column(String(20), nullable=False)
     is_company = Column(Boolean, nullable=False)
     car_models = relationship("CustomerCar", back_populates="customer")
+    customer_orders = relationship("CustomerOrder")
