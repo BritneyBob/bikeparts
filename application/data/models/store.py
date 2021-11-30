@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, Column, ForeignKey
 
-from bikeparts.application.data.db import Base
+from application.data.db import Base
 
 
-class Stores(Base):
+class Store(Base):
     __tablename__ = "stores"
 
     store_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)

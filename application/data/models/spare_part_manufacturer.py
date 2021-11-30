@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, Column, ForeignKey
 
-from bikeparts.application.data.db import Base
+from application.data.db import Base
 
 
-class SparePartsHaveManufacturers(Base):
+class SparePartManufacturer(Base):
     __tablename__ = "spare_parts_have_manufacturers"
 
     product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
