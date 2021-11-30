@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, Column, ForeignKey, DateTime, Date, String, Text
 
-from bikeparts.application.data.db import Base
+from application.data.db import Base
 
 
-class CustomerOrders(Base):
+class CustomerOrder(Base):
     __tablename__ = "customer_orders"
     customer_order_number = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     customer_id = Column(Integer, ForeignKey('customers.customer_id'), nullable=False)

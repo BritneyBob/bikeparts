@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, Column, Numeric, ForeignKey
 
-from bikeparts.application.data.db import Base
+from application.data.db import Base
 
 
-class OrderDetails(Base):
+class OrderDetail(Base):
     __tablename__ = "order_details"
 
     customer_order_number = Column(Integer, ForeignKey('customer_orders.customer_order_number'), primary_key=True,

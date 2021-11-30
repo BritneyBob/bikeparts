@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, Column, Date, Numeric, ForeignKey
 
-from bikeparts.application.data.db import Base
+from application.data.db import Base
 
 
-class AutoOrders(Base):
+class AutoOrder(Base):
     __tablename__ = "auto_orders"
 
     order_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
