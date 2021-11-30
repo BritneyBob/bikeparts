@@ -15,3 +15,4 @@ class SparePart(Base):
     customer_orders = relationship("OrderDetail", back_populates="spare_parts")
     manufacturers = relationship("SparePartManufacturer", back_populates="spare_parts")
     suppliers = relationship("SparePartSupplier", back_populates="spare_parts")
+    stores = relationship("SparePartInStore", back_populates="spare_parts")
