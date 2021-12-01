@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models.supplier import Supplier
+from application.data.models import Supplier
 
 
 def create_supplier(supplier):

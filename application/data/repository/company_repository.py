@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models.company import Company
+from application.data.models import Company
 
 
 def create_company(company):
