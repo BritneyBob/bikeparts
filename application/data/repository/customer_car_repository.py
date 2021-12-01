@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models.customer_car import CustomerCar
+from application.data.models import CustomerCar
 
 
 def create_customer_car(customer_car):

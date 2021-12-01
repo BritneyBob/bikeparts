@@ -1,10 +1,7 @@
-from sqlalchemy import Integer, String, Column, ForeignKey
+from sqlalchemy import Integer, String, Column, ForeignKey, DateTime, Date, Text, Numeric, Boolean, Float
 from sqlalchemy.orm import relationship
 
 from application.data.db import Base
-
-from application.data.models.store import Store
-from application.data.models.customer_address import CustomerAddress
 
 
 class Address(Base):
@@ -71,14 +68,14 @@ class Company(Base):
     __tablename__ = "companies"  # den här håller koll på vilken tabell vi matchar
 
     company_id = Column(Integer, primary_key=True, autoincrement=True)
-    #address_id = Column(Integer, ForeignKey='addresses.address_id', nullable=False)
+    # address_id = Column(Integer, ForeignKey='addresses.address_id', nullable=False)
     company_name = Column(String(100), nullable=False)
     contact = Column(String(100), nullable=False)
     contact_phonenumber = Column(String(20), nullable=False)
     contact_email = Column(String(100), nullable=False)
     manufacturer = relationship("Manufacturer", back_populates="company", uselist=False)
     supplier = relationship("Supplier", back_populates="company", uselist=False)
-    #addresses = relationship('Address', back_populates='companies')
+    # addresses = relationship('Address', back_populates='companies')
     # TODO: Add address_id FK and relation to addresses
 
 
@@ -104,3 +101,132 @@ class CustomerAddress(Base):
     address_id = Column(Integer, ForeignKey('addresses.address_id'), primary_key=True, nullable=False)
     customers = relationship("Customer", back_populates="addresses")
     addresses = relationship("Address", back_populates="customers")
+
+
+class CustomerCar(Base):
+    __tablename__ = "customer_cars"
+
+    license_number = Column(String(6), primary_key=True, autoincrement=True)
+    customer_id = Column(Integer, ForeignKey("customers.customer_id"))
+    car_model_id = Column(Integer, ForeignKey("car_models.car_model_id"))
+    color = Column(String(20), nullable=False)
+    customers = relationship("Customer", back_populates="car_models")
+    car_models = relationship("CarModel", back_populates="customers")
+
+
+class CustomerOrder(Base):
+    __tablename__ = "customer_orders"
+    customer_order_number = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    customer_id = Column(Integer, ForeignKey('customers.customer_id'), nullable=False)
+    store_id = Column(Integer, ForeignKey('stores.store_id'), nullable=False)
+    employee_id = Column(Integer, ForeignKey('employees.employee_id'), nullable=False)
+    order_date = Column(DateTime, nullable=False)
+    shipped_date = Column(Date)
+    status = Column(String(45), nullable=False)
+    comments = Column(Text)
+    spare_parts = relationship("OrderDetail", back_populates="customer_orders")
+    # TODO: Add relation to customers
+    # TODO: Add relation to stores
+    # TODO: Add relation to employees
+
+
+class Employee(Base):
+    __tablename__ = "employees"
+
+    employee_id = Column(Integer, primary_key=True, autoincrement=True)
+    store_id = Column(Integer, ForeignKey("stores.store_id"))
+    first_name = Column(String(60), nullable=False)
+    last_name = Column(String(60), nullable=False)
+    email = Column(String(100), nullable=False)
+    customer_orders = relationship("CustomerOrder")
+    # TODO: Add relation to stores
+
+
+class Manufacturer(Base):
+    __tablename__ = "manufacturers"
+
+    manufacturer_id = Column(Integer, primary_key=True, autoincrement=True)
+    company_id = Column(Integer, ForeignKey("companies.company_id"))
+    company = relationship("Company", back_populates="manufacturer")
+    spare_parts = relationship("SparePartManufacturer", back_populates="manufacturer")
+
+
+class OrderDetail(Base):
+    __tablename__ = "order_details"
+
+    customer_order_number = Column(Integer, ForeignKey('customer_orders.customer_order_number'), primary_key=True,
+                                   nullable=False)
+    product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
+    price_each = Column(Numeric, nullable=False)
+    quantity_ordered = Column(Integer, nullable=False)
+    customer_orders = relationship("CustomerOrder", back_populates="spare_parts")
+    spare_parts = relationship("SparePart", back_populates="customer_orders")
+
+
+class SparePart(Base):
+    __tablename__ = "spare_parts"
+
+    product_number = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String(100), nullable=False)
+    description = Column(String(45), nullable=False)
+    sell_price = Column(Float, nullable=False)
+    car_models = relationship("CarModelSparePart", back_populates="spare_parts")
+    customer_orders = relationship("OrderDetail", back_populates="spare_parts")
+    manufacturers = relationship("SparePartManufacturer", back_populates="spare_part")
+    suppliers = relationship("SparePartSupplier", back_populates="spare_part")
+    stores = relationship("SparePartInStore", back_populates="spare_parts")
+
+
+class SparePartInStore(Base):
+    __tablename__ = "spare_parts_in_stores"
+
+    product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
+    store_id = Column(Integer, ForeignKey('stores.store_id'), primary_key=True, nullable=False)
+    shelf_number = Column(String(4), nullable=False)
+    quantity_in_stock = Column(Integer, nullable=False)
+    lowest_index = Column(Integer, nullable=False)
+    quantity_to_order = Column(Integer, nullable=False)
+    spare_parts = relationship("SparePart", back_populates="stores")
+    stores = relationship("Store", back_populates="spare_parts")
+    # TODO: Add relation to auto_orders
+
+
+class SparePartManufacturer(Base):
+    __tablename__ = "spare_parts_have_manufacturers"
+
+    product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
+    manufacturer_id = Column(Integer, ForeignKey('manufacturers.manufacturer_id'), primary_key=True, nullable=False)
+    spare_part = relationship("SparePart", back_populates="manufacturers")
+    manufacturer = relationship("Manufacturer", back_populates="spare_parts")
+
+
+class SparePartSupplier(Base):
+    __tablename__ = "spare_parts_have_suppliers"
+
+    product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
+    supplier_id = Column(Integer, ForeignKey('suppliers.supplier_id'), primary_key=True, nullable=False)
+    buy_price = Column(Numeric, nullable=False)
+    delivery_time = Column(Integer, nullable=False)
+    spare_part = relationship("SparePart", back_populates="suppliers")
+    supplier = relationship("Supplier", back_populates="spare_parts")
+
+
+class Store(Base):
+    __tablename__ = "stores"
+
+    store_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    address_id = Column(Integer, ForeignKey('addresses.address_id'), nullable=False)
+    employees = relationship("Employee")
+    addresses = relationship("Address", back_populates="stores")
+    spare_parts = relationship("SparePartInStore", back_populates="stores")
+    # TODO: Add relation to customer_orders
+
+
+class Supplier(Base):
+    __tablename__ = "suppliers"
+
+    supplier_id = Column(Integer, primary_key=True, autoincrement=True)
+    company_id = Column(Integer, ForeignKey("companies.company_id"))
+    company = relationship("Company", back_populates="supplier")
+    spare_parts = relationship("SparePartSupplier", back_populates="supplier")
+    # TODO: Add relation to auto_orders
