@@ -11,8 +11,9 @@ remove company_id DONE DONE
 
 create new table:
 companies_has_addresses -> FK company_id and FK address_id DONE DONE 
-The two foreign keys in this table does not start with fk_ as usual but I think they will work anyway.
-If they don't, let me know and I will change it! /Johanna
+P.S. The two foreign keys in this table does not start with fk_ as usual but I think they will work anyway.
+If they don't, let me know and I will change it! /Johanna 
+P.P.S. I have not included Base.metadata in the table since it seems to relate only to the classes, but feel free to correct me if I'm wrong! D.S.
 
 customers:
 (add email address?)
