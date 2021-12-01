@@ -11,10 +11,9 @@ company_id -> fk and nn DONE
 
 companies:
 add foreign key address_id DONE (Added corresponding relationship in Address)
-(contact -> contact_first_name and contact_last_name??)
 
 customers:
-add email address?
+(add email address?)
 
 customer_cars:
 license_number INT -> VARCHAR(6) - DONE (but not shared in a dump yet)!
