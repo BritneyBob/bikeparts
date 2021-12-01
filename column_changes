@@ -6,25 +6,27 @@ DO NOT ERASE TASKS THAT HAS BEEN DONE BEFORE CHANGING IN DB!
 This is the case in the Company class with the relations to Supplier and Manufacturer. I do not know what that means. :) What is a scalar and why do we want it instead of a list? /Johanna
 
 addresses:
-address_type_id -> fk and nn DONE
-remove company_id
+address_type_id -> fk and nn DONE DONE 
+remove company_id DONE DONE
 
 create new table:
-companies_has_addresses -> FK company_id and FK address_id
+companies_has_addresses -> FK company_id and FK address_id DONE DONE 
+The two foreign keys in this table does not start with fk_ as usual but I think they will work anyway.
+If they don't, let me know and I will change it! /Johanna
 
 customers:
 (add email address?)
 
 customer_cars:
-license_number INT -> VARCHAR(6) - DONE!
+license_number INT -> VARCHAR(6) - DONE DONE
 
 manufacturers:
-manufacturer_id -> add auto_increment DONE
+manufacturer_id -> add auto_increment DONE DONE 
 
 spare_parts:
-product_number -> add auto_increment (fk constraints)
-description varchar(250) -> varchar(45) DONE
+product_number -> add auto_increment (fk constraints) DONE DONE 
+description varchar(250) -> varchar(45) DONE DONE
 
 suppliers:
-supplier_id -> add auto_increment
-company_id -> fk DONE
+supplier_id -> add auto_increment DONE DONE
+company_id -> fk DONE DONE
