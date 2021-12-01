@@ -11,5 +11,5 @@ class SparePartManufacturer(Base):
 
     product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
     manufacturer_id = Column(Integer, ForeignKey('manufacturers.manufacturer_id'), primary_key=True, nullable=False)
-    spare_parts = relationship("SparePart", back_populates="manufacturers")
-    manufacturers = relationship("Manufacturer", back_populates="spare_parts")
+    spare_part = relationship("SparePart", back_populates="manufacturers")
+    manufacturer = relationship("Manufacturer", back_populates="spare_parts")

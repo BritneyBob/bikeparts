@@ -11,5 +11,5 @@ class SparePartSupplier(Base):
     supplier_id = Column(Integer, ForeignKey('suppliers.supplier_id'), primary_key=True, nullable=False)
     buy_price = Column(Numeric, nullable=False)
     delivery_time = Column(Integer, nullable=False)
-    spare_parts = relationship("SparePart", back_populates="suppliers")
-    suppliers = relationship("Supplier", back_populates="spare_parts")
+    spare_part = relationship("SparePart", back_populates="suppliers")
+    supplier = relationship("Supplier", back_populates="spare_parts")

@@ -15,6 +15,6 @@ class SparePart(Base):
     sell_price = Column(Float, nullable=False)
     car_models = relationship("CarModelSparePart", back_populates="spare_parts")
     customer_orders = relationship("OrderDetail", back_populates="spare_parts")
-    manufacturers = relationship("SparePartManufacturer", back_populates="spare_parts")
-    suppliers = relationship("SparePartSupplier", back_populates="spare_parts")
+    manufacturers = relationship("SparePartManufacturer", back_populates="spare_part")
+    suppliers = relationship("SparePartSupplier", back_populates="spare_part")
     stores = relationship("SparePartInStore", back_populates="spare_parts")
