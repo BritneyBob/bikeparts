@@ -7,16 +7,16 @@ This is the case in the Company class with the relations to Supplier and Manufac
 
 addresses:
 address_type_id -> fk and nn DONE
-company_id -> fk and nn DONE
+remove company_id
 
-companies:
-add foreign key address_id DONE (Added corresponding relationship in Address)
+create new table:
+companies_has_addresses -> FK company_id and FK address_id
 
 customers:
 (add email address?)
 
 customer_cars:
-license_number INT -> VARCHAR(6) - DONE (but not shared in a dump yet)!
+license_number INT -> VARCHAR(6) - DONE!
 
 manufacturers:
 manufacturer_id -> add auto_increment DONE
