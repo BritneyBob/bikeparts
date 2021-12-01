@@ -1,26 +1,19 @@
-Britta
-customers - done!
-manufacturers
-employees
-suppliers
-companies - done!
-addresses
-car_models - done!
-customer_cars
-
-Kajsa
--
-
-
-Johanna
-spare_parts
-car_models_have_spare_parts
-spare_parts_have_manufacturers
-spare_parts_have_suppliers
-auto_orders
-spare_parts_in_stores
-stores
-customer_orders
-order_details
-customer_have_addresses
-address_types
+customers - done! Data generated
+manufacturers - done! How to insert data (foreign keys)?
+employees - needs relations, needs data, how to generate foreign keys?
+suppliers - needs relations, How to insert data (foreign keys)?
+companies - done! Data generated
+addresses - done! How to generate data for address_line1 and 2?
+car_models - done! Data generated
+customer_cars - done! How to generate data (foreign keys?)
+spare_parts - done! Has data? How to insert data? (foreign keys)
+car_models_have_spare_parts - done! But maybe it should be an association table, not a class. How to insert data? (foreign keys)
+spare_parts_have_manufacturers - done! But maybe it should be an association table, not a class. How to insert data? (foreign keys)
+spare_parts_have_suppliers - done! How to insert data? (foreign keys)
+auto_orders - needs relations and data - triggers!
+spare_parts_in_stores - needs relations How to insert data? (foreign keys) - triggers!
+stores - needs relations + data, how?
+customer_orders - needs relations + data, how?
+order_details - done! needs data, how?
+customer_have_addresses - done! But maybe it should be an association table, not a class.
+address_types - done! needs data, how?
