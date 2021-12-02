@@ -1,7 +1,8 @@
 import json
 import random
+import numpy as np
 
-from application.controllers.employee_controller import create_employee
+from application.controllers.spare_part_controller import create_spare_part_supplier
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -84,7 +85,40 @@ product_types = ["Sticker", "Wunderbaum", "Sleeves", "Bumper", "Subwoofer", "Whe
                  "Back door", "Seat cover", "Head rest", "Sun cover"]
 product_descriptions = ["Flames", "Moose", "Green", "Pink", "Yellow", "Brown", "Leopard", "Zebra", "Tiger"]
 
-""
+
+def generate_random_product():
+    name = f"{random.choice(product_types)}, {random.choice(product_descriptions)}"
+    description = random.choice(adjectives)
+    if "Sticker" in name:
+        sell_price = 20
+    elif "Wunderbaum" in name:
+        sell_price = 2
+    elif "Sleeves" in name:
+        sell_price = 15
+    elif "Bumper" in name:
+        sell_price = 80
+    elif "Subwoofer" in name:
+        sell_price = 250
+    elif "Wheel cover" in name:
+        sell_price = 50
+    elif "Mug holder" in name:
+        sell_price = 10
+    elif "Seat cover" in name:
+        sell_price = 200
+    elif "Head rest" in name:
+        sell_price = 75
+    elif "Sun cover" in name:
+        sell_price = 12
+    else:
+        sell_price = 500
+
+    return {
+        "name": name,
+        "description": description,
+        "sell_price": sell_price
+    }
+
+
 with open("data_files/postcodes.json", "r", encoding="utf-8") as postcode_file:
     postcodes = json.load(postcode_file)
     postcodes_list = []
@@ -288,6 +322,20 @@ def generate_random_car():
     }
 
 
+def generate_random_spare_part_supplier():
+    product_number = random.choice(range(1, 167))
+    supplier_id = random.choice(range(1, 82))
+    buy_price = random.choice(np.arange(1.99, 500, 0.75)).round(2)
+    delivery_time = random.choice(range(1, 22))
+
+    return {
+        "product_number": product_number,
+        "supplier_id": supplier_id,
+        "buy_price": buy_price,
+        "delivery_time": delivery_time
+    }
+
+
 def main():
     # for _ in range(100):
     #   customer = generate_random_customer()
@@ -319,11 +367,17 @@ def main():
     #    employee = generate_random_employee()
     #    create_employee(employee)
 
-
-
     #for _ in range(50):
     #    store = generate_random_store()
     #    create_store(store)
+
+    #for _ in range(150):
+    #    spare_part = generate_random_product()
+    #    create_spare_part(spare_part)
+
+    for _ in range(200):
+        spare_part_supplier = generate_random_spare_part_supplier()
+        create_spare_part_supplier(spare_part_supplier)
 
 
 if __name__ == "__main__":
