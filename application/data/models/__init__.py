@@ -47,15 +47,12 @@ class AutoOrder(Base):
     __tablename__ = "auto_orders"
 
     order_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    product_number = Column(Integer, ForeignKey('spare_parts.product_number'), nullable=False)
-    store_id = Column(Integer, ForeignKey('stores.store_id'), nullable=False)
-    supplier_id = Column(Integer, ForeignKey('suppliers.supplier_id'), nullable=False)
+    product_number = Column(Integer, nullable=False)
+    store_id = Column(Integer, nullable=False)
+    supplier_id = Column(Integer, nullable=False)
     arrival_date = Column(Date)
     ordered_quantity = Column(Integer, nullable=False)
     price_each = Column(Numeric, nullable=False)
-
-    supplier = relationship("Supplier", back_populates="auto_orders")
-    spare_part_in_store = relationship("SparePartInStore", back_populates="auto_orders")
 
 
 car_models_have_spare_parts_table = Table("car_models_have_spare_parts", Base.metadata,
@@ -223,7 +220,6 @@ class SparePartInStore(Base):
 
     spare_part = relationship("SparePart", back_populates="stores")
     store = relationship("Store", back_populates="spare_parts")
-    auto_orders = relationship("AutoOrder", back_populates="spare_part_in_store")
 
 
 # class SparePartManufacturer(Base):
@@ -266,4 +262,3 @@ class Supplier(Base):
 
     company = relationship("Company", back_populates="supplier")
     spare_parts = relationship("SparePartSupplier", back_populates="supplier")
-    auto_orders = relationship("AutoOrder", back_populates="supplier")
