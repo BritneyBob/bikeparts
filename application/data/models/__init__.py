@@ -25,7 +25,7 @@ class Address(Base):
     address_type_id = Column(Integer, ForeignKey("address_types.address_type_id"), nullable=False)
     address_line1 = Column(String(100))
     address_line2 = Column(String(100))
-    zip_code = Column(String(15), nullable=False)
+    zipcode = Column(String(15), nullable=False)
     city_name = Column(String(60), nullable=False)
     country_name = Column(String(45), nullable=False)
 

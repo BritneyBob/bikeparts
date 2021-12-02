@@ -1,8 +1,7 @@
 import json
 import random
 
-from application.controllers.manufacturer_controller import create_manufacturer
-from application.controllers.supplier_controller import create_supplier
+from application.controllers.address_controller import create_address
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -174,7 +173,11 @@ def generate_random_customer():
     }
 
 
+# def generate_random_store():
+
+
 def generate_random_employee():
+    store_id = random.choice(range(1, 51))
     first_name = random_first_name()
 
     last_name = random_last_name()
@@ -182,6 +185,7 @@ def generate_random_employee():
     email = generate_random_email(first_name, last_name)
 
     return {
+        "store_id": store_id,
         "first_name": first_name,
         "last_name": last_name,
         "email": email,
@@ -224,8 +228,11 @@ def random_street_address_postcode():
 
 
 def generate_random_address():
-    address_line1, postcode = random_street_address_postcode()
-    address_line2 = random.choice([None, random_street_address_postcode()[0]])
+    _, postcode = random_street_address_postcode()
+    address_line1 = None
+    address_line2 = random_street_address_postcode()[0]
+
+    address_type_id = random.choice([1, 2, 3])
 
     country = random.choice(["Sweden", "Sweden", "Sweden", "Denmark", "Norway", "Finland"])
     city = ""
@@ -241,11 +248,12 @@ def generate_random_address():
             city = random_finnish_cities()
 
     return {
+        "address_type_id": address_type_id,
         "address_line1": address_line1,
         "address_line2": address_line2,
-        "zip_code": postcode,
-        "city": city,
-        "country": country
+        "zipcode": postcode,
+        "city_name": city,
+        "country_name": country
     }
 
 
@@ -281,8 +289,9 @@ def main():
     #   company = (generate_random_company())
     #   create_company(company)
     #
-    # for _ in range(200):
-    #     addresses.append(generate_random_address())
+    for _ in range(450):
+        address = generate_random_address()
+        create_address(address)
     #
     # for _ in range(10):
     #     car_model = generate_random_car_model()
@@ -292,13 +301,13 @@ def main():
     #     car = generate_random_car()
     #     create_customer_car(car)
 
-    for i in range(1, 40):
-        manufacturer = {"company_id": i}
-        create_manufacturer(manufacturer)
+    #for i in range(1, 40):
+    #    manufacturer = {"company_id": i}
+    #    create_manufacturer(manufacturer)
 
-    # for i in range(20, 101):
-    #     supplier = {"company_id": i}
-    #     create_supplier(supplier)
+    #for i in range(20, 101):
+    #    supplier = {"company_id": i}
+    #    create_supplier(supplier)
 
     # for _ in range(200):
     #     employees.append(generate_random_employee())
