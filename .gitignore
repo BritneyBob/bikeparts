@@ -3,4 +3,5 @@ venv/
 *.pyc
 __pycache__/
 db_config.py
-docker/docker-compose.yml
+docker-compose.yml
+docker/
