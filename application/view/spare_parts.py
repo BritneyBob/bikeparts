@@ -1,4 +1,4 @@
-from application.controllers.spare_parts_controller import get_spare_parts, get_spare_part_by_id, \
+from application.controllers.spare_part_controller import get_spare_parts, get_spare_part_by_id, \
     get_spare_parts_by_filter, get_spare_part_supplier_by_id
 
 
