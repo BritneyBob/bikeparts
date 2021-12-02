@@ -1,7 +1,7 @@
 import json
 import random
 
-from application.controllers.address_controller import create_address
+from application.controllers.employee_controller import create_employee
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -80,8 +80,11 @@ car_manufacturers = [
   "Volvo"
 ]
 car_models = [line.strip() for line in open("data_files/car_model_names.txt", "r", encoding="utf-8")]
+product_types = ["Sticker", "Wunderbaum", "Sleeves", "Bumper", "Subwoofer", "Wheel cover", "Mug holder", "Front door",
+                 "Back door", "Seat cover", "Head rest", "Sun cover"]
+product_descriptions = ["Flames", "Moose", "Green", "Pink", "Yellow", "Brown", "Leopard", "Zebra", "Tiger"]
 
-
+""
 with open("data_files/postcodes.json", "r", encoding="utf-8") as postcode_file:
     postcodes = json.load(postcode_file)
     postcodes_list = []
@@ -173,7 +176,10 @@ def generate_random_customer():
     }
 
 
-# def generate_random_store():
+def generate_random_store():
+    address_id = random.choice(range(1,451))
+
+    return {"address_id": address_id}
 
 
 def generate_random_employee():
@@ -289,9 +295,9 @@ def main():
     #   company = (generate_random_company())
     #   create_company(company)
     #
-    for _ in range(450):
-        address = generate_random_address()
-        create_address(address)
+    #for _ in range(450):
+    #    address = generate_random_address()
+    #    create_address(address)
     #
     # for _ in range(10):
     #     car_model = generate_random_car_model()
@@ -309,8 +315,15 @@ def main():
     #    supplier = {"company_id": i}
     #    create_supplier(supplier)
 
-    # for _ in range(200):
-    #     employees.append(generate_random_employee())
+    #for _ in range(200):
+    #    employee = generate_random_employee()
+    #    create_employee(employee)
+
+
+
+    #for _ in range(50):
+    #    store = generate_random_store()
+    #    create_store(store)
 
 
 if __name__ == "__main__":
