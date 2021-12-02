@@ -15,7 +15,7 @@ def main_menu():
     print("9. Quit")
     print()
     while True:
-        choice = input("Choice > ")
+        choice = input("Choice: ")
         if choice in "123459" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3, 4, 5 or 9")
@@ -27,17 +27,18 @@ def product_menu():
     print("*" * 50)
     print("Product menu")
     print("*" * 50)
-    print("1. View product information")
-    print("2. Update product")
-    print("3. Add product")
+    print("1. View all products")
+    print("2. View product details")
+    print("3. Update product")
+    print("4. Add product")
     print()
     print("9. Back to main menu")
     print()
     while True:
-        choice = input("Choice > ")
-        if choice in "1239" and len(choice) == 1:
+        choice = input("Choice: ")
+        if choice in "12349" and len(choice) == 1:
             break
-        print("Valid options are 1, 2, 3 or 9")
+        print("Valid options are 1, 2, 3, 4 or 9")
     return choice
 
 
@@ -52,7 +53,7 @@ def pricing_menu():
     print("9. Back to main menu")
     print()
     while True:
-        choice = input("Choice > ")
+        choice = input("Choice: ")
         if choice in "129" and len(choice) == 1:
             break
         print("Valid options are 1, 2, or 9")
@@ -71,7 +72,7 @@ def customer_menu():
     print("9. Back to main menu")
     print()
     while True:
-        choice = input("Choice > ")
+        choice = input("Choice: ")
         if choice in "1239" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3 or 9")
@@ -90,7 +91,7 @@ def procurement_menu():
     print("9. Back to main menu")
     print()
     while True:
-        choice = input("Choice > ")
+        choice = input("Choice: ")
         if choice in "1239" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3 or 9")
@@ -108,7 +109,7 @@ def store_menu():
     print("9. Back to main menu")
     print()
     while True:
-        choice = input("Choice > ")
+        choice = input("Choice: ")
         if choice in "129" and len(choice) == 1:
             break
         print("Valid options are 1, 2 or 9")
