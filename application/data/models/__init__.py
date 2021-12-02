@@ -54,6 +54,9 @@ class AutoOrder(Base):
     ordered_quantity = Column(Integer, nullable=False)
     price_each = Column(Numeric, nullable=False)
 
+    def __repr__(self):
+        return f"{self.product_number} Quantity: {self.ordered_quantity} Expected delivery date: {self.arrival_date}"
+
 
 car_models_have_spare_parts_table = Table("car_models_have_spare_parts", Base.metadata,
                                           Column("car_model_id", ForeignKey('car_models.car_model_id'),
@@ -206,6 +209,9 @@ class SparePart(Base):
                                  back_populates="spare_parts")
     suppliers = relationship("SparePartSupplier", back_populates="spare_part")
     stores = relationship("SparePartInStore", back_populates="spare_part")
+
+    def __repr__(self):
+        return f"Product number: {self.product_number}\tName: {self.name}\tDescription: {self.description}\tPrice: {self.sell_price} SEK"
 
 
 class SparePartInStore(Base):
