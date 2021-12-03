@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models import SparePartSupplier, SparePart
+from application.data.models import SparePartSupplier, SparePart, SparePartInStore
 
 
 def create_spare_part(spare_part):
@@ -11,6 +11,12 @@ def create_spare_part(spare_part):
 def create_spare_part_supplier(spare_part_supplier):
     spare_part_supplier = SparePartSupplier(**spare_part_supplier)
     session.add(spare_part_supplier)
+    session.commit()
+
+
+def create_spare_part_in_store(spare_part_in_store):
+    spare_part_in_store = SparePartInStore(**spare_part_in_store)
+    session.add(spare_part_in_store)
     session.commit()
 
 

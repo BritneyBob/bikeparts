@@ -9,6 +9,10 @@ def create_spare_part_supplier(spare_part_supplier):
     spare_part_repository.create_spare_part_supplier(spare_part_supplier)
 
 
+def create_spare_part_in_store(spare_part_in_store):
+    spare_part_repository.create_spare_part_in_store(spare_part_in_store)
+
+
 def get_spare_parts():
     return spare_part_repository.get_spare_parts()
 

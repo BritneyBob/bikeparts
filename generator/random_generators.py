@@ -6,7 +6,7 @@ from decimal import Decimal
 from mysqlx import Error
 from sqlalchemy.exc import IntegrityError
 
-from application.controllers.spare_part_controller import create_spare_part_supplier
+from application.controllers.spare_part_controller import create_spare_part_in_store
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -339,6 +339,25 @@ def generate_random_spare_part_supplier():
         "delivery_time": delivery_time
     }
 
+def generate_random_spare_part_in_store():
+    letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ"
+    numbers = "123456789"
+    product_number = random.choice(range(1, 167))
+    store_id = random.choice(range(1, 51))
+    shelf_number = f"{random.choice(letters)}{random.choice(numbers)}"
+    quantity_in_stock = random.choice(range(10, 201))
+    lowest_index = random.choice(range(20, 51))
+    quantity_to_order = lowest_index * 3
+
+    return {
+        "product_number": product_number,
+        "store_id": store_id,
+        "shelf_number": shelf_number,
+        "quantity_in_stock": quantity_in_stock,
+        "lowest_index": lowest_index,
+        "quantity_to_order": quantity_to_order
+    }
+
 
 def main():
     # for _ in range(100):
@@ -385,6 +404,10 @@ def main():
     #         create_spare_part_supplier(spare_part_supplier)
     #     except IntegrityError:
     #         pass
+
+    for _ in range(71):
+        spare_part_in_store = generate_random_spare_part_in_store()
+        create_spare_part_in_store(spare_part_in_store)
 
 
 if __name__ == "__main__":
