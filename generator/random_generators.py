@@ -1,6 +1,10 @@
 import json
 import random
 import numpy as np
+from decimal import Decimal
+
+from mysqlx import Error
+from sqlalchemy.exc import IntegrityError
 
 from application.controllers.spare_part_controller import create_spare_part_supplier
 
@@ -325,7 +329,7 @@ def generate_random_car():
 def generate_random_spare_part_supplier():
     product_number = random.choice(range(1, 167))
     supplier_id = random.choice(range(1, 82))
-    buy_price = random.choice(np.arange(1.99, 500, 0.75)).round(2)
+    buy_price = Decimal(random.choice(np.arange(1.99, 500, 0.75)).round(2))
     delivery_time = random.choice(range(1, 22))
 
     return {
@@ -375,9 +379,12 @@ def main():
     #    spare_part = generate_random_product()
     #    create_spare_part(spare_part)
 
-    for _ in range(200):
-        spare_part_supplier = generate_random_spare_part_supplier()
-        create_spare_part_supplier(spare_part_supplier)
+    # for _ in range(200):
+    #     try:
+    #         spare_part_supplier = generate_random_spare_part_supplier()
+    #         create_spare_part_supplier(spare_part_supplier)
+    #     except IntegrityError:
+    #         pass
 
 
 if __name__ == "__main__":
