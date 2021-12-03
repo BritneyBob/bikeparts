@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models import SparePartSupplier, SparePart, SparePartInStore
+from application.data.models import SparePartSupplier, SparePart, SparePartInStore, spare_parts_have_manufacturers_table
 
 
 def create_spare_part(spare_part):
@@ -17,6 +17,13 @@ def create_spare_part_supplier(spare_part_supplier):
 def create_spare_part_in_store(spare_part_in_store):
     spare_part_in_store = SparePartInStore(**spare_part_in_store)
     session.add(spare_part_in_store)
+    session.commit()
+
+
+def create_spare_part_manufacturer(spare_part, manufacturer):
+    statement = spare_parts_have_manufacturers_table.insert().values(product_number=spare_part,
+                                                                     manufacturer_id=manufacturer)
+    session.execute(statement)
     session.commit()
 
 
