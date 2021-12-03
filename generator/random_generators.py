@@ -410,5 +410,6 @@ def main():
         create_spare_part_in_store(spare_part_in_store)
 
 
+
 if __name__ == "__main__":
     main()
