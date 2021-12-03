@@ -13,3 +13,7 @@ def create_customer_address(customer, address):
     session.execute(statement)
     session.commit()
 
+
+def get_customers():
+    return session.query(Customer).all()
+
