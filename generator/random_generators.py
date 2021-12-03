@@ -426,11 +426,10 @@ def main():
     #     car_model, spare_part = generate_random_car_model_spare_part()
     #     create_car_model_spare_part(car_model, spare_part)
 
-    for i in range(100):
+    for i in range(1, 101):
         company_id = i
         address_id = generate_company_address()
         create_company_address(company_id, address_id)
-
 
 
 if __name__ == "__main__":
