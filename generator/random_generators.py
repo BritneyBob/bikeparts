@@ -6,7 +6,7 @@ from decimal import Decimal
 from mysqlx import Error
 from sqlalchemy.exc import IntegrityError
 
-from application.controllers.spare_part_controller import create_spare_part_in_store
+from application.controllers.company_controller import create_company_address
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -359,6 +359,19 @@ def generate_random_spare_part_in_store():
     }
 
 
+def generate_random_car_model_spare_part():
+    car_model = random.choice(range(1, 211))
+    spare_part = random.choice(range(1, 167))
+
+    return car_model, spare_part
+
+def generate_company_address():
+    #company = random.choice(range(1, 101))
+    address = random.choice(range(1, 451))
+
+    return address
+
+
 def main():
     # for _ in range(100):
     #   customer = generate_random_customer()
@@ -405,9 +418,18 @@ def main():
     #     except IntegrityError:
     #         pass
 
-    for _ in range(71):
-        spare_part_in_store = generate_random_spare_part_in_store()
-        create_spare_part_in_store(spare_part_in_store)
+    # for _ in range(71):
+    #     spare_part_in_store = generate_random_spare_part_in_store()
+    #     create_spare_part_in_store(spare_part_in_store)
+
+    # for _ in range(8):
+    #     car_model, spare_part = generate_random_car_model_spare_part()
+    #     create_car_model_spare_part(car_model, spare_part)
+
+    for i in range(100):
+        company_id = i
+        address_id = generate_company_address()
+        create_company_address(company_id, address_id)
 
 
 
