@@ -24,8 +24,13 @@ def show_products_from_company(_id):
         Company
     ).filter(
         Supplier.supplier_id == _id
-    ).all()
-    return products
+    ).all(
+    )
+    print()
+    name_and_id = []
+    for product in products:
+        name_and_id.append(f'Product id: {product.product_number}, Product name: {product.name}')
+    return name_and_id
 
 #
 #  t1 = aliased(Task)

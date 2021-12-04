@@ -113,6 +113,10 @@ class Customer(Base):
     stores = relationship("CustomerOrder", back_populates="customer")
     addresses = relationship("Address", secondary=customers_have_addresses_table, back_populates="customers")
 
+    def __repr__(self):
+        return f"Customer id: {self.customer_id}\tCompany name (if company): {self.customer_name}\t" \
+               f"Contact: {self.contact_first_name} {self.contact_last_name}\tPhone number: {self.phonenumber}" \
+
 
 # Should this be an association table instead of a class?
 # class CustomerAddress(Base):
@@ -211,7 +215,8 @@ class SparePart(Base):
     stores = relationship("SparePartInStore", back_populates="spare_part")
 
     def __repr__(self):
-        return f"Product number: {self.product_number}\tName: {self.name}\tDescription: {self.description}\tPrice: {self.sell_price} SEK"
+        return f"Product number: {self.product_number}\tName: {self.name}\tDescription: {self.description}\t" \
+               f"Price: {self.sell_price} SEK"
 
 
 class SparePartInStore(Base):
