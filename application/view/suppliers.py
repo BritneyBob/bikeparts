@@ -15,8 +15,9 @@ def negotiate_supplier_prices():
     name_and_id = show_products_from_company(_id)
     for n in name_and_id:  # Why does PyCharm insert a new line before printing first time?
         print(n)
-
+        # Continue with negotiation phase. List with possible %-changes
 
 
 def adjust_sell_margins():
+    # Skip method and add a 25% raise on buy price after the auto order is completed?
     pass

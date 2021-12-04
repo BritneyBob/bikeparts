@@ -15,7 +15,8 @@ def get_suppliers():
 
 def show_products_from_company(_id):
     products = session.query(
-        SparePart
+        SparePart,
+        SparePartSupplier
     ).join(
         SparePartSupplier
     ).join(
@@ -27,27 +28,12 @@ def show_products_from_company(_id):
     ).all(
     )
     print()
-    name_and_id = []
-    for product in products:
-        name_and_id.append(f'Product id: {product.product_number}, Product name: {product.name}')
-    return name_and_id
-
-#
-#  t1 = aliased(Task)
-#  t2 = aliased(Task)
-#  query = (
-#  self.db.query(t2)
-#  .select_from(t1)
-#  .join(t2, t2.g_id == t1.g_id)
-#  .filter(t1.id == task_id)
-# )
+    name_and_buy_price = []
+    # for product in products:
+    #     name_and_buy_price.append({'Product number: ': {product[0]}, 'Product name: ': {product['name']},
+    #                         'Buy price: ': {product['buy_price']}})
+    return name_and_buy_price
 
 
-#     SELECT spare_parts.product_number, name, description, c.company_name
-# FROM spare_parts
-# INNER JOIN spare_parts_have_suppliers sphs on spare_parts.product_number = sphs.product_number
-# INNER JOIN suppliers s on sphs.supplier_id = s.supplier_id
-# INNER JOIN companies c on s.company_id = c.company_id
-# WHERE s.supplier_id = 51;
 
 
