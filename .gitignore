@@ -2,6 +2,6 @@ venv/
 .idea/
 *.pyc
 __pycache__/
-db_config.py
+application/data/db/db_config.py
 docker-compose.yml
 docker/

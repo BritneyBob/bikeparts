@@ -1,5 +1,6 @@
 from application.view.options import main_menu, product_menu, customer_menu, procurement_menu, pricing_menu, store_menu
 from application.view.spare_parts import show_all_spare_parts, show_spare_part
+from application.view.suppliers import negotiate_supplier_prices, adjust_sell_margins
 
 
 def main():
@@ -27,9 +28,9 @@ def main():
                     sub_choice = pricing_menu()
                     match sub_choice:
                         case "1":
-                            print("<This string will be replaced with method to redirect user>")
+                            negotiate_supplier_prices()
                         case "2":
-                            print("<This string will be replaced with method to redirect user>")
+                            adjust_sell_margins()
                         case "3":
                             print("<This string will be replaced with method to redirect user>")
                         case "9":
