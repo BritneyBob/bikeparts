@@ -28,3 +28,6 @@ def show_spare_part():
     # Add manufacturer
     print(f"Items in stock: ")
     # Add store + stock
+
+
+
