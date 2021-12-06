@@ -9,5 +9,5 @@ def create_customer_car(customer_car):
 
 
 def get_customers_cars(customer_id):
-    # return session.query(CustomerCar).filter(CustomerCar.customer_id == customer_id).all()
-    return session.query(CustomerCar).all()
+    x = session.query(CustomerCar).filter(CustomerCar.customer_id == customer_id).all()
+    return x

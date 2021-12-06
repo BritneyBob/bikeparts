@@ -128,7 +128,7 @@ class Customer(Base):
 class CustomerCar(Base):
     __tablename__ = "customer_cars"
 
-    license_number = Column(String(6), primary_key=True, autoincrement=True)
+    license_number = Column(String(6), primary_key=True, nullable=False, autoincrement=True)
     customer_id = Column(Integer, ForeignKey("customers.customer_id"))
     car_model_id = Column(Integer, ForeignKey("car_models.car_model_id"))
     color = Column(String(20), nullable=False)
