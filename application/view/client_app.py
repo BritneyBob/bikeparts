@@ -1,7 +1,7 @@
 # from application.view.options import main_menu, product_menu, customer_menu, procurement_menu,
 # pricing_menu, store_menu
 # from application.view.spare_parts import show_all_spare_parts, show_spare_part
-from application.view import options, spare_parts, customers, suppliers, stores
+from application.view import options, spare_parts, customers, suppliers, stores, auto_order
 
 
 def main():
@@ -59,7 +59,7 @@ def main():
                         case "2":
                             print("<This string will be replaced with method to redirect user>")
                         case "3":
-                            print("<This string will be replaced with method to redirect user>")
+                            auto_order.evaluate_auto_order(12, 1)
                         case "9":
                             print("Going back to main menu")
                             break
