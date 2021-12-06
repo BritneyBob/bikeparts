@@ -9,8 +9,8 @@ def get_suppliers():
     return supplier_repository.get_suppliers()
 
 
-def negotiation(id_and_buy_price, company_id):
-    return supplier_repository.negotiation(id_and_buy_price, company_id)
+def negotiation(id_and_buy_price, comp_and_supp_id):
+    return supplier_repository.negotiation(id_and_buy_price, comp_and_supp_id)
 
 
 # def show_products_from_company(_id):
