@@ -13,6 +13,3 @@ def negotiation(id_and_buy_price, comp_and_supp_id):
     return supplier_repository.negotiation(id_and_buy_price, comp_and_supp_id)
 
 
-# def show_products_from_company(_id):
-#     return supplier_repository.show_products_from_company(_id)
-

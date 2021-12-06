@@ -31,7 +31,7 @@ def main():
                         case "1":
                             suppliers.negotiate_supplier_prices()
                         case "2":
-                            suppliers.adjust_sell_margins()
+                            spare_parts.adjust_sell_margins()
                         case "3":
                             print("<This string will be replaced with method to redirect user>")
                         case "9":

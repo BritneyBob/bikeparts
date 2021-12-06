@@ -21,7 +21,6 @@ def negotiate_supplier_prices():
                       f'Current buy price: {spare_part.buy_price}')
                 id_and_buy_price.append({'product_number: ': spare_part.product_number,
                                          'name: ': spare_part.spare_part.name, 'buy_price: ': spare_part.buy_price})
-
             break
 
     new_buy_prices = negotiation(id_and_buy_price, comp_and_supp_id)
@@ -29,9 +28,8 @@ def negotiate_supplier_prices():
     for i in range(len(id_and_buy_price)):
         print(f"Product id: {id_and_buy_price[i]['product_number: ']}, Product name: {id_and_buy_price[i]['name: ']}, "
               f"New buy price: {new_buy_prices[i]}")
-    # name_and_id = show_products_from_company(_id)
 
 
-def adjust_sell_margins():
-    # Skip method and add a 25% raise on buy price after the auto order is completed?
+
+
     pass

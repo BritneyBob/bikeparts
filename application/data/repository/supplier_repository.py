@@ -32,26 +32,6 @@ def negotiation(id_and_buy_price, comp_and_supp_id):
 
 
 
-# def show_products_from_company(_id):
-#     products = session.query(
-#         SparePart,
-#         SparePartSupplier
-#     ).join(
-#         SparePartSupplier
-#     ).join(
-#         Supplier
-#     ).join(
-#         Company
-#     ).filter(
-#         Supplier.supplier_id == _id
-#     ).all(
-#     )
-#     print()
-#     name_and_buy_price = []
-#     # for product in products:
-#     #     name_and_buy_price.append({'Product number: ': {product[0]}, 'Product name: ': {product['name']},
-#     #                         'Buy price: ': {product['buy_price']}})
-#     return name_and_buy_price
 
 
 
