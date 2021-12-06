@@ -17,3 +17,6 @@ def create_customer_address(customer, address):
 def get_customers():
     return session.query(Customer).all()
 
+
+def get_customer_by_id(customer_id):
+    return session.query(Customer).filter(Customer.customer_id == customer_id).first()

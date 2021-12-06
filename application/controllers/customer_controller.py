@@ -11,3 +11,7 @@ def create_customer_address(customer, address):
 
 def get_customers():
     return customer_repository.get_customers()
+
+
+def get_customer_by_id(customer_id):
+    return customer_repository.get_customer_by_id(customer_id)
