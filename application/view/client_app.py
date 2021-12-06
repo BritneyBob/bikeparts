@@ -1,7 +1,7 @@
 # from application.view.options import main_menu, product_menu, customer_menu, procurement_menu,
 # pricing_menu, store_menu
 # from application.view.spare_parts import show_all_spare_parts, show_spare_part
-from application.view import options, spare_parts, customers, suppliers
+from application.view import options, spare_parts, customers, suppliers, stores
 
 
 def main():
@@ -68,7 +68,7 @@ def main():
                     sub_choice = options.store_menu()
                     match sub_choice:
                         case "1":
-                            print("<This string will be replaced with method to redirect user>")
+                            stores.view_all_stores()
                         case "2":
                             print("<This string will be replaced with method to redirect user>")
                         case "3":

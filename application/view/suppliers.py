@@ -32,4 +32,4 @@ def negotiate_supplier_prices():
 
 
 
-    pass
+
