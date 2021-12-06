@@ -1,5 +1,6 @@
 from application.data.db import session
-from application.data.models import SparePartSupplier, SparePart, SparePartInStore, spare_parts_have_manufacturers_table
+from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
+    spare_parts_have_manufacturers_table, Company, Supplier
 
 
 def create_spare_part(spare_part):
@@ -36,7 +37,12 @@ def get_spare_part_by_id(_id):
 
 
 def get_spare_part_supplier_by_id(_id):
-    return session.query(SparePartSupplier).filter(SparePartSupplier.product_number == _id).all()
+    return session.query(Company).join(Supplier).filter(Supplier.supplier_id == 45).all()
+
+
+def get_suppliers_for_spare_part(_id):
+    # actual_suppliers = session.query(SparePartSupplier).filter(SparePartSupplier.product_number == _id).all()
+    # return session.query(SparePartSupplier).filter(SparePartSupplier.product_number == _id).all()
 
 
 def get_spare_parts_by_filter(_filter):

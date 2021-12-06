@@ -212,8 +212,7 @@ class SparePart(Base):
     stores = relationship("SparePartInStore", back_populates="spare_part")
 
     def __repr__(self):
-        return f"Product number: {self.product_number}\tName: {self.name}\tDescription: {self.description}\t" \
-               f"Price: {self.sell_price} EUR"
+        return f"{self.product_number}, {self.name}, {self.description}, {self.sell_price}"
 
 
 class SparePartInStore(Base):
@@ -249,6 +248,10 @@ class SparePartSupplier(Base):
     spare_part = relationship("SparePart", back_populates="suppliers")
     supplier = relationship("Supplier", back_populates="spare_parts")
 
+    def __repr__(self):
+        return f"{self.product_number}, {self.supplier_id}, {self.buy_price}, {self.delivery_time}" \
+               f" - {self.spare_part}, {self.supplier}"
+
 
 class Store(Base):
     __tablename__ = "stores"
@@ -270,3 +273,6 @@ class Supplier(Base):
 
     company = relationship("Company", back_populates="supplier")
     spare_parts = relationship("SparePartSupplier", back_populates="supplier")
+
+    def __repr__(self):
+        return f"{self.supplier_id}, {self.company_id} - {self.company}, {self.spare_parts}"

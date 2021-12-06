@@ -6,8 +6,7 @@ def show_all_spare_parts():
     print("List of available spare parts: ")
     spare_parts = spare_part_controller.get_spare_parts()
     for spare_part in spare_parts:
-        print(f"Product number: {spare_part.product_number}\t\tName: {spare_part.name}"
-              f"\t\tDescription: {spare_part.description}\t\tPrice: {spare_part.sell_price} EUR")
+        print(spare_part)
 
 
 def show_spare_part():
@@ -24,7 +23,8 @@ def show_spare_part():
     print(f"Sell price: {spare_part.sell_price} EUR")
     print(f"Available from the following suppliers: ")
     for supplier in suppliers:
-        print(f"Name: {supplier.supplier}\tBuy price: {supplier.buy_price} EUR")
+        print(supplier.company_name)
+        # print(f"Name: {supplier.supplier}\tBuy price: {supplier.buy_price} EUR")
     # Add suppliers and price
     print(f"Manufactured by: ")
     # Add manufacturer
