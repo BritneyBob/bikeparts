@@ -42,3 +42,11 @@ def get_spare_part_supplier_by_id(_id):
 
 def get_spare_parts_by_filter(_filter):
     return session.query(SparePart).filter(SparePart.name.like(f'%{_filter}%')).all()
+
+
+def adjust_price(product_no, new_price):
+    product = session.query(SparePart).filter(SparePart.product_number == product_no).first()
+    product.sell_price = new_price
+    print()
+    session.commit()
+

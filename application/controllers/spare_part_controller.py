@@ -31,3 +31,7 @@ def get_spare_part_supplier_by_id(_id):
 
 def get_spare_parts_by_filter(_filter):
     return spr.get_spare_parts_by_filter(_filter)
+
+  
+def adjust_price(product_no, new_price):
+    return spr.adjust_price(product_no, new_price)
