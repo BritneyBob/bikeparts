@@ -1,5 +1,6 @@
 from application.data.db import session
-from application.data.models import SparePartSupplier, SparePart, SparePartInStore, spare_parts_have_manufacturers_table
+from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
+    spare_parts_have_manufacturers_table, car_models_have_spare_parts_table
 
 
 def create_spare_part(spare_part):

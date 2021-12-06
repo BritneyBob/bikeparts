@@ -15,5 +15,4 @@ def create_car_model_spare_part(car_model, spare_part):
 
 
 def get_car_model_by_id(car_model_id):
-    x = session.query(CarModel).filter(CarModel.car_model_id == car_model_id).first()
-    return x
+    return session.query(CarModel).filter(CarModel.car_model_id == car_model_id).first()
