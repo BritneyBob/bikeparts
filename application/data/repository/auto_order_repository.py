@@ -1,3 +1,4 @@
+from application.controllers import store_controller
 from application.data.db import session
 from application.data.models import SparePartInStore, SparePartSupplier, AutoOrder
 from datetime import datetime, date, timedelta
@@ -26,16 +27,5 @@ def create_auto_order(store_id, product_number, supplier_id):
                                arrival_date=arrival_date, ordered_quantity=ordered_quantity, price_each=price_each)
     session.add(new_auto_order)
     session.commit()
-    update_stock_in_store(store_id, product_number, ordered_quantity)
-
-
-def update_stock_in_store(store_id, product_number, ordered_quantity):
-    product_in_stock = session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id).\
-        filter(SparePartInStore.product_number == product_number).first()
-    product_in_stock.quantity_in_stock += ordered_quantity
-    session.commit()
-    updated_product_in_stock = session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id). \
-        filter(SparePartInStore.product_number == product_number).first()
-    print(f'Ordered {ordered_quantity} items of product number {product_number}. Quantity in stock in store {store_id} is now '
-          f'{updated_product_in_stock.quantity_in_stock} items.')
-
+    # move row below to where the function create_auto_order is called?
+    store_controller.update_stock_in_store(store_id, product_number, ordered_quantity)
