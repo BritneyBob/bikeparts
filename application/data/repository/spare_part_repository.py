@@ -1,6 +1,6 @@
 from application.data.db import session
 from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
-    spare_parts_have_manufacturers_table, Company, Supplier
+    Company, Supplier, Manufacturer, spare_parts_have_manufacturers_table
 
 
 def create_spare_part(spare_part):
@@ -32,18 +32,29 @@ def get_spare_parts():
     return session.query(SparePart).all()
 
 
-def get_spare_part_by_id(_id):
-    return session.query(SparePart).filter(SparePart.product_number == _id).first()
+def get_spare_parts_by_filter(name_filter):
+    return session.query(SparePart).filter(SparePart.name.like(f'%{name_filter}%')).all()
 
 
-def get_spare_part_supplier_by_id(_id):
-    return session.query(Company).join(Supplier).filter(Supplier.supplier_id == 45).all()
+def get_spare_part_by_id(product_no):
+    return session.query(SparePart).filter(SparePart.product_number == product_no).first()
 
 
-def get_suppliers_for_spare_part(_id):
-    # actual_suppliers = session.query(SparePartSupplier).filter(SparePartSupplier.product_number == _id).all()
-    # return session.query(SparePartSupplier).filter(SparePartSupplier.product_number == _id).all()
+# returns a bunch of supplier id's based on the selected product
+def get_spare_part_suppliers(product_no):
+    return session.query(SparePartSupplier).filter(SparePartSupplier.product_number == product_no).all()
 
 
-def get_spare_parts_by_filter(_filter):
-    return session.query(SparePart).filter(SparePart.name.like(f'%{_filter}%')).all()
+# returns company related to supplier_id
+def get_spare_part_supplier_company(supplier_id):
+    return session.query(Company).join(Supplier).filter(Supplier.supplier_id == supplier_id).all()
+
+
+# returns a bunch of manufacturer id's based on the selected product
+def get_spare_part_manufacturers(product_no):
+    return session.query(spare_parts_have_manufacturers_table).filter(spare_parts_have_manufacturers_table.product_number == product_no).all()
+
+
+# returns company related to supplier_id
+def get_spare_part_manufacturer_company(manufacturer_id):
+    return session.query(Company).join(Manufacturer).filter(Manufacturer.manufacturer_id == manufacturer_id).all()

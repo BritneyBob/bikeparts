@@ -96,6 +96,9 @@ class Company(Base):
     supplier = relationship("Supplier", back_populates="company", uselist=False)
     addresses = relationship("Address", secondary=companies_has_addresses_table, back_populates='companies')
 
+    def __repr__(self):
+        return f"{self.company_id}, {self.company_name}, {self.contact}, {self.contact_phonenumber}, " \
+               f"{self.contact_email}"
 
 class Customer(Base):
     __tablename__ = "customers"
