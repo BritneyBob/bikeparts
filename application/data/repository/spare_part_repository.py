@@ -50,3 +50,7 @@ def adjust_price(product_no, new_price):
     print()
     session.commit()
 
+#
+# def get_spare_parts_without_car_model():
+#     return session.query(SparePart).filter()
+
