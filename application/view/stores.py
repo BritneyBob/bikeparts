@@ -10,3 +10,4 @@ def view_all_stores():
         print(f'\nAddress: {store.address.address_line2} {store.address.city_name}')
         print(f'Country: {store.address.country_name}')
         print(f'Store id: {store.store_id}')
+
