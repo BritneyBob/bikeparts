@@ -60,6 +60,7 @@ def main():
                             print("<This string will be replaced with method to redirect user>")
                         case "3":
                             # auto_order.evaluate_auto_order(12, 48)
+                            print("<This string will be replaced with method to redirect user>")
                         case "9":
                             print("Going back to main menu")
                             break
