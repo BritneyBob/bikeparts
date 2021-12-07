@@ -1,4 +1,4 @@
-from application.controllers.auto_order_controller import low_index, lowest_buy_price
+from application.controllers.auto_order_controller import low_index, lowest_buy_price, create_auto_order
 
 
 def evaluate_auto_order(store_id, product_number):
@@ -11,17 +11,27 @@ def evaluate_auto_order(store_id, product_number):
 
 def send_auto_order(store_id, product_number):
     check_lowest_buy_price = lowest_buy_price(product_number)
-    price_id_delivery = {'buy_price': 10000, 'id': 0, 'delivery_time': 1000}
-    for supplier in check_lowest_buy_price:
+    price_id_delivery = {'buy_price': 10000, 'supplier_id': 0, 'delivery_time': 1000}
+    for supplier in check_lowest_buy_price:  # Beautify the code!
         if price_id_delivery['buy_price'] > supplier.buy_price:
             price_id_delivery['buy_price'] = supplier.buy_price
-            price_id_delivery['id'] = supplier.supplier_id
+            price_id_delivery['supplier_id'] = supplier.supplier_id
             price_id_delivery['delivery_time'] = supplier.delivery_time
-        elif supplier.buy_price == price_id_delivery['buy_price']:
+        elif price_id_delivery['buy_price'] == supplier.buy_price:
             if price_id_delivery['delivery_time'] > supplier.delivery_time:
                 price_id_delivery['buy_price'] = supplier.buy_price
-                price_id_delivery['id'] = supplier.supplier_id
+                price_id_delivery['supplier_id'] = supplier.supplier_id
                 price_id_delivery['delivery_time'] = supplier.delivery_time
+
+    supplier_id = price_id_delivery['supplier_id']
+    create_order(store_id, product_number, supplier_id)
+    # Found supplier to order from
+    # Make an object in auto_order
+    # Change quantity in stock
+
+
+def create_order(store_id, product_number, supplier_id):
+    create_auto_order(store_id, product_number, supplier_id)
     print()
 
 
