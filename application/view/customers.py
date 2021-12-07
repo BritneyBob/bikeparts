@@ -1,5 +1,15 @@
+from datetime import datetime
+
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
-    car_model_controller, spare_part_controller
+    car_model_controller, spare_part_controller, store_controller
+
+
+def print_customer_name(customer):
+    if customer.customer_name:
+        print(f"Name: {customer.customer_name}\t", end='')
+        print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}\t", end='')
+    else:
+        print(f"Name: {customer.contact_last_name}, {customer.contact_first_name} \t", end='')
 
 
 def show_all_customers():
@@ -7,11 +17,7 @@ def show_all_customers():
     customers = customer_controller.get_customers()
     for customer in customers:
         print(f"Id: {customer.customer_id}\t", end='')
-        if customer.customer_name:
-            print(f"Name: {customer.customer_name}\t", end='')
-            print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}\t", end='')
-        else:
-            print(f"Name: {customer.contact_last_name}, {customer.contact_first_name} \t", end='')
+        print_customer_name(customer)
         print(f"Phone number: {customer.phonenumber}\t")
 
 
@@ -20,19 +26,16 @@ def show_all_customer_orders():
     customer_orders = customer_order_controller.get_customer_orders()
     for customer_order in customer_orders:
         print(f"Order number: {customer_order.customer_order_number}\t", end='')
-        if True:
-            print(f"Customer:\t", end='')
-            print(f"Contact: , \t", end='')
-        else:
-            print(f"Customer: , \t", end='')
-        print(f"Store: \t", end='')
-        print(f"Employee: \t", end='')
-        print(f"Order date: \t", end='')
-        if True:
-            print(f"Shipped date: \t", end='')
-        print(f"Status: \t", end='')
-        if True:
+        print_customer_name(customer_order.customer)
+        print(f"Store: {customer_order.store}\t", end='')
+        print(f"Employee: {customer_order.employee}\t", end='')
+        print(f"Order date: {customer_order.order_date}\t", end='')
+        if customer_order.shipped_date:
+            print(f"Shipped date: {customer_order.shipped_date}\t", end='')
+        print(f"Status: {customer_order.status}\t", end='')
+        if {customer_order.comments}:
             print(f"Comments: \t", end='')
+        print()
 
 
 def get_customer_name(customer_id):
@@ -134,6 +137,33 @@ def choose_store(product, product_number, stores):
     return chosen_store
 
 
+def choose_employee(store):
+    employees = store.store.employees
+    employee_ids = []
+    chosen_employee = None
+
+    print(f"These are the employees working in store number {store.store_id}:")
+    for employee in employees:
+        employee_id = employee.employee_id
+        print(f"{employee_id}. {employee.last_name}, {employee.first_name}")
+        employee_ids.append(employee_id)
+
+    has_chosen = False
+    while not has_chosen:
+        chosen_employee_id = int(input(f"\nWho is selling the product "
+                                       f"({', '.join([str(i) for i in employee_ids])})?: "))
+
+        for employee in employees:
+            if employee.employee_id == chosen_employee_id:
+                chosen_employee = employee
+                has_chosen = True
+                break
+        if not has_chosen:
+            print("Please choose one of the employees listed.")
+
+    return chosen_employee
+
+
 def print_list_of_fits_all_products():
     fits_all_spare_parts = []
     spare_parts_ids = []
@@ -148,7 +178,37 @@ def print_list_of_fits_all_products():
     return fits_all_spare_parts, spare_parts_ids
 
 
-def product_not_in_stock(chosen_car, chosen_product):
+def order_spare_part_fits_all(products, product_numbers, customer_id):
+    chosen_product = None
+    has_chosen = False
+    while not has_chosen:
+        fits_all_product_choice = input("\nDoes the customer want to place an order for one of the products above? "
+                                        "(Enter product number or N)?: ")
+
+        if fits_all_product_choice.upper() == "N":
+            print("Ok. Going back to customer menu.")
+
+        elif int(fits_all_product_choice) in product_numbers:
+            for product in products:
+                if product.product_number == int(fits_all_product_choice):
+                    chosen_product = product
+                    has_chosen = True
+                    break
+            stores = chosen_product.stores
+            if len(stores) == 0:
+                print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: "
+                      f"{chosen_product.description} in stock.")
+                print("Going back to main menu.")
+            else:
+                chosen_store = choose_store(chosen_product, chosen_product.product_number, stores)
+                chosen_employee = choose_employee(chosen_store)
+                place_order(chosen_product, chosen_store, chosen_employee, customer_id)
+
+        else:
+            print("Please choose one of the product numbers listed, or N.")
+
+
+def product_not_in_stock(chosen_car, chosen_product, customer_id):
     print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: {chosen_product.description} "
           f"for {chosen_car.manufacturer} {chosen_car.model}, {chosen_car.year} in stock")
     find_fits_all_choice = input("Does the customer want to see the assortment for products that works with "
@@ -156,46 +216,47 @@ def product_not_in_stock(chosen_car, chosen_product):
 
     if find_fits_all_choice.upper() == "Y":
         products, product_numbers = print_list_of_fits_all_products()
-        new_chosen_product = None
-        has_chosen = False
-        while not has_chosen:
-            fits_all_product_choice = input("\nDoes the customer want to place an order for one of the products above? "
-                                            "(Enter product number or N)?: ")
-
-            if fits_all_product_choice.upper() == "N":
-                print("Ok. Going back to customer menu.")
-
-            elif int(fits_all_product_choice) in product_numbers:
-                for product in products:
-                    if product.product_number == int(fits_all_product_choice):
-                        new_chosen_product = product
-                        has_chosen = True
-                        break
-                stores = new_chosen_product.stores
-                if len(stores) == 0:
-                    print(f"Unfortunately we don't have a/an {new_chosen_product.name}. Description: "
-                          f"{new_chosen_product.description} in stock.")
-                    print("Going back to main menu.")
-                else:
-                    chosen_store = choose_store(new_chosen_product, new_chosen_product.product_number, stores)
-                    place_order(new_chosen_product, chosen_store)
-
-            else:
-                print("Please choose one of the product numbers listed, or N.")
+        order_spare_part_fits_all(products, product_numbers, customer_id)
     else:
         print("Ok. Going back to customer menu.")
 
 
-def place_order(product, store):
+def place_order(product, store, employee, customer_id):
+    customer_order = {
+        "customer_id": customer_id,
+        "store_id": store.store_id,
+        "employee_id": employee.employee_id,
+        "order_date": datetime.now(),
+        "status": "Ordered"
+    }
+
     order = input(
-        f"Does the customer want to place an order for one {product.name} from store number {store.store_id} in "
-        f"{store.store.address.city_name}, {store.store.address.country_name} (Y or N)? ")
+        f"Does the customer want to place an order for one {product.name} from {employee.first_name} "
+        f"{employee.last_name} in store number {store.store_id} in {store.store.address.city_name}, "
+        f"{store.store.address.country_name} (Y or N)? ")
 
     if order.upper() == "Y":
-        # TODO: Write function to remove one of chosen product from stock
         print(f"Order placed for 1 {product.name}, €{product.sell_price}")
+        customer_order_controller.create_customer_order(customer_order)
+        insert_order_details(customer_id, product, product.product_number, 1)
+        store_controller.update_stock_in_store(store.store_id, product.product_number, -1)
     else:
         print("Ok. No order was placed.")
+
+
+def insert_order_details(customer_id, product, product_number, quantity):
+    order = customer_order_controller.get_customer_orders_by_customer_id(customer_id)[-1]
+    order_number = order.customer_order_number
+    price_each = product.sell_price
+
+    order_details = {
+        "customer_order_number": order_number,
+        "product_number": product_number,
+        "price_each": price_each,
+        "quantity_ordered": quantity
+    }
+
+    customer_order_controller.create_order_details(order_details)
 
 
 def order_choices():
@@ -209,12 +270,20 @@ def order_choices():
         chosen_product, product_number = choose_spare_part(chosen_car)
         stores = chosen_product.stores
         if len(stores) == 0:
-            product_not_in_stock(chosen_car, chosen_product)
+            product_not_in_stock(chosen_car, chosen_product, customer_id)
         else:
             chosen_store = choose_store(chosen_product, product_number, stores)
-            place_order(chosen_product, chosen_store)
+            chosen_employee = choose_employee(chosen_store)
+            place_order(chosen_product, chosen_store, chosen_employee, customer_id)
 
     else:
         print(f"The chosen customer {customer} does not own any car.")
+        find_fits_all_choice = input("Does the customer want to see the assortment for products that works with "
+                                     "all car models (Y or N)?: ")
 
+        if find_fits_all_choice.upper() == "Y":
+            products, product_numbers = print_list_of_fits_all_products()
+            order_spare_part_fits_all(products, product_numbers, customer_id)
+        else:
+            print("Ok. Going back to customer menu.")
 
