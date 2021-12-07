@@ -14,9 +14,9 @@ def main():
                     sub_choice = options.product_menu()
                     match sub_choice:
                         case "1":
-                            spare_parts.show_all_spare_parts()
+                            spare_parts.search_spare_parts()
                         case "2":
-                            spare_parts.show_spare_part()
+                            spare_parts.show_one_spare_part()
                         case "3":
                             print("<This string will be replaced with method to redirect user>")
                         case "4":
@@ -46,7 +46,7 @@ def main():
                         case "2":
                             customers.show_all_customer_orders()
                         case "3":
-                            customers.place_order()
+                            customers.order_choices()
                         case "9":
                             print("Going back to main menu")
                             break

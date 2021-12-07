@@ -27,7 +27,7 @@ def product_menu():
     print("*" * 50)
     print("Product menu")
     print("*" * 50)
-    print("1. View all products")
+    print("1. View list of products")
     print("2. View product details")
     print("3. Update product")
     print("4. Add product")
