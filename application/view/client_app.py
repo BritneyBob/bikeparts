@@ -46,7 +46,7 @@ def main():
                         case "2":
                             customers.show_all_customer_orders()
                         case "3":
-                            customers.place_order()
+                            customers.order_choices()
                         case "9":
                             print("Going back to main menu")
                             break
