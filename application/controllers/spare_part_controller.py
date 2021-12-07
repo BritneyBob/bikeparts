@@ -43,3 +43,7 @@ def get_spare_part_manufacturers(product_no):
 
 def get_spare_part_manufacturer_company(manufacturer_id):
     return spr.get_spare_part_manufacturer_company(manufacturer_id)
+
+
+def adjust_price(product_no, new_price):
+    return spr.adjust_price(product_no, new_price)
