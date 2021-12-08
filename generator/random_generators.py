@@ -7,6 +7,9 @@ from decimal import Decimal
 # from sqlalchemy.exc import IntegrityError
 #
 # from application.controllers.spare_part_controller import create_spare_part_manufacturer
+from sqlalchemy.exc import IntegrityError
+
+from application.controllers.spare_part_controller import create_spare_part_supplier
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -522,7 +525,7 @@ def generate_random_customer():
 
 
 def generate_random_store():
-    address_id = random.choice(range(1,451))
+    address_id = random.choice(range(1, 451))
 
     return {"address_id": address_id}
 
@@ -633,8 +636,8 @@ def generate_random_car():
     }
 
 
-def generate_random_spare_part_supplier():
-    product_number = random.choice(range(1, 167))
+def generate_random_spare_part_supplier(product_no):
+    product_number = product_no  # random.choice(range(1, 167)), exclude product_no if randomizing
     supplier_id = random.choice(range(1, 82))
     buy_price = Decimal(random.choice(np.arange(1.99, 500, 0.75)).round(2))
     delivery_time = random.choice(range(1, 22))
@@ -721,9 +724,9 @@ def main():
     #    spare_part = generate_random_product()
     #    create_spare_part(spare_part)
 
-    # for _ in range(200):
+    # for _ in range(3):
     #     try:
-    #         spare_part_supplier = generate_random_spare_part_supplier()
+    #         spare_part_supplier = generate_random_spare_part_supplier(154)
     #         create_spare_part_supplier(spare_part_supplier)
     #     except IntegrityError:
     #         pass
