@@ -23,7 +23,7 @@ def show_all_customers():
         print_customer_info(customer)
 
 
-def insert_new_address_info(address_type):
+def insert_new_address_info(address_type, customer_id, customer):
     new_address_line2 = input("Please enter new street address: ")
     new_zipcode = input("Please enter new zipcode: ")
     new_city = input("Please enter new city: ")
@@ -39,6 +39,7 @@ def insert_new_address_info(address_type):
     # address_controller.create_address(address)
     customer_address = {"customer_id": customer_id, "address_id": customer.addresses}
     # customer_controller.create_customer_address(customer_address)
+
 
 def update_customer():
     customer_id = input("Please enter the customer id of the customer you would like to update information for: ")
@@ -66,16 +67,16 @@ def update_customer():
         case "2":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
-            customer_controller.update_contact_name(new_contact_first_name, new_contact_last_name)
+            customer_controller.update_contact_name(customer, new_contact_first_name, new_contact_last_name)
         case "3":
             address_type = 1
-            insert_new_address_info(address_type)
+            insert_new_address_info(address_type, customer_id, customer)
         case "4":
             address_type = 2
-            insert_new_address_info(address_type)
+            insert_new_address_info(address_type, customer_id, customer)
         case "5":
             new_phone_number = input("Please enter new phone number: ")
-            customer_controller.update_contact_phone_number(new_phone_number)
+            customer_controller.update_contact_phone_number(customer, new_phone_number)
         case "9":
             options.customer_menu()
 

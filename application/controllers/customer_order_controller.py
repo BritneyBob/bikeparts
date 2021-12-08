@@ -19,3 +19,7 @@ def create_order_details(order_details):
 
 def get_order_details_by_order_number(order_number):
     return customer_order_repository.get_order_details_by_order_number(order_number)
+
+
+def get_customer_orders_by_order_number(order_number):
+    return customer_order_repository.get_customer_orders_by_order_number(order_number)
