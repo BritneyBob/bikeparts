@@ -2,38 +2,105 @@ from datetime import datetime
 
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
+from application.view import options
+
+
+def print_customer_order(customer_order):
+    order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
+                                                                                customer_order_number)
+    print("*" * 50)
+    print(f"Order number {customer_order.customer_order_number}:")
+    print(f"Product: {order_details.spare_part.product_number}, {order_details.spare_part.name}. Description: "
+          f"{order_details.spare_part.description}")
+    print(f"Price per product: €{order_details.price_each}")
+    print(f"Quantity: {order_details.quantity_ordered}")
+    print(f"Total price: €{order_details.price_each * order_details.quantity_ordered}")
+    print(f"Customer: {customer_order.customer.customer_id}, ", end='')
+    if customer_order.customer.customer_name:
+        print(f"{customer_order.customer.customer_name}\t", end='')
+        print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
+              f", {customer_order.customer.phonenumber}")
+    else:
+        print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
+              f"{customer_order.customer.phonenumber}")
+    print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
+          f"{customer_order.store.address.city_name}")
+    print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
+          f"{customer_order.employee.first_name}")
+    print(f"Order date: {customer_order.order_date}")
+    if customer_order.shipped_date:
+        print(f"Shipped date: {customer_order.shipped_date}")
+    print(f"Status: {customer_order.status}")
+    print(f"Comments: {customer_order.comments}")
 
 
 def show_all_customer_orders():
     print("All customer orders: ")
     customer_orders = customer_order_controller.get_customer_orders()
     for customer_order in customer_orders:
-        order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
-                                                                                    customer_order_number)
-        print("*" * 50)
-        print(f"Order number {customer_order.customer_order_number}:")
-        print(f"Product: {order_details.spare_part.product_number}, {order_details.spare_part.name}. Description: "
-              f"{order_details.spare_part.description}")
-        print(f"Price per product: €{order_details.price_each}")
-        print(f"Quantity: {order_details.quantity_ordered}")
-        print(f"Total price: €{order_details.price_each * order_details.quantity_ordered}")
-        print(f"Customer: {customer_order.customer.customer_id}, ", end='')
-        if customer_order.customer.customer_name:
-            print(f"{customer_order.customer.customer_name}\t", end='')
-            print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
-                  f", {customer_order.customer.phonenumber}")
-        else:
-            print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
-                  f"{customer_order.customer.phonenumber}")
-        print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
-              f"{customer_order.store.address.city_name}")
-        print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
-              f"{customer_order.employee.first_name}")
-        print(f"Order date: {customer_order.order_date}")
-        if customer_order.shipped_date:
-            print(f"Shipped date: {customer_order.shipped_date}")
-        print(f"Status: {customer_order.status}")
-        print(f"Comments: {customer_order.comments}")
+        print_customer_order(customer_order)
+
+
+def update_customer_order():
+    order_number = input("Please enter the order id of the order you would like to update: ")
+    order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    print_customer_order(order)
+
+    print("1. Product")
+    print("2. Price")
+    print("3. Quantity")
+    print("4. Customer")
+    print("5. Store")
+    print("6. Employee")
+    print("7. Shipped date")
+    print("8. Status")
+    print("9. Comments")
+    print()
+    print("0. Back to customer menu")
+    print()
+    while True:
+        choice = input("What would you like to change (1-9): ")
+        if choice in "0123456789" and len(choice) == 1:
+            break
+        print("Valid options are 1, 2, 3, 4, 5, 6, 7, 8 or 9")
+
+    match choice:
+        case "1":
+            new_product_id = input("Please enter new product id: ")
+            customer_order_controller.update_product(order, new_product_id)
+        case "2":
+            new_price = float(input("Please enter new price: "))
+            customer_order_controller.update_price(order, new_price)
+        case "3":
+            new_quantity = int(input("Please enter new quantity: "))
+            customer_order_controller.update_quantity(order, new_quantity)
+        case "4":
+            new_customer_id = input("Please enter new customer id: ")
+            customer_order_controller.update_customer(order, new_customer_id)
+        case "5":
+            # TODO: First check if the product is in stock in another store. If it is, print list of stores to choose
+            #  from. Must also choose new employee
+            new_store_id = input("Please enter new store id: ")
+            customer_order_controller.update_store(order, new_store_id)
+            new_employee_id = input("Please enter new employee id: ")
+            customer_order_controller.update_employee(order, new_employee_id)
+        case "6":
+            # TODO: First print list of employees from store to choose from
+            new_employee_id = input("Please enter new employee id: ")
+            customer_order_controller.update_employee(order, new_employee_id)
+        # TODO: Options 7-9
+        case "7":
+            pass
+        case "8":
+            pass
+        case "9":
+            pass
+        case "0":
+            options.customer_menu()
+
+    print("The order was updated with the new information: ")
+    updated_order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    print_customer_order(updated_order)
 
 
 def get_customer_name(customer_id):

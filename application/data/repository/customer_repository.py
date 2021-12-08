@@ -27,9 +27,12 @@ def update_customer_name(customer, new_customer_name):
     session.commit()
 
 
-def update_contact_name(new_contact_first_name, new_contact_last_name):
-    return None
+def update_contact_name(customer, new_contact_first_name, new_contact_last_name):
+    customer.contact_first_name = new_contact_first_name
+    customer.contact_last_name = new_contact_last_name
+    session.commit()
 
 
-def update_contact_phone_number(new_phone_number):
-    return None
+def update_contact_phone_number(customer, new_phone_number):
+    customer.phonenumber = new_phone_number
+    session.commit()
