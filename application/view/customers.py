@@ -104,7 +104,6 @@ def choose_spare_part(chosen_car_model):
     spare_parts = chosen_car_model.spare_parts
     product_numbers = []
     chosen_product = None
-    chosen_product_number = None
 
     print(f"\nWe have the following spare part/s for {chosen_car_model.manufacturer} {chosen_car_model.model}, "
           f"{chosen_car_model.year}:")
@@ -129,13 +128,13 @@ def choose_spare_part(chosen_car_model):
             if not has_chosen:
                 print("Please choose one of the product numbers listed.")
 
-    return chosen_product, chosen_product_number
+    return chosen_product
 
 
-def choose_store(product, product_number, stores):
+def choose_store(product, stores):
     store_ids = []
     chosen_store = None
-    print(f"{product_number}.\t{product.name}, {product.description} is in stock in the following store/s:")
+    print(f"The following stores sells {product.name}:")
     for store in stores:
         print(f"Store id {store.store_id} at {store.store.address.address_line2} in "
               f"{store.store.address.city_name}, {store.store.address.country_name}")
@@ -187,6 +186,22 @@ def choose_employee(store):
     return chosen_employee
 
 
+def choose_and_check_quantity(product, store):
+    has_chosen = False
+    product_in_stock = store_controller.get_spare_part_in_store_by_store_id_and_product_number(store.store_id,
+                                                                                               product.product_number)
+    quantity_in_stock = product_in_stock.quantity_in_stock
+    print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_id}, "
+          f"{store.store.address.city_name}")
+
+    while not has_chosen:
+        quantity = int(input(f"How many {product.name} does the customer want?: "))
+        if quantity > quantity_in_stock:
+            print(f"You can only order a quantity that is less or equal to {quantity_in_stock}")
+        else:
+            return quantity
+
+
 def print_list_of_fits_all_products():
     fits_all_spare_parts = []
     spare_parts_ids = []
@@ -223,9 +238,10 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                       f"{chosen_product.description} in stock.")
                 print("Going back to main menu.")
             else:
-                chosen_store = choose_store(chosen_product, chosen_product.product_number, stores)
+                chosen_store = choose_store(chosen_product, stores)
                 chosen_employee = choose_employee(chosen_store)
-                place_order(chosen_product, chosen_store, chosen_employee, customer_id)
+                quantity = choose_and_check_quantity(chosen_product, chosen_store)
+                place_order(chosen_product, chosen_store, chosen_employee, customer_id, quantity)
 
         else:
             print("Please choose one of the product numbers listed, or N.")
@@ -244,7 +260,7 @@ def product_not_in_stock(chosen_car, chosen_product, customer_id):
         print("Ok. Going back to customer menu.")
 
 
-def place_order(product, store, employee, customer_id):
+def place_order(product, store, employee, customer_id, quantity):
     customer_order = {
         "customer_id": customer_id,
         "store_id": store.store_id,
@@ -254,15 +270,16 @@ def place_order(product, store, employee, customer_id):
     }
 
     order = input(
-        f"Does the customer want to place an order for one {product.name} from {employee.first_name} "
+        f"Does the customer want to place an order for {quantity} {product.name} from {employee.first_name} "
         f"{employee.last_name} in store number {store.store_id} in {store.store.address.city_name}, "
         f"{store.store.address.country_name} (Y or N)? ")
 
     if order.upper() == "Y":
-        print(f"Order placed for 1 {product.name}, €{product.sell_price}")
+        print(f"Order placed for {quantity} {product.name}, €{product.sell_price}. Total price: "
+              f"{quantity * product.sell_price}")
         customer_order_controller.create_customer_order(customer_order)
-        insert_order_details(customer_id, product, product.product_number, 1)
-        store_controller.update_stock_in_store(store.store_id, product.product_number, -1)
+        insert_order_details(customer_id, product, product.product_number, quantity)
+        store_controller.update_stock_in_store(store.store_id, product.product_number, -quantity)
     else:
         print("Ok. No order was placed.")
 
@@ -290,14 +307,15 @@ def place_order_choices():
     if cars:
         car_models = print_customers_cars(cars, customer)
         chosen_car = choose_car_model(car_models)
-        chosen_product, product_number = choose_spare_part(chosen_car)
+        chosen_product = choose_spare_part(chosen_car)
         stores = chosen_product.stores
         if len(stores) == 0:
             product_not_in_stock(chosen_car, chosen_product, customer_id)
         else:
-            chosen_store = choose_store(chosen_product, product_number, stores)
+            chosen_store = choose_store(chosen_product, stores)
             chosen_employee = choose_employee(chosen_store)
-            place_order(chosen_product, chosen_store, chosen_employee, customer_id)
+            quantity = choose_and_check_quantity(chosen_product, chosen_store)
+            place_order(chosen_product, chosen_store, chosen_employee, customer_id, quantity)
 
     else:
         print(f"The chosen customer {customer} does not own any car.")
@@ -309,4 +327,3 @@ def place_order_choices():
             order_spare_part_fits_all(products, product_numbers, customer_id)
         else:
             print("Ok. Going back to customer menu.")
-
