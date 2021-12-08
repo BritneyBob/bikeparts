@@ -20,3 +20,16 @@ def get_customers():
 
 def get_customer_by_id(customer_id):
     return session.query(Customer).filter(Customer.customer_id == customer_id).first()
+
+
+def update_customer_name(customer, new_customer_name):
+    customer.customer_name = new_customer_name
+    session.commit()
+
+
+def update_contact_name(new_contact_first_name, new_contact_last_name):
+    return None
+
+
+def update_contact_phone_number(new_phone_number):
+    return None

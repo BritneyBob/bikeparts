@@ -1,11 +1,11 @@
 # from application.view.options import main_menu, product_menu, customer_menu, procurement_menu,
 # pricing_menu, store_menu
 # from application.view.spare_parts import show_all_spare_parts, show_spare_part
-from application.view import options, spare_parts, customers, suppliers, stores, auto_order
+from application.view import options, spare_parts, customers, suppliers, stores, auto_order, customer_orders
 
 
 def main():
-    # TODO All subchoices have to be replaced with methods to redirect user to their choice
+    # TODO All sub choices have to be replaced with methods to redirect user to their choice
     while True:
         menu_choice = options.main_menu()
         match menu_choice:
@@ -44,13 +44,13 @@ def main():
                         case "1":
                             customers.show_all_customers()
                         case "2":
-                            print("<This string will be replaced with method to redirect user>")
+                            customers.update_customer()
                         case "3":
-                            customers.show_all_customer_orders()
+                            customer_orders.show_all_customer_orders()
                         case "4":
                             print("<This string will be replaced with method to redirect user>")
                         case "5":
-                            customers.place_order_choices()
+                            customer_orders.place_order_choices()
                         case "9":
                             print("Going back to main menu")
                             break
