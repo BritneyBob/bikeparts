@@ -25,13 +25,9 @@ def send_auto_order(store_id, product_number):
 
     supplier_id = price_id_delivery['supplier_id']
     create_order(store_id, product_number, supplier_id)
-    # Found supplier to order from
-    # Make an object in auto_order
-    # Change quantity in stock
 
 
 def create_order(store_id, product_number, supplier_id):
     create_auto_order(store_id, product_number, supplier_id)
-    print()
 
 

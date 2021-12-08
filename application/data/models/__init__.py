@@ -50,6 +50,7 @@ class AutoOrder(Base):
     product_number = Column(Integer, nullable=False)
     store_id = Column(Integer, nullable=False)
     supplier_id = Column(Integer, nullable=False)
+    order_date = Column(Date, nullable=False)
     arrival_date = Column(Date)
     ordered_quantity = Column(Integer, nullable=False)
     price_each = Column(Numeric, nullable=False)
