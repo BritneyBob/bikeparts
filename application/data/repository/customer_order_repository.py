@@ -20,3 +20,7 @@ def create_order_details(order_details):
     order_details = OrderDetail(**order_details)
     session.add(order_details)
     session.commit()
+
+
+def get_order_details_by_order_number(order_number):
+    return session.query(OrderDetail).filter(OrderDetail.customer_order_number == order_number).first()

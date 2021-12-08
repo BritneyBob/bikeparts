@@ -65,17 +65,19 @@ def customer_menu():
     print("*" * 50)
     print("Customer menu")
     print("*" * 50)
-    print("1. View or update customer information")
-    print("2. View or update customer orders")
-    print("3. Place customer order")
+    print("1. Show all customers")
+    print("2. Update customer information")
+    print("3. Show all customer orders")
+    print("4. Update customer order")
+    print("5. Place customer order")
     print()
     print("9. Back to main menu")
     print()
     while True:
         choice = input("Choice: ")
-        if choice in "1239" and len(choice) == 1:
+        if choice in "123459" and len(choice) == 1:
             break
-        print("Valid options are 1, 2, 3 or 9")
+        print("Valid options are 1, 2, 3, 4, 5 or 9")
     return choice
 
 

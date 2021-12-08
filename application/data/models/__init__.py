@@ -221,7 +221,7 @@ class SparePart(Base):
     stores = relationship("SparePartInStore", back_populates="spare_part")
 
     def __repr__(self):
-        return f"{self.product_number}, {self.name}, {self.description}, {self.sell_price}"
+        return f"{self.product_number}, {self.name}, {self.description}, €{self.sell_price}"
 
 
 class SparePartInStore(Base):
