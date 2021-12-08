@@ -890,14 +890,14 @@ def main():
     #     car_model, spare_part = generate_random_car_model_spare_part()
     #     create_car_model_spare_part(car_model, spare_part)
 
-    for i in range(1, 101):
-        company_id = i
-        delivery_address_id = random.choice(delivery_address_ids)
-        billing_address_id = random.choice(billing_address_ids)
-        visiting_address_id = random.choice(visiting_address_ids)
-        create_company_address(company_id, delivery_address_id)
-        create_company_address(company_id, billing_address_id)
-        create_company_address(company_id, visiting_address_id)
+    # for i in range(1, 101):
+    #     company_id = i
+    #     delivery_address_id = random.choice(delivery_address_ids)
+    #     billing_address_id = random.choice(billing_address_ids)
+    #     visiting_address_id = random.choice(visiting_address_ids)
+    #     create_company_address(company_id, delivery_address_id)
+    #     create_company_address(company_id, billing_address_id)
+    #     create_company_address(company_id, visiting_address_id)
 
     # for i in range(1, 201):
     #     customer_id = i
