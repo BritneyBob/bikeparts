@@ -23,3 +23,8 @@ def update_stock_in_store(store_id, product_number, quantity):
         print(f"Ordered {quantity} items of product number {product_number}.")
     print(f"Quantity product {product_number} in stock, store {store_id}: {updated_product_in_stock.quantity_in_stock} "
           f"items.")
+
+
+def get_spare_part_in_store_by_store_id_and_product_number(store_id, product_number):
+    return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id). \
+        filter(SparePartInStore.product_number == product_number).first()
