@@ -1,5 +1,6 @@
 from application.controllers import spare_part_controller
 from application.controllers.spare_part_controller import adjust_price
+from application.controllers.store_controller import view_stores, get_spare_part_in_store_by_store_id_and_product_number
 
 
 def search_spare_parts():
@@ -26,8 +27,9 @@ def show_one_spare_part():
 def print_spare_part(product_no):
     spare_part = spare_part_controller.get_spare_part_by_id(product_no)
     suppliers = spare_part_controller.get_spare_part_suppliers(product_no)
-    # stores =
-    # manufacturers = spare_part_controller.get_spare_part_manufacturers(product_no)
+    manufacturer_id_s = [manufacturer.manufacturer_id for manufacturer in spare_part.manufacturers]
+    sorted_stores = sorted(view_stores(), key=lambda x: x.store_id)
+
     print("*" * 50)
     print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
     print(f"Description: {spare_part.description}")
@@ -35,13 +37,21 @@ def print_spare_part(product_no):
     print(f"Available from the following suppliers: ")
     for supplier in suppliers:
         supplier_company = spare_part_controller.get_spare_part_supplier_company(supplier.supplier_id)
-        print(f"Company name: {supplier_company}\tBuy price: {supplier.buy_price} EUR")
-        # TODO Find out why I can't print company name. supplier_company.company_name => error
-    # print(f"Manufactured by: ")
-    # for manufacturer in manufacturers:
-    #     manufacturer_company = spare_part_controller.get_spare_part_manufacturer_company(manufacturer.manufacturer_id)
-    #     print(f"Company name: {manufacturer_company}")
-    print(f"Items in stock: ")
+        for company in supplier_company:
+            print(f"\tCompany name: {company.company_name}\tBuy price: {supplier.buy_price} EUR")
+    print(f"Manufactured by: ")
+    for manufacturer_id in manufacturer_id_s:
+        manufacturer_company = spare_part_controller.get_spare_part_manufacturer_company(manufacturer_id)
+        for company in manufacturer_company:
+            print(f"\tCompany name: {company.company_name}")
+    print(f"Items in stock in the following stores: ")
+    for store in sorted_stores:
+        stock_info = get_spare_part_in_store_by_store_id_and_product_number(store.store_id, spare_part.product_number)
+        try:
+            print(f"\t{store.store_id} {store.address.city_name}\t "
+                  f"Stock: {stock_info.quantity_in_stock}\tShelf number: {stock_info.shelf_number}")
+        except:
+            continue
 
 
 def adjust_sell_margins():

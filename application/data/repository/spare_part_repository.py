@@ -1,6 +1,6 @@
 from application.data.db import session
 from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
-    Company, Supplier, Manufacturer, spare_parts_have_manufacturers_table, car_models_have_spare_parts_table
+    Company, Supplier, Manufacturer, spare_parts_have_manufacturers_table
 
 
 def create_spare_part(spare_part):
@@ -48,11 +48,6 @@ def get_spare_part_suppliers(product_no):
 # returns company related to supplier_id
 def get_spare_part_supplier_company(supplier_id):
     return session.query(Company).join(Supplier).filter(Supplier.supplier_id == supplier_id).all()
-
-
-# returns a bunch of manufacturer id's based on the selected product
-def get_spare_part_manufacturers(product_no):
-    return session.query(spare_parts_have_manufacturers_table).filter(spare_parts_have_manufacturers_table.product_number == product_no).all()
 
 
 # returns company related to manufacturer_id
