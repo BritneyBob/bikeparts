@@ -646,6 +646,7 @@ def generate_random_spare_part_supplier():
         "delivery_time": delivery_time
     }
 
+
 def generate_random_spare_part_in_store():
     letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ"
     numbers = "123456789"
@@ -671,6 +672,7 @@ def generate_random_car_model_spare_part():
     spare_part = random.choice(range(1, 167))
 
     return car_model, spare_part
+
 
 def generate_company_address():
     #company = random.choice(range(1, 101))
