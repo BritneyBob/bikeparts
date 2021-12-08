@@ -7,17 +7,25 @@ from application.controllers import customer_controller, customer_order_controll
 def print_customer_name(customer):
     if customer.customer_name:
         print(f"Name: {customer.customer_name}\t", end='')
-        print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}\t", end='')
+        print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}")
     else:
-        print(f"Name: {customer.contact_last_name}, {customer.contact_first_name} \t", end='')
+        print(f"Name: {customer.contact_last_name}, {customer.contact_first_name}")
 
 
 def show_all_customers():
     print("All customers: ")
     customers = customer_controller.get_customers()
     for customer in customers:
-        print(f"Id: {customer.customer_id}\t", end='')
-        print_customer_name(customer)
+        print(f"{customer.customer_id}:\t", end='')
+        if customer.customer_name:
+            print(f"{customer.customer_name}\t", end='')
+            print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}\t", end="")
+        else:
+            print(f"Name: {customer.contact_last_name}, {customer.contact_first_name}\t", end="")
+        addresses = customer.addresses
+        for address in addresses:
+            print(f"{address.address_type.address_type_name.capitalize()}: {address.address_line2}, {address.zipcode} "
+                  f"{address.city_name}, {address.country_name}\t", end="")
         print(f"Phone number: {customer.phonenumber}\t")
 
 
@@ -25,17 +33,32 @@ def show_all_customer_orders():
     print("All customer orders: ")
     customer_orders = customer_order_controller.get_customer_orders()
     for customer_order in customer_orders:
-        print(f"Order number: {customer_order.customer_order_number}\t", end='')
-        print_customer_name(customer_order.customer)
-        print(f"Store: {customer_order.store}\t", end='')
-        print(f"Employee: {customer_order.employee}\t", end='')
-        print(f"Order date: {customer_order.order_date}\t", end='')
+        order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
+                                                                                    customer_order_number)
+        print("*" * 50)
+        print(f"Order number {customer_order.customer_order_number}:")
+        print(f"Product: {order_details.spare_part.product_number}, {order_details.spare_part.name}. Description: "
+              f"{order_details.spare_part.description}")
+        print(f"Price per product: €{order_details.price_each}")
+        print(f"Quantity: {order_details.quantity_ordered}")
+        print(f"Total price: €{order_details.price_each * order_details.quantity_ordered}")
+        print(f"Customer: {customer_order.customer.customer_id}, ", end='')
+        if customer_order.customer.customer_name:
+            print(f"{customer_order.customer.customer_name}\t", end='')
+            print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
+                  f", {customer_order.customer.phonenumber}")
+        else:
+            print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
+                  f"{customer_order.customer.phonenumber}")
+        print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
+              f"{customer_order.store.address.city_name}")
+        print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
+              f"{customer_order.employee.first_name}")
+        print(f"Order date: {customer_order.order_date}")
         if customer_order.shipped_date:
-            print(f"Shipped date: {customer_order.shipped_date}\t", end='')
-        print(f"Status: {customer_order.status}\t", end='')
-        if {customer_order.comments}:
-            print(f"Comments: \t", end='')
-        print()
+            print(f"Shipped date: {customer_order.shipped_date}")
+        print(f"Status: {customer_order.status}")
+        print(f"Comments: {customer_order.comments}")
 
 
 def get_customer_name(customer_id):
@@ -259,7 +282,7 @@ def insert_order_details(customer_id, product, product_number, quantity):
     customer_order_controller.create_order_details(order_details)
 
 
-def order_choices():
+def place_order_choices():
     customer_id = input("Please enter customer id: ")
     customer = get_customer_name(customer_id)
     cars = customer_car_controller.get_customers_cars(customer_id)

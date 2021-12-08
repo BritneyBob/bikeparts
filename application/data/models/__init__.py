@@ -101,6 +101,7 @@ class Company(Base):
         return f"{self.company_id}, {self.company_name}, {self.contact}, {self.contact_phonenumber}, " \
                f"{self.contact_email}"
 
+
 class Customer(Base):
     __tablename__ = "customers"
 
@@ -169,6 +170,10 @@ class Employee(Base):
     customer_orders = relationship("CustomerOrder", back_populates="employee")
     store = relationship("Store", back_populates="employees")
 
+    def __repr__(self):
+        return f"Employee id: {self.employee_id}\tName: {self.last_name}, {self.first_name}\tStore id: " \
+               f"{self.store_id}\tEmail: {self.email}"
+
 
 spare_parts_have_manufacturers_table = Table("spare_parts_have_manufacturers", Base.metadata,
                                              Column("product_number", ForeignKey("spare_parts.product_number"),
@@ -216,7 +221,7 @@ class SparePart(Base):
     stores = relationship("SparePartInStore", back_populates="spare_part")
 
     def __repr__(self):
-        return f"{self.product_number}, {self.name}, {self.description}, {self.sell_price}"
+        return f"{self.product_number}, {self.name}, {self.description}, €{self.sell_price}"
 
 
 class SparePartInStore(Base):

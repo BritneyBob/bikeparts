@@ -44,9 +44,13 @@ def main():
                         case "1":
                             customers.show_all_customers()
                         case "2":
-                            customers.show_all_customer_orders()
+                            print("<This string will be replaced with method to redirect user>")
                         case "3":
-                            customers.order_choices()
+                            customers.show_all_customer_orders()
+                        case "4":
+                            print("<This string will be replaced with method to redirect user>")
+                        case "5":
+                            customers.place_order_choices()
                         case "9":
                             print("Going back to main menu")
                             break
