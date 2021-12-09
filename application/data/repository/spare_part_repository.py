@@ -55,6 +55,14 @@ def get_spare_part_manufacturer_company(manufacturer_id):
     return session.query(Company).join(Manufacturer).filter(Manufacturer.manufacturer_id == manufacturer_id).all()
 
 
+def update_product(product_no, new_name, new_description):
+    product = get_spare_part_by_id(product_no)
+    product.name = new_name
+    product.description = new_description
+    session.add(product)
+    session.commit()
+
+
 def adjust_price(product_no, new_price):
     product = session.query(SparePart).filter(SparePart.product_number == product_no).first()
     product.sell_price = new_price

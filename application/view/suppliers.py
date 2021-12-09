@@ -28,8 +28,3 @@ def negotiate_supplier_prices():
     for i in range(len(id_and_buy_price)):
         print(f"Product id: {id_and_buy_price[i]['product_number: ']}, Product name: {id_and_buy_price[i]['name: ']}, "
               f"New buy price: {new_buy_prices[i]}")
-
-
-
-
-
