@@ -48,7 +48,7 @@ def main():
                         case "3":
                             customer_orders.show_all_customer_orders()
                         case "4":
-                            print("<This string will be replaced with method to redirect user>")
+                            customer_orders.update_customer_order()
                         case "5":
                             customer_orders.place_order_choices()
                         case "9":

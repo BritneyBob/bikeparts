@@ -5,6 +5,10 @@ def create_store(store):
     store_repository.create_store(store)
 
 
+def get_store_by_id(store_id):
+    return store_repository.get_store_by_id(store_id)
+
+
 def view_stores():
     return store_repository.view_stores()
 

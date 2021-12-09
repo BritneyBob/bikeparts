@@ -8,6 +8,10 @@ def create_store(store):
     session.commit()
 
 
+def get_store_by_id(store_id):
+    return session.query(Store).filter(Store.store_id == store_id).first()
+
+
 def view_stores():
     return session.query(Store).join(Address).join(AddressType).filter(AddressType.address_type_id == 3).all()
 
