@@ -53,6 +53,7 @@ def insert_new_address_info(address_type, customer_id, customer):
 def update_customer_with_existing_address(address_type, customer_id, customer):
     old_address_id = None
     for address in customer.addresses:
+        print(customer_id, address.address_id)
         if address.address_type == address_type:
             old_address_id = address.address_id
     new_address_id = input("Please enter id of the new address: ")

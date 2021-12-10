@@ -80,23 +80,23 @@ def update_customer_order():
             new_quantity = int(input("Please enter new quantity: "))
             customer_order_controller.update_quantity(order_details, new_quantity)
 
-        case "7":
-            is_shipped = input("Has the order been shipped (Y, N)?")
-            if is_shipped == "Y":
+        case "3":
+            is_shipped = input("Has the order been shipped (Y, N)?: ")
+            if is_shipped.upper() == "Y":
                 shipped_date = date.today()
                 customer_order_controller.add_shipped_date(order, shipped_date)
             else:
                 print("Ok. No shipped date was added.")
 
-        case "8":
+        case "4":
             new_status = input("Please enter new status: ")
             customer_order_controller.update_status(order, new_status)
 
-        case "9":
-            old_comments = order.comments
+        case "5":
             new_comments = input("Please enter new comments: ")
-            comments = old_comments + new_comments
-            customer_order_controller.update_comments(order, comments)
+            if order.comments:
+                new_comments = order.comments + new_comments
+            customer_order_controller.update_comments(order, new_comments)
 
         case "9":
             options.customer_menu()
