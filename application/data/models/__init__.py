@@ -49,11 +49,11 @@ class AutoOrder(Base):
     order_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     product_number = Column(Integer, nullable=False)
     store_id = Column(Integer, nullable=False)
-    supplier_id = Column(Integer, nullable=False)
-    order_date = Column(Date, nullable=False)
+    order_date = Column(Date)
     arrival_date = Column(Date)
     ordered_quantity = Column(Integer, nullable=False)
-    price_each = Column(Numeric, nullable=False)
+    price_each = Column(Numeric)
+    message = Column(String(40))
 
 
 car_models_have_spare_parts_table = Table("car_models_have_spare_parts", Base.metadata,

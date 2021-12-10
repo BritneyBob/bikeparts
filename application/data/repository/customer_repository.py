@@ -1,3 +1,5 @@
+from sqlalchemy import update
+
 from application.data.db import session
 from application.data.models import Customer, customers_have_addresses_table
 
@@ -35,4 +37,13 @@ def update_contact_name(customer, new_contact_first_name, new_contact_last_name)
 
 def update_contact_phone_number(customer, new_phone_number):
     customer.phonenumber = new_phone_number
+    session.commit()
+
+
+def update_customer_address(customer_id, new_address_id, old_address_id):
+    statement = update(customers_have_addresses_table).\
+        where(customers_have_addresses_table.c.customer_id == customer_id and
+              customers_have_addresses_table.c.address_id == old_address_id).\
+        values(address_id=new_address_id)
+    session.execute(statement)
     session.commit()

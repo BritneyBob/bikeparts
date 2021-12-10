@@ -23,6 +23,14 @@ def show_all_customers():
         print_customer_info(customer)
 
 
+def get_old_address_id(customer, address_type):
+    old_address_id = None
+    for address in customer.addresses:
+        if address.address_type == address_type:
+            old_address_id = address.address_id
+    return old_address_id
+
+
 def insert_new_address_info(address_type, customer_id, customer):
     new_address_line2 = input("Please enter new street address: ")
     new_zipcode = input("Please enter new zipcode: ")
@@ -36,9 +44,20 @@ def insert_new_address_info(address_type, customer_id, customer):
         "city_name": new_city,
         "country_name": new_country
     }
-    # address_controller.create_address(address)
-    customer_address = {"customer_id": customer_id, "address_id": customer.addresses}
-    # customer_controller.create_customer_address(customer_address)
+    address_controller.create_address(address)
+    old_address_id = get_old_address_id(customer, address_type)
+    new_address_id = address_controller.get_all_addresses()[-1].address_id
+    customer_controller.update_customer_address(customer_id, new_address_id, old_address_id)
+
+
+def update_customer_with_existing_address(address_type, customer_id, customer):
+    old_address_id = None
+    for address in customer.addresses:
+        print(customer_id, address.address_id)
+        if address.address_type == address_type:
+            old_address_id = address.address_id
+    new_address_id = input("Please enter id of the new address: ")
+    customer_controller.update_customer_address(customer_id, new_address_id, old_address_id)
 
 
 def update_customer():
@@ -70,10 +89,18 @@ def update_customer():
             customer_controller.update_contact_name(customer, new_contact_first_name, new_contact_last_name)
         case "3":
             address_type = 1
-            insert_new_address_info(address_type, customer_id, customer)
+            choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
+            if choice == "1":
+                insert_new_address_info(address_type, customer_id, customer)
+            elif choice == "2":
+                update_customer_with_existing_address(address_type, customer_id, customer)
         case "4":
             address_type = 2
-            insert_new_address_info(address_type, customer_id, customer)
+            choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
+            if choice == "1":
+                insert_new_address_info(address_type, customer_id, customer)
+            elif choice == "2":
+                update_customer_with_existing_address(address_type, customer_id, customer)
         case "5":
             new_phone_number = input("Please enter new phone number: ")
             customer_controller.update_contact_phone_number(customer, new_phone_number)

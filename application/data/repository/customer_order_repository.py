@@ -28,3 +28,48 @@ def get_order_details_by_order_number(order_number):
 
 def get_customer_orders_by_order_number(order_number):
     return session.query(CustomerOrder).filter(CustomerOrder.customer_order_number == order_number).first()
+
+
+def update_product(order_details, new_product_id):
+    order_details.product_number = new_product_id
+    session.commit()
+
+
+def update_price(order_details, new_price):
+    order_details.price_each = new_price
+    session.commit()
+
+
+def update_quantity(order_details, new_quantity):
+    order_details.quantity_ordered = new_quantity
+    session.commit()
+
+
+def update_customer(order, new_customer_id):
+    order.customer_id = new_customer_id
+    session.commit()
+
+
+def update_store(order, new_store_id):
+    order.store_id = new_store_id
+    session.commit()
+
+
+def update_employee(order, new_employee_id):
+    order.employee_id = new_employee_id
+    session.commit()
+
+
+def add_shipped_date(order, shipped_date):
+    order.shipped_date = shipped_date
+    session.commit()
+
+
+def update_status(order, new_status):
+    order.status = new_status
+    session.commit()
+
+
+def update_comments(order, comments):
+    order.comments = comments
+    session.commit()

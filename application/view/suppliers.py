@@ -55,3 +55,4 @@ def view_suppliers():
                     print(f"Shipping address: {address.address_line2}\t {address.zipcode} {address.city_name}\t "
                           f"{address.country_name}")
 
+

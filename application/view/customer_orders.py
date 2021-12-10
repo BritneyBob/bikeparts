@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
@@ -41,61 +41,64 @@ def show_all_customer_orders():
         print_customer_order(customer_order)
 
 
-def update_customer_order():
-    order_number = input("Please enter the order id of the order you would like to update: ")
-    order = customer_order_controller.get_customer_orders_by_order_number(order_number)
-    print_customer_order(order)
+def change_order_menu():
+    print()
+    print("*" * 50)
+    print("Update order menu")
+    print("*" * 50)
+    print("1. Price")
+    print("2. Quantity")
+    print("3. Shipped date")
+    print("4. Status")
+    print("5. Comments")
+    print()
+    print("9. Back to customer menu")
+    print()
 
-    print("1. Product")
-    print("2. Price")
-    print("3. Quantity")
-    print("4. Customer")
-    print("5. Store")
-    print("6. Employee")
-    print("7. Shipped date")
-    print("8. Status")
-    print("9. Comments")
-    print()
-    print("0. Back to customer menu")
-    print()
     while True:
-        choice = input("What would you like to change (1-9): ")
-        if choice in "0123456789" and len(choice) == 1:
+        choice = input("What would you like to change/add (1-5)?: ")
+        if choice in "123459" and len(choice) == 1:
             break
-        print("Valid options are 1, 2, 3, 4, 5, 6, 7, 8 or 9")
+        print("Valid options are 1, 2, 3, 4, 5, or 9")
+    return choice
+
+
+def update_customer_order():
+    order_number = input("Please enter the id of the order you would like to update: ")
+    order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    order_details = customer_order_controller.get_order_details_by_order_number(order_number)
+
+    print_customer_order(order)
+    choice = change_order_menu()
 
     match choice:
         case "1":
-            new_product_id = input("Please enter new product id: ")
-            customer_order_controller.update_product(order, new_product_id)
-        case "2":
             new_price = float(input("Please enter new price: "))
-            customer_order_controller.update_price(order, new_price)
-        case "3":
+            customer_order_controller.update_price(order_details, new_price)
+
+        case "2":
             new_quantity = int(input("Please enter new quantity: "))
-            customer_order_controller.update_quantity(order, new_quantity)
+            customer_order_controller.update_quantity(order_details, new_quantity)
+
+        case "3":
+            is_shipped = input("Has the order been shipped (Y, N)?: ")
+            if is_shipped.upper() == "Y":
+                shipped_date = date.today()
+                customer_order_controller.add_shipped_date(order, shipped_date)
+            else:
+                print("Ok. No shipped date was added.")
+
         case "4":
-            new_customer_id = input("Please enter new customer id: ")
-            customer_order_controller.update_customer(order, new_customer_id)
+            new_status = input("Please enter new status: ")
+            customer_order_controller.update_status(order, new_status)
+
         case "5":
-            # TODO: First check if the product is in stock in another store. If it is, print list of stores to choose
-            #  from. Must also choose new employee
-            new_store_id = input("Please enter new store id: ")
-            customer_order_controller.update_store(order, new_store_id)
-            new_employee_id = input("Please enter new employee id: ")
-            customer_order_controller.update_employee(order, new_employee_id)
-        case "6":
-            # TODO: First print list of employees from store to choose from
-            new_employee_id = input("Please enter new employee id: ")
-            customer_order_controller.update_employee(order, new_employee_id)
-        # TODO: Options 7-9
-        case "7":
-            pass
-        case "8":
-            pass
+            new_comments = input("Please enter new comments: ")
+            if order.comments:
+                new_comments = order.comments + new_comments
+            customer_order_controller.update_comments(order, new_comments)
+
         case "9":
-            pass
-        case "0":
             options.customer_menu()
 
     print("The order was updated with the new information: ")

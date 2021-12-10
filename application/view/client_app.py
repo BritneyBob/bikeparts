@@ -19,9 +19,9 @@ def main():
                         case "2":
                             spare_parts.show_one_spare_part()
                         case "3":
-                            print("<This string will be replaced with method to redirect user>")
+                            spare_parts.update_a_product()
                         case "4":
-                            print("<This string will be replaced with method to redirect user>")
+                            spare_parts.add_product()
                         case "9":
                             print("Going back to main menu")
                             break
@@ -33,8 +33,6 @@ def main():
                             suppliers.negotiate_supplier_prices()
                         case "2":
                             spare_parts.adjust_sell_margins()
-                        case "3":
-                            print("<This string will be replaced with method to redirect user>")
                         case "9":
                             print("Going back to main menu")
                             break
@@ -49,7 +47,7 @@ def main():
                         case "3":
                             customer_orders.show_all_customer_orders()
                         case "4":
-                            print("<This string will be replaced with method to redirect user>")
+                            customer_orders.update_customer_order()
                         case "5":
                             customer_orders.place_order_choices()
                         case "9":
