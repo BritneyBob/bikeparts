@@ -1,0 +1,13 @@
+logga in på er mongo-container
+    docker ps
+    hitta id på mongo containern
+    docker exec -it <id> /bin/bash
+
+ta er till rätt mapp där ni har alla apllikationer
+    cd /usr/bin
+
+
+dumpa:
+mongodump --host=localhost --port=27017 --username=root --password="s3cr37" --out=/dumps
+återställ:
+mongorestore --host=localhost --port=27017 --username=root  --password="s3cr37" --authenticationDatabase=admin /dumps
