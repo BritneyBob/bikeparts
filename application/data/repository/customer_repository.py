@@ -41,9 +41,8 @@ def update_contact_phone_number(customer, new_phone_number):
 
 
 def update_customer_address(customer_id, new_address_id, old_address_id):
-    statement = update(customers_have_addresses_table).\
-        where(customers_have_addresses_table.c.customer_id == customer_id and
-              customers_have_addresses_table.c.address_id == old_address_id).\
-        values(address_id=new_address_id)
-    session.execute(statement)
+    sql = f"UPDATE customers_have_addresses SET address_id = {new_address_id} WHERE  customer_id={customer_id} and " \
+          f"address_id = {old_address_id};"
+    session.execute(sql)
     session.commit()
+

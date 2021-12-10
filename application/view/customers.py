@@ -26,12 +26,13 @@ def show_all_customers():
 def get_old_address_id(customer, address_type):
     old_address_id = None
     for address in customer.addresses:
-        if address.address_type == address_type:
+        if address.address_type_id == address_type:
             old_address_id = address.address_id
     return old_address_id
 
 
 def insert_new_address_info(address_type, customer_id, customer):
+    old_address_id = get_old_address_id(customer, address_type)
     new_address_line2 = input("Please enter new street address: ")
     new_zipcode = input("Please enter new zipcode: ")
     new_city = input("Please enter new city: ")
@@ -45,19 +46,30 @@ def insert_new_address_info(address_type, customer_id, customer):
         "country_name": new_country
     }
     address_controller.create_address(address)
-    old_address_id = get_old_address_id(customer, address_type)
     new_address_id = address_controller.get_all_addresses()[-1].address_id
     customer_controller.update_customer_address(customer_id, new_address_id, old_address_id)
 
 
-def update_customer_with_existing_address(address_type, customer_id, customer):
+def update_customer_with_existing_address(address_type_id, customer_id, customer):
+    if address_type_id == 1:
+        address_type = "Delivery address"
+    else:
+        address_type = "Billing address"
     old_address_id = None
     for address in customer.addresses:
-        print(customer_id, address.address_id)
-        if address.address_type == address_type:
+        if address.address_type.address_type_id == address_type_id:
             old_address_id = address.address_id
-    new_address_id = input("Please enter id of the new address: ")
-    customer_controller.update_customer_address(customer_id, new_address_id, old_address_id)
+    addresses = address_controller.get_all_addresses_of_address_type(address_type_id)
+    valid_address_ids = [address.address_id for address in addresses]
+
+    valid = False
+    while not valid:
+        new_address_id = int(input("Please enter id of the new address: "))
+        if new_address_id in valid_address_ids:
+            customer_controller.update_customer_address(customer_id, new_address_id, old_address_id)
+            valid = True
+        else:
+            print(f"The chosen address is not a {address_type}. Please try again.")
 
 
 def update_customer():
