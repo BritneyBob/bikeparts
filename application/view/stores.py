@@ -10,4 +10,7 @@ def view_all_stores():
         print(f'\nAddress: {store.address.address_line2} {store.address.city_name}')
         print(f'Country: {store.address.country_name}')
         print(f'Store id: {store.store_id}')
+        print('Employees working here:')
+        for s in store.employees:
+            print(f'\t{s.first_name} {s.last_name}, {s.email}')
 

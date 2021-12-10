@@ -10,3 +10,7 @@ def create_address(address):
 
 def get_all_addresses():
     return session.query(Address).all()
+
+
+def get_all_addresses_of_address_type(address_type_id):
+    return session.query(Address).filter(Address.address_type_id == address_type_id).all()

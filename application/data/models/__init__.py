@@ -49,11 +49,11 @@ class AutoOrder(Base):
     order_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     product_number = Column(Integer, nullable=False)
     store_id = Column(Integer, nullable=False)
-    supplier_id = Column(Integer, nullable=False)
-    order_date = Column(Date, nullable=False)
+    order_date = Column(Date)
     arrival_date = Column(Date)
     ordered_quantity = Column(Integer, nullable=False)
-    price_each = Column(Numeric, nullable=False)
+    price_each = Column(Numeric)
+    message = Column(String(40))
 
 
 car_models_have_spare_parts_table = Table("car_models_have_spare_parts", Base.metadata,
@@ -233,6 +233,7 @@ class SparePartInStore(Base):
     quantity_in_stock = Column(Integer, nullable=False)
     lowest_index = Column(Integer, nullable=False)
     quantity_to_order = Column(Integer, nullable=False)
+    # message = Column(String(40))
 
     spare_part = relationship("SparePart", back_populates="stores")
     store = relationship("Store", back_populates="spare_parts")

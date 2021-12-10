@@ -1,7 +1,8 @@
-from application.controllers.auto_order_controller import low_index, lowest_buy_price, create_auto_order
+from application.controllers.auto_order_controller import low_index, lowest_buy_price, create_auto_order, \
+    get_auto_orders
 
 
-def evaluate_auto_order(store_id, product_number):
+def evaluate_stock_level(store_id, product_number):
     inquiry_low_index = low_index(store_id, product_number)
     for inquiry in inquiry_low_index:
         if inquiry.quantity_in_stock < inquiry.lowest_index:
@@ -27,7 +28,12 @@ def send_auto_order(store_id, product_number):
     create_order(store_id, product_number, supplier_id)
 
 
-def create_order(store_id, product_number, supplier_id):
+def create_order(store_id, product_number, supplier_id):  # Skip this function?
     create_auto_order(store_id, product_number, supplier_id)
+
+
+def view_auto_orders():
+    auto_orders = get_auto_orders()
+    print()
 
 

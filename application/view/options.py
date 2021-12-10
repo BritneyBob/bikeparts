@@ -86,17 +86,20 @@ def procurement_menu():
     print("*" * 50)
     print("Procurement menu")
     print("*" * 50)
-    print("1. View or update supplier information")
-    print("2. View or update manufacturer information")
-    print("3. View or update auto order")
+    print("1. View supplier information")
+    print("2. Update supplier information")
+    print("3. View manufacturer information")
+    print("4. Update manufacturer information")
+    print("5. View auto order")
+    print("6. Update auto order")
     print()
     print("9. Back to main menu")
     print()
     while True:
         choice = input("Choice: ")
-        if choice in "1239" and len(choice) == 1:
+        if choice in "1234569" and len(choice) == 1:
             break
-        print("Valid options are 1, 2, 3 or 9")
+        print("Valid options are 1, 2, 3, 4, 5, 6 or 9")
     return choice
 
 

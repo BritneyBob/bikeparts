@@ -12,3 +12,8 @@ def create_company_address(company, address):
     statement = companies_has_addresses_table.insert().values(company_id=company, address_id=address)
     session.execute(statement)
     session.commit()
+
+
+# def get_companies():
+#     companies = session.query(Company).all()
+#     return companies
