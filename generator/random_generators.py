@@ -10,6 +10,7 @@ from decimal import Decimal
 from sqlalchemy.exc import IntegrityError
 
 from application.controllers.company_controller import create_company_address
+from application.controllers.spare_part_controller import create_spare_part_manufacturer
 
 first_names = [line.strip() for line in open("data_files/first_names.txt", "r", encoding="utf-8")]
 last_names = [line.strip() for line in open("data_files/lastnames.txt", "r", encoding="utf-8")]
@@ -882,6 +883,11 @@ def main():
     #     except IntegrityError:
     #         pass
 
+    for _ in range(3):
+        spare_part = 165  #random.choice(range(1, 167))
+        manufacturer = random.choice(range(1, 40))
+        create_spare_part_manufacturer(spare_part, manufacturer)
+
     # for _ in range(71):
     #     spare_part_in_store = generate_random_spare_part_in_store()
     #     create_spare_part_in_store(spare_part_in_store)
@@ -906,10 +912,7 @@ def main():
     #     create_customer_address(customer_id, delivery_address_id)
     #     create_customer_address(customer_id, billing_address_id)
 
-    # for _ in range(76):
-    #     spare_part = random.choice(range(1, 167))
-    #     manufacturer = random.choice(range(1, 40))
-    #     create_spare_part_manufacturer(spare_part, manufacturer)
+
 
 
 if __name__ == "__main__":

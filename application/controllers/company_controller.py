@@ -7,3 +7,7 @@ def create_company(company):
 
 def create_company_address(company, address):
     company_repository.create_company_address(company, address)
+
+
+# def get_companies():
+#     company_repository.get_companies()

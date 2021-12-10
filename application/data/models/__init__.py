@@ -233,6 +233,7 @@ class SparePartInStore(Base):
     quantity_in_stock = Column(Integer, nullable=False)
     lowest_index = Column(Integer, nullable=False)
     quantity_to_order = Column(Integer, nullable=False)
+    # message = Column(String(40))
 
     spare_part = relationship("SparePart", back_populates="stores")
     store = relationship("Store", back_populates="spare_parts")
