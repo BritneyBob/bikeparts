@@ -60,14 +60,19 @@ def print_manufacturer(product_no):
 
 def print_stock_info(product_no):
     sorted_stores = sorted(view_stores(), key=lambda x: x.store_id)
+    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
     print(f"Items in stock in the following stores: ")
     for store in sorted_stores:
-        stock_info = get_spare_part_in_store_by_store_id_and_product_number(store.store_id, product_no)
-        try:
-            print(f"\t{store.store_id} {store.address.city_name}\t "
-                  f"Stock: {stock_info.quantity_in_stock}\tShelf number: {stock_info.shelf_number}")
-        except:
+        if spare_part.quantity_in_stock == 0:
             continue
+        else:
+            print((f"\t{store.store_id} {store.address.city_name}\t "
+                   f"Stock: {spare_part.quantity_in_stock}\tShelf number: {spare_part.shelf_number}"))
+        # try:
+        #     print(f"\t{store.store_id} {store.address.city_name}\t "
+        #           f"Stock: {stock_info.quantity_in_stock}\tShelf number: {stock_info.shelf_number}")
+        # except:
+        #     continue
 
 
 def update_a_product():
@@ -131,8 +136,6 @@ def add_product():
         # for company in supplier_companies:
         print(f"Id: {supplier.supplier_id} Company name: {supplier.company}")
     # supplier_id = input("Enter a supplier id from the list: ")
-
-
 
 
 def adjust_sell_margins():

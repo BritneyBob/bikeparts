@@ -1,0 +1,5 @@
+USERNAME = 'root'
+PASSWORD = 's3cr37'
+HOST = 'localhost'
+PORT = '27023'
+DATABASE = 'mongodb'
