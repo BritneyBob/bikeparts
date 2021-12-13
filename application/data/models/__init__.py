@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Column, ForeignKey, DateTime, Date, Text, Numeric, Boolean, Float, Table
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.mysql import MEDIUMBLOB, MEDIUMTEXT
 
 from application.data.db import Base
 
