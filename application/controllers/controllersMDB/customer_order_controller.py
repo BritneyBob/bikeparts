@@ -1,4 +1,4 @@
-from application.data.repository import customer_order_repository
+from application.data.dataMDB.repositoryMDB import customer_order_repository
 
 
 def get_customer_orders():
