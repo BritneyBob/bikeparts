@@ -73,9 +73,18 @@ def update_customer_with_existing_address(address_type_id, customer_id, customer
 
 
 def update_customer():
-    customer_id = input("Please enter the customer id of the customer you would like to update information for: ")
-    customer = customer_controller.get_customer_by_id(customer_id)
-    print_customer_info(customer)
+    valid_id = False
+    customer_id = 0
+    customer = None
+    while not valid_id:
+        customer_id = int(input("Please enter the customer id of the customer you would like to update information "
+                                "for: "))
+        if customer_id > len(customer_controller.get_customers()):
+            print("Customer does not exist. Please enter another id.")
+        else:
+            customer = customer_controller.get_customer_by_id(customer_id)
+            print_customer_info(customer)
+            valid_id = True
 
     print("1. Name of company")
     print("2. Name of private customer or company contact")

@@ -50,41 +50,30 @@ def change_order_menu():
     print("*" * 50)
     print("Update order menu")
     print("*" * 50)
-    print("1. Price")
-    print("2. Quantity")
-    print("3. Shipped date")
-    print("4. Status")
-    print("5. Comments")
+    print("1. Shipped date")
+    print("2. Status")
+    print("3. Comments")
     print()
     print("9. Back to customer menu")
     print()
 
     while True:
-        choice = input("What would you like to change/add (1-5)?: ")
-        if choice in "123459" and len(choice) == 1:
+        choice = input("What would you like to change/add (1-3)?: ")
+        if choice in "1239" and len(choice) == 1:
             break
-        print("Valid options are 1, 2, 3, 4, 5, or 9")
+        print("Valid options are 1, 2, 3, or 9")
     return choice
 
 
 def update_customer_order():
     order_number = input("Please enter the id of the order you would like to update: ")
     order = customer_order_controller.get_customer_orders_by_order_number(order_number)
-    order_details = customer_order_controller.get_order_details_by_order_number(order_number)
 
     print_customer_order(order)
     choice = change_order_menu()
 
     match choice:
         case "1":
-            new_price = float(input("Please enter new price: "))
-            customer_order_controller.update_price(order_details, new_price)
-
-        case "2":
-            new_quantity = int(input("Please enter new quantity: "))
-            customer_order_controller.update_quantity(order_details, new_quantity)
-
-        case "3":
             is_shipped = input("Has the order been shipped (Y, N)?: ")
             if is_shipped.upper() == "Y":
                 shipped_date = date.today()
@@ -92,11 +81,11 @@ def update_customer_order():
             else:
                 print("Ok. No shipped date was added.")
 
-        case "4":
+        case "2":
             new_status = input("Please enter new status: ")
             customer_order_controller.update_status(order, new_status)
 
-        case "5":
+        case "3":
             new_comments = input("Please enter new comments: ")
             if order.comments:
                 new_comments = order.comments + new_comments
