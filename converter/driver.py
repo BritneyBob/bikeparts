@@ -14,9 +14,9 @@ def convert_products():
         cars = []
         for car_model in product.car_models:
             cars.append({
-                "manufacturer": car_model.manufacturer,
                 "model": car_model.model,
-                "year": car_model.year,
+                "manufacturer": car_model.manufacturer,
+                "year": car_model.year
             })
         if len(cars) > 0:
             as_dict["compatible_with_cars"] = cars
@@ -25,8 +25,7 @@ def convert_products():
         for store in product.stores:
             stores.append({
                 "store_id": store.store_id,
-                "shelf_number": store.shelf_number,
-                "quantity_in_stock": store.quantity_in_stock
+                "city": store.store.address.city_name
             })
         if len(stores) > 0:
             as_dict["available_in_stores"] = stores
@@ -35,7 +34,8 @@ def convert_products():
         for supplier in product.suppliers:
             suppliers.append({
                 "supplier_id": supplier.supplier_id,
-                "name": supplier.supplier.company.company_name
+                "supplier_name": supplier.supplier.company.company_name,
+                "buy_price": float(supplier.buy_price)
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -44,10 +44,11 @@ def convert_products():
         for manufacturer in product.manufacturers:
             manufacturers.append({
                 "manufacturer_id": manufacturer.manufacturer_id,
-                "name": manufacturer.company.company_name
+                "manufacturer_name": manufacturer.company.company_name
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
+
         del as_dict["_sa_instance_state"]
         del as_dict["car_models"]
         del as_dict["stores"]
@@ -56,22 +57,42 @@ def convert_products():
         mongo_product.save()
 
 
-# def convert_stores():
-#     stores = session.query(Store).all()
-#     for store in stores:
-#         as_dict = store.__dict__
-#         del as_dict["_sa_instance_state"]
-#         employees = []
-#         for employee in store.employees:
-#             employees.append({
-#                 "first_name": employee.first_name,
-#                 "last_name": employee.last_name,
-#                 "email": employee.email,
-#             })
-#         print()
-#         mongo_office = mm.Store(as_dict)
-#         mongo_office.save()
-#
+def convert_stores():
+    stores = session.query(Store).all()
+    for store in stores:
+        as_dict = store.__dict__
+        as_dict["street_address"] = store.address.address_line2
+        as_dict["zipcode"] = store.address.zipcode
+        as_dict["city"] = store.address.city_name
+        as_dict["country"] = store.address.country_name
+
+        employees = []
+        for employee in store.employees:
+            employees.append({
+                "name": f"{employee.first_name} {employee.last_name}",
+                "email": employee.email
+            })
+        as_dict["employees"] = employees
+
+        products = []
+        for product in store.spare_parts:
+            products.append({
+                "product_number": product.product_number,
+                "new_product_id": mm.Product.find(product_number=product.product_number).first_or_none(),
+                "shelf_number": product.shelf_number,
+                "quantity_in_stock": product.quantity_in_stock
+            })
+        if len(products) > 0:
+            as_dict["products"] = products
+
+        del as_dict["_sa_instance_state"]
+        del as_dict["address"]
+        del as_dict["address_id"]
+        del as_dict["spare_parts"]
+        mongo_office = mm.Store(as_dict)
+        mongo_office.save()
+
+
 # def convert_employees():
 #     employees = session.query(Employee).all()
 #     for employee in employees:
@@ -89,8 +110,8 @@ def convert_products():
 #         if hasattr(employee, "reportsTo"):
 #             employee.reportsTo = mm.Employee.find(employeeNumber=employee.reportsTo).first_or_none()._id
 #             employee.save()
-#
-#
+
+
 def convert_customers():
     customers = session.query(Customer).all()
     for customer in customers:
@@ -187,18 +208,19 @@ def convert_orders():
 
         mongo_order = mm.CustomerOrder(as_dict)
         mongo_order.save()
-#
+
+
 # def fix_orders():
 #     for order in mm.Order.all():
-#         order.delete_field("customerNumber")
+#         order.delete_field('customerNumber')
 
 
 def main():
-    # convert_products()
+    convert_products()
     # convert_stores()
     # convert_employees()
     # convert_customers()
-    convert_orders()
+    # convert_orders()
     # fix_orders()
 
 
