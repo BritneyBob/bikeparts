@@ -271,32 +271,32 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
     order_details_list = []
     chosen_product = None
     has_chosen = False
-    add_more_products = True
 
-    while add_more_products:
-        while not has_chosen:
-            fits_all_product_choice = input("\nDoes the customer want to place an order for one of the products above? "
-                                            "(Enter product number or N)?: ")
+    while not has_chosen:
+        fits_all_product_choice = input("\nDoes the customer want to place an order for one of the products above? "
+                                        "(Enter product number or N)?: ")
 
-            if fits_all_product_choice.upper() == "N":
-                print("Ok. Going back to customer menu.")
+        if fits_all_product_choice.upper() == "N":
+            print("Ok. Going back to customer menu.")
 
-            elif int(fits_all_product_choice) in product_numbers:
-                for product in products:
-                    if product.product_number == int(fits_all_product_choice):
-                        chosen_product = product
-                        has_chosen = True
-                        break
-                stores = chosen_product.stores
-                if len(stores) == 0:
-                    print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: "
-                          f"{chosen_product.description} in stock.")
-                    print("Going back to main menu.")
-                else:
-                    chosen_store = choose_store(chosen_product, stores)
-                    chosen_employee = choose_employee(chosen_store)
-                    quantity = choose_and_check_quantity(chosen_product, chosen_store)
-                    order_details_list = insert_order_details(order_details_list, chosen_product, quantity)
+        elif int(fits_all_product_choice) in product_numbers:
+            for product in products:
+                if product.product_number == int(fits_all_product_choice):
+                    chosen_product = product
+                    has_chosen = True
+                    break
+            stores = chosen_product.stores
+            if len(stores) == 0:
+                print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: "
+                      f"{chosen_product.description} in stock.")
+                print("Going back to main menu.")
+            else:
+                chosen_store = choose_store(chosen_product, stores)
+                chosen_employee = choose_employee(chosen_store)
+                quantity = choose_and_check_quantity(chosen_product, chosen_store)
+                order_details_list = insert_order_details(order_details_list, chosen_product, quantity)
+                add_more_products = True
+                while add_more_products:
                     add_more = input("Does the customer want to add another product from this store to their order "
                                      "(Y, N)?: ")
                     if add_more == "Y":
@@ -305,9 +305,10 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                     elif add_more == "N":
                         place_order(order_details_list, chosen_store, chosen_employee, customer_id)
                         add_more_products = False
+                has_chosen = True
 
-            else:
-                print("Please choose one of the product numbers listed, or N.")
+        else:
+            print("Please choose one of the product numbers listed, or N.")
 
 
 def product_not_in_stock(chosen_car, chosen_product, customer_id):
