@@ -2,16 +2,23 @@ import datetime
 
 from application.data.dataMDB import modelsMDB as mm
 from application.data.db import session
-from application.data.models import SparePart, Customer
+from application.data.models import SparePart, Customer, Store
 
 
 def convert_products():
     products = session.query(SparePart).all()
     for product in products:
         as_dict = product.__dict__
-        as_dict['MSRP'] = float(as_dict['MSRP'])
-        as_dict['buyPrice'] = float(as_dict['buyPrice'])
         del as_dict['_sa_instance_state']
+        # stores = []
+        # for store in product.stores:
+        #     stores.append({
+        #         "store_id": store.store_id,
+        #         # "shelf_number": store.shelf_number,
+        #         # "quantity_in_stock": store.quantity_in_stock
+        #     })
+
+        print()
         mongo_product = mm.Product(as_dict)
         mongo_product.save()
 
@@ -26,6 +33,22 @@ def convert_customers():
         # mongo_customer = mm.Customer(as_dict)
         # mongo_customer.save()
 
+# def convert_stores():
+#     stores = session.query(Store).all()
+#     for store in stores:
+#         as_dict = store.__dict__
+#         del as_dict['_sa_instance_state']
+#         employees = []
+#         for employee in store.employees:
+#             employees.append({
+#                 'first_name': employee.first_name,
+#                 'last_name': employee.last_name,
+#                 'email': employee.email,
+#             })
+#         print()
+#         mongo_office = mm.Store(as_dict)
+#         mongo_office.save()
+#
 # def convert_employees():
 #     employees = session.query(Employee).all()
 #     for employee in employees:
@@ -105,9 +128,8 @@ def convert_customers():
 #
 #
 def main():
-    convert_customers()
-    #convert_products()
-    #convert_offices()
+    convert_products()
+    # convert_stores()
     #convert_employees()
     #convert_customers()
     #convert_orders()
