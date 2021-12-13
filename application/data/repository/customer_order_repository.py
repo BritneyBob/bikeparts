@@ -23,7 +23,7 @@ def create_order_details(order_details):
 
 
 def get_order_details_by_order_number(order_number):
-    return session.query(OrderDetail).filter(OrderDetail.customer_order_number == order_number).first()
+    return session.query(OrderDetail).filter(OrderDetail.customer_order_number == order_number).all()
 
 
 def get_customer_orders_by_order_number(order_number):
