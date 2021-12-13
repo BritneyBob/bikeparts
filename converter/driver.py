@@ -6,7 +6,6 @@ from application.data.db import session
 from application.data.models import SparePart, Store, Customer, CustomerOrder
 
 
-
 def convert_products():
     products = session.query(SparePart).all()
     for product in products:
@@ -56,16 +55,6 @@ def convert_products():
         mongo_product = mm.Product(as_dict)
         mongo_product.save()
 
-
-def convert_customers():
-    customers = session.query(Customer).all()
-    for customer in customers:
-        as_dict = customer.__dict__
-        del as_dict['_sa_instance_state']
-        as_dict = {key: value for key, value in as_dict.items() if value is not None}
-        print()
-        # mongo_customer = mm.Customer(as_dict)
-        # mongo_customer.save()
 
 # def convert_stores():
 #     stores = session.query(Store).all()
