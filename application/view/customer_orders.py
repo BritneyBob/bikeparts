@@ -325,24 +325,24 @@ def product_not_in_stock(chosen_car, chosen_product, customer_id):
 
 
 def see_products_from_chosen_store(store):
-    products = store_controller.get_spare_parts_by_store_id(store.store_id)
+    products_in_store = store_controller.get_spare_parts_by_store_id(store.store_id)
     product_numbers = []
     has_chosen = False
     chosen_product = None
     quantity = 0
     print(f"The following spare parts are sold in this store ({store.store_id}): ")
-    for product in products:
-        print(f"{product.product_number}.\t{product.name}. Description: {product.description}.\tPrice: "
-              f"€{product.sell_price}")
-        product_numbers.append(product.product_number)
+    for product_in_store in products_in_store:
+        print(f"{product_in_store.product_number}.\t{product_in_store.spare_part.name}. Description: "
+              f"{product_in_store.spare_part.description}.\tPrice: €{product_in_store.spare_part.sell_price}")
+        product_numbers.append(product_in_store.product_number)
     while not has_chosen:
         product_choice = input(f"Does the customer want to buy one of the products listed "
                                f"({', '.join([str(i) for i in product_numbers])}, N)?: ")
         if product_choice.upper() == "N":
             break
-        for product in products:
-            if product.product_number == int(product_choice):
-                chosen_product = product
+        for product_in_store in products_in_store:
+            if product_in_store.product_number == int(product_choice):
+                chosen_product = product_in_store.spare_part
                 quantity = choose_and_check_quantity(chosen_product, store)
                 has_chosen = True
                 break

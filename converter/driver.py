@@ -2,14 +2,13 @@ import datetime
 
 from application.data.dataMDB import modelsMDB as mm
 from application.data.db import session
-from application.data.models import SparePart
+from application.data.models import SparePart, Customer
 
 
 def convert_products():
     products = session.query(SparePart).all()
     for product in products:
         as_dict = product.__dict__
-        print()
         as_dict['MSRP'] = float(as_dict['MSRP'])
         as_dict['buyPrice'] = float(as_dict['buyPrice'])
         del as_dict['_sa_instance_state']
@@ -17,15 +16,16 @@ def convert_products():
         mongo_product.save()
 
 
-# def convert_offices():
-#     offices = session.query(Office).all()
-#     for office in offices:
-#         as_dict = office.__dict__
-#         del as_dict['_sa_instance_state']
-#         as_dict = {key: value for key, value in as_dict.items() if value is not None and value != 'NA'}
-#         mongo_office = mm.Office(as_dict)
-#         mongo_office.save()
-#
+def convert_customers():
+    customers = session.query(Customer).all()
+    for customer in customers:
+        as_dict = customer.__dict__
+        del as_dict['_sa_instance_state']
+        as_dict = {key: value for key, value in as_dict.items() if value is not None}
+        print()
+        # mongo_customer = mm.Customer(as_dict)
+        # mongo_customer.save()
+
 # def convert_employees():
 #     employees = session.query(Employee).all()
 #     for employee in employees:
@@ -105,7 +105,8 @@ def convert_products():
 #
 #
 def main():
-    convert_products()
+    convert_customers()
+    #convert_products()
     #convert_offices()
     #convert_employees()
     #convert_customers()
