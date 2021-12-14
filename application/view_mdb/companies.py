@@ -1,5 +1,5 @@
-from application.controllers import company_controller, address_controller
-from application.view import options
+from application.controllers.controllersMDB import company_controller
+from application.view_mdb import options
 
 
 def negotiate_supplier_prices():
@@ -34,92 +34,46 @@ def negotiate_supplier_prices():
 def print_company_info(company):
 
     print(f"\nCompany name: {company.company_name}")
-    print(f"Company id: {company.company_id}")
-    if company.supplier:
-        print(f"Supplier id: {company.supplier.supplier_id}")
-    if company.manufacturer:
-        print(f"Manufacturer id: {company.manufacturer.manufacturer_id}")
+    print(f"Company id: {company._id}")
     print(f"\nCompany contact mail: {company.contact_email}")
     print(f"Company contact phone number: {company.contact_phonenumber}\n")
     for address in company.addresses:
-        if address.address_type_id == 1:
-            print(f"Delivery address: {address.address_line2}\t {address.zipcode} {address.city_name}\t "
-                  f"{address.country_name}")
-        elif address.address_type_id == 2:
-            print(f"Billing address: {address.address_line2}\t {address.zipcode} {address.city_name}\t "
-                  f"{address.country_name}")
-        elif address.address_type_id == 3:
-            print(f"Shipping address: {address.address_line2}\t {address.zipcode} {address.city_name}\t "
-                  f"{address.country_name}")
+        print(f"{address['address_tye'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
+              f"{address.city}\t {address.country}")
 
 
 def view_companies():
     companies = company_controller.get_all_companies()
     print("All companies: ")
     for company in companies:
-        print(f"Company id: {company.company_id}, Company name: {company.company_name}, Company type: ", end="")
-        if company.supplier and company.manufacturer:
-            print("Supplier, Manufacturer")
-        elif company.supplier:
-            print("Supplier")
-        else:
-            print("Manufacturer")
+        print(f"Company id: {company._id}, Company name: {company.company_name}, Company type: {company.company_type}")
 
-    company_id = int(input("Please choose the company id for the supplier company you want to see information about: "))
+    company_id = int(input("Please choose the company id for the company you want to see information about: "))
     for company in companies:
         if company.company_id == company_id:
             print_company_info(company)
-                    
-
-def get_old_address_id(company, address_type):
-    old_address_id = None
-    for address in company.addresses:
-        if address.address_type_id == address_type:
-            old_address_id = address.address_id
-    return old_address_id
 
 
-def insert_new_address_info(address_type, company_id, company):
-    old_address_id = get_old_address_id(company, address_type)
+def insert_new_address_info(address_type, company):
     new_address_line2 = input("Please enter new street address: ")
     new_zipcode = input("Please enter new zipcode: ")
     new_city = input("Please enter new city: ")
     new_country = input("Please enter new country: ")
     address = {
-        "address_type_id": address_type,
-        "address_line1": None,
-        "address_line2": new_address_line2,
+        "address_type": address_type,
+        "street_address": new_address_line2,
         "zipcode": new_zipcode,
-        "city_name": new_city,
-        "country_name": new_country
+        "city": new_city,
+        "country": new_country
     }
-    address_controller.create_address(address)
-    new_address_id = address_controller.get_all_addresses()[-1].address_id
-    company_controller.update_company_address(company_id, new_address_id, old_address_id)
+    # TODO: This doesn't work. Ask for help!
+    company_controller.create_company_address(company, address)
 
 
-def update_company_with_existing_address(address_type_id, company_id, company):
-    if address_type_id == 1:
-        address_type = "Visiting address"
-    elif address_type_id == 2:
-        address_type = "Delivery address"
-    else:
-        address_type = "Billing address"
-    old_address_id = None
-    for address in company.addresses:
-        if address.address_type.address_type_id == address_type_id:
-            old_address_id = address.address_id
-    addresses = address_controller.get_all_addresses_of_address_type(address_type_id)
-    valid_address_ids = [address.address_id for address in addresses]
-
-    valid = False
-    while not valid:
-        new_address_id = int(input("Please enter id of the new address: "))
-        if new_address_id in valid_address_ids:
-            company_controller.update_company_address(company_id, new_address_id, old_address_id)
-            valid = True
-        else:
-            print(f"The chosen address is not a {address_type}. Please try again.")
+def print_new_info(company_id):
+    print("The company was updated with the new information: ")
+    updated_company = company_controller.get_company_by_id(company_id)
+    print_company_info(updated_company)
 
 
 def update_company():
@@ -155,37 +109,24 @@ def update_company():
         case "1":
             new_company_name = input("Please enter new name: ")
             company_controller.update_company_name(company, new_company_name)
+            print_new_info(company_id)
         case "2":
-            address_type = 1
-            choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
-            if choice == "1":
-                insert_new_address_info(address_type, company_id, company)
-            elif choice == "2":
-                update_company_with_existing_address(address_type, company_id, company)
+            insert_new_address_info("visiting address", company)
+            print_new_info(company_id)
         case "3":
-            address_type = 2
-            choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
-            if choice == "1":
-                insert_new_address_info(address_type, company_id, company)
-            elif choice == "2":
-                update_company_with_existing_address(address_type, company_id, company)
+            insert_new_address_info("delivery address", company)
+            print_new_info(company_id)
         case "4":
-            address_type = 3
-            choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
-            if choice == "1":
-                insert_new_address_info(address_type, company_id, company)
-            elif choice == "2":
-                update_company_with_existing_address(address_type, company_id, company)
+            insert_new_address_info("billing address", company)
+            print_new_info(company_id)
         case "5":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
             company_controller.update_contact_name(company, new_contact_first_name, new_contact_last_name)
+            print_new_info(company_id)
         case "6":
             new_phone_number = input("Please enter new phone number: ")
             company_controller.update_contact_phone_number(company, new_phone_number)
+            print_new_info(company_id)
         case "9":
             options.procurement_menu()
-
-    print("The company was updated with the new information: ")
-    updated_company = company_controller.get_company_by_id(company_id)
-    print_company_info(updated_company)

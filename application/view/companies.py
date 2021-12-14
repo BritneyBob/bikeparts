@@ -65,7 +65,7 @@ def view_companies():
         else:
             print("Manufacturer")
 
-    company_id = int(input("Please choose the company id for the supplier company you want to see information about: "))
+    company_id = int(input("Please choose the company id for the company you want to see information about: "))
     for company in companies:
         if company.company_id == company_id:
             print_company_info(company)
@@ -122,6 +122,12 @@ def update_company_with_existing_address(address_type_id, company_id, company):
             print(f"The chosen address is not a {address_type}. Please try again.")
 
 
+def print_new_info(company_id):
+    print("The company was updated with the new information: ")
+    updated_company = company_controller.get_company_by_id(company_id)
+    print_company_info(updated_company)
+
+
 def update_company():
     valid_id = False
     company_id = 0
@@ -155,6 +161,7 @@ def update_company():
         case "1":
             new_company_name = input("Please enter new name: ")
             company_controller.update_company_name(company, new_company_name)
+            print_new_info(company_id)
         case "2":
             address_type = 1
             choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
@@ -162,6 +169,7 @@ def update_company():
                 insert_new_address_info(address_type, company_id, company)
             elif choice == "2":
                 update_company_with_existing_address(address_type, company_id, company)
+            print_new_info(company_id)
         case "3":
             address_type = 2
             choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
@@ -169,6 +177,7 @@ def update_company():
                 insert_new_address_info(address_type, company_id, company)
             elif choice == "2":
                 update_company_with_existing_address(address_type, company_id, company)
+            print_new_info(company_id)
         case "4":
             address_type = 3
             choice = input("Do you want to 1. add a new address or 2. choose an existing one (1, 2)?: ")
@@ -176,16 +185,15 @@ def update_company():
                 insert_new_address_info(address_type, company_id, company)
             elif choice == "2":
                 update_company_with_existing_address(address_type, company_id, company)
+            print_new_info(company_id)
         case "5":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
             company_controller.update_contact_name(company, new_contact_first_name, new_contact_last_name)
+            print_new_info(company_id)
         case "6":
             new_phone_number = input("Please enter new phone number: ")
             company_controller.update_contact_phone_number(company, new_phone_number)
+            print_new_info(company_id)
         case "9":
             options.procurement_menu()
-
-    print("The company was updated with the new information: ")
-    updated_company = company_controller.get_company_by_id(company_id)
-    print_company_info(updated_company)
