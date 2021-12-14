@@ -13,7 +13,11 @@ def get_store_by_id(store_id):
 
 
 def view_stores():
-    return session.query(Store).join(Address).join(AddressType).filter(AddressType.address_type_id == 3).all()
+    return session.query(Store).outerjoin(Address).outerjoin(AddressType).all()
+
+
+# def view_stores():
+#     return session.query(Store).join(Address).join(AddressType).filter(AddressType.address_type_id == 3).all()
 
 
 def update_stock_in_store(store_id, product_number, quantity):

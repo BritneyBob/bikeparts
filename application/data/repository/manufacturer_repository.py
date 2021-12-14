@@ -1,5 +1,5 @@
 from application.data.db import session
-from application.data.models import Manufacturer
+from application.data.models import Manufacturer, spare_parts_have_manufacturers_table
 
 
 def create_manufacturer(manufacturer):

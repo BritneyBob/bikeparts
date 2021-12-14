@@ -216,8 +216,8 @@ def convert_orders():
 
 
 def main():
-    convert_products()
-    # convert_stores()
+    # convert_products()
+    convert_stores()
     # convert_employees()
     # convert_customers()
     # convert_orders()
