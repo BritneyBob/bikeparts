@@ -25,7 +25,6 @@ def convert_products():
         for store in product.stores:
             stores.append({
                 "store_id": store.store_id,
-                "city": store.store.address.city_name
             })
         if len(stores) > 0:
             as_dict["available_in_stores"] = stores
@@ -34,8 +33,7 @@ def convert_products():
         for supplier in product.suppliers:
             suppliers.append({
                 "supplier_id": supplier.supplier_id,
-                "supplier_name": supplier.supplier.company.company_name,
-                "buy_price": float(supplier.buy_price)
+                "new_supplier_id": None
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -44,7 +42,7 @@ def convert_products():
         for manufacturer in product.manufacturers:
             manufacturers.append({
                 "manufacturer_id": manufacturer.manufacturer_id,
-                "manufacturer_name": manufacturer.company.company_name
+                "new_manufacturer_id": None
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
@@ -78,7 +76,7 @@ def convert_stores():
         for product in store.spare_parts:
             products.append({
                 "product_number": product.product_number,
-                "new_product_id": mm.Product.find(product_number=product.product_number).first_or_none(),
+                "new_product_id": mm.Product.find(product_number=product.product_number).first_or_none()._id,
                 "shelf_number": product.shelf_number,
                 "quantity_in_stock": product.quantity_in_stock
             })
@@ -89,27 +87,9 @@ def convert_stores():
         del as_dict["address"]
         del as_dict["address_id"]
         del as_dict["spare_parts"]
+
         mongo_office = mm.Store(as_dict)
         mongo_office.save()
-
-
-# def convert_employees():
-#     employees = session.query(Employee).all()
-#     for employee in employees:
-#         as_dict = employee.__dict__
-#         as_dict["office_id"] = mm.Office.find(officeCode=employee.officeCode).first_or_none()._id
-#         del as_dict["officeCode"]
-#         del as_dict["_sa_instance_state"]
-#         if as_dict["reportsTo"] is None:
-#             del as_dict["reportsTo"]
-#         mongo_employee = mm.Employee(as_dict)
-#         mongo_employee.save()
-#
-#     employees = mm.Employee.all()
-#     for employee in employees:
-#         if hasattr(employee, "reportsTo"):
-#             employee.reportsTo = mm.Employee.find(employeeNumber=employee.reportsTo).first_or_none()._id
-#             employee.save()
 
 
 def convert_customers():
@@ -152,7 +132,11 @@ def convert_customers():
         orders = []
         customer_orders = customer_order_controller.get_customer_orders_by_customer_id(customer.customer_id)
         for order in customer_orders:
-            orders.append(order.customer_order_number)
+            orders.append({
+                "customer_order_number": order.customer_order_number,
+                "new_customer_order_number": None
+                # "new_customer_order_number": mm.CustomerOrder.find(customer_order_number=order.customer_order_number).first_or_none()._id
+            })
         if len(orders) > 0:
             as_dict["orders"] = orders
 
@@ -182,9 +166,7 @@ def convert_orders():
         as_dict["store"] = store
 
         sales_contact = {
-            "employee_id": order.employee_id,
-            "first_name": order.employee.first_name,
-            "last_name": order.employee.last_name,
+            "name": f"{order.employee.first_name} {order.employee.last_name}",
             "email": order.employee.email
         }
         as_dict["sales_contact"] = sales_contact
@@ -216,11 +198,15 @@ def convert_orders():
 
 
 def main():
-    convert_products()
+    pass
+    # convert_products()
     # convert_stores()
-    # convert_employees()
     # convert_customers()
     # convert_orders()
+
+    # convert_companies()
+    # convert_supplier_orders()
+
     # fix_orders()
 
 

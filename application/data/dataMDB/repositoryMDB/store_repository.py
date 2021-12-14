@@ -1,15 +1,13 @@
-from application.data.db import session
-from application.data.models import Store, Address, AddressType, SparePartInStore
+from application.data.dataMDB.modelsMDB import Store
 
 
 def create_store(store):
     store = Store(**store)
-    session.add(store)
-    session.commit()
+    store.save()
 
 
 def get_store_by_id(store_id):
-    return session.query(Store).filter(Store.store_id == store_id).first()
+    return Store.find(store_id=store_id).first_or_none()
 
 
 def view_stores():
@@ -36,3 +34,7 @@ def get_spare_part_in_store_by_store_id_and_product_number(store_id, product_num
 
 def get_spare_parts_by_store_id(store_id):
     return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id).all()
+
+
+def get_stores_by_ids(store_ids):
+    return [get_store_by_id(store_id) for store_id in store_ids]

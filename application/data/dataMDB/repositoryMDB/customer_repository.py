@@ -40,3 +40,7 @@ def update_contact_phone_number(customer, new_phone_number):
 #     session.execute(sql)
 #     session.commit()
 
+
+def get_customers_cars(customer_id):
+    x = session.query(CustomerCar).filter(CustomerCar.customer_id == customer_id).all()
+    return x
