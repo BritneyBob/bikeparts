@@ -3,7 +3,75 @@ import datetime
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
 from application.data.db import session
-from application.data.models import SparePart, Store, Customer, CustomerOrder
+from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier
+
+
+def convert_companies():
+    companies = session.query(Company).filter(Company.company_id == 21).all()
+    for company in companies:
+        as_dict = company.__dict__
+
+        supplier_id = None
+        manufacturer_id = None
+
+        if hasattr(company, 'supplier'):
+            if company.supplier is None:
+                as_dict['is_supplier'] = False
+            else:
+                as_dict['is_supplier'] = True
+                supplier_id = company.supplier.supplier_id
+
+        if hasattr(company, 'manufacturer'):
+            if company.manufacturer is None:
+                as_dict['is_manufacturer'] = False
+            else:
+                as_dict['is_manufacturer'] = True
+            manufacturer_id = company.manufacturer.manufacturer_id
+
+        as_dict['contact'] = {
+            'last_name': company.contact,
+            'phone_number': company.contact_phonenumber,
+            'email': company.contact_email
+        }
+
+        for address in company.addresses:
+            if address.address_type == 1:
+                as_dict['delivery_address'] = {
+                    'address_line': address.address_line2,
+                    'zip_code': address.zipcode,
+                    'city': address.city_name,
+                    'country': address.country_name
+                }
+            if address.address_type == 2:
+                as_dict['billing_address'] = {
+                    'address_line': address.address_line2,
+                    'zip_code': address.zipcode,
+                    'city': address.city_name,
+                    'country': address.country_name
+                }
+            if address.address_type == 3:
+                as_dict['visiting_address'] = {
+                    'address_line': address.address_line2,
+                    'zip_code': address.zipcode,
+                    'city': address.city_name,
+                    'country': address.country_name
+                }
+        supplier_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
+        sell_products = []
+        for product in supplier_products:
+            sell_products.append({
+                'number': product.product_number,
+                'buy_price': product.buy_price,
+                'delivery_time': product.delivery_time
+            })
+        if len(sell_products) > 0:
+            as_dict["sell_products"] = sell_products
+
+        manufacturer_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
+        # Get rid of filter on query line 10 before save to db!!!!!
+        print()
+
+
 
 
 def convert_products():
@@ -25,6 +93,7 @@ def convert_products():
         for store in product.stores:
             stores.append({
                 "store_id": store.store_id,
+                "new_store_id": mm.Store.find(store_id=store.store_id).first_or_none()._id
             })
         if len(stores) > 0:
             as_dict["available_in_stores"] = stores
@@ -198,7 +267,7 @@ def convert_orders():
 
 
 def main():
-    pass
+    convert_companies()
     # convert_products()
     # convert_stores()
     # convert_customers()
