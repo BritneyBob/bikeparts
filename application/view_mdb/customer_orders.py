@@ -101,7 +101,6 @@ def update_customer_order():
 
 def get_customer_name(customer_id):
     customer = customer_controller.get_customer_by_id(customer_id)
-    print()
     try:
         customer_name = customer.customer_name
     except AttributeError:
@@ -139,34 +138,33 @@ def choose_car_model(car_models):
 
 
 def choose_spare_part(chosen_car_model):
-    spare_parts = chosen_car_model.spare_parts
-    if not spare_parts:
+    try:
+        product_ids = chosen_car_model["compatible_with_products"]
+    except AttributeError:
         return None
-    product_numbers = []
     chosen_product = None
 
-    print(f"\nWe have the following spare part/s for {chosen_car_model.manufacturer} {chosen_car_model.model}, "
-          f"{chosen_car_model.year}:")
-    for spare_part in spare_parts:
-        print(f"{spare_part.product_number}.\t{spare_part.name}. Description: {spare_part.description}.\tPrice: "
-              f"€{spare_part.sell_price}")
-        product_numbers.append(spare_part.product_number)
+    print(f"\nWe have the following product/s for {chosen_car_model['manufacturer']} {chosen_car_model['model']}, "
+          f"{chosen_car_model['year']}:")
+    for i, product_id in enumerate(product_ids):
+        product = product_controller.get_spare_part_by_id(product_id)
+        print(f"{i + 1}. {product._id}: {product.name}. Description: {product.description}.\tPrice: "
+              f"€{product.sell_price}")
 
-    if len(spare_parts) == 1:
-        chosen_product = spare_parts[0]
+    if len(product_ids) == 1:
+        chosen_product = product_controller.get_spare_part_by_id(product_ids[0])
 
     else:
         has_chosen = False
         while not has_chosen:
-            chosen_product_number = int(input(f"\nWhich spare part does the customer want to buy"
-                                              f" ({', '.join([str(i) for i in product_numbers])})?: "))
-            for spare_part in spare_parts:
-                if spare_part.product_number == chosen_product_number:
-                    chosen_product = spare_part
-                    has_chosen = True
-                    break
-            if not has_chosen:
-                print("Please choose one of the product numbers listed.")
+            choice = int(input(f"\nWhich spare part does the customer want to buy (1-{len(product_ids)})?: "))
+            try:
+                chosen_product_id = product_ids[choice - 1]
+                chosen_product = product_controller.get_spare_part_by_id(chosen_product_id)
+                has_chosen = True
+
+            except KeyError:
+                print("Please choose the number of one of the products listed.")
 
     return chosen_product
 
@@ -201,38 +199,37 @@ def choose_store(product, stores):
 
 def choose_employee(store):
     employees = store.employees
-    employee_ids = []
     chosen_employee = None
+    temporary_ids = []
 
     print(f"These are the employees working in store number {store.store_id}:")
-    for employee in employees:
-        employee_id = employee["employee_id"]
-        print(f"{employee_id}. {employee['name']}")
-        employee_ids.append(employee_id)
+    for i, employee in enumerate(employees):
+        print(f"{i + 1}. {employee['name']}")
+        temporary_ids.append(str(i + 1))
 
     has_chosen = False
     while not has_chosen:
-        chosen_employee_id = int(input(f"\nWho is selling the product "
-                                       f"({', '.join([str(i) for i in employee_ids])})?: "))
+        choice = int(input(f"\nWho is selling the product (1-{len(employees)})?: "))
 
-        for employee in employees:
-            if employee["employee_id"] == chosen_employee_id:
-                chosen_employee = employee
-                has_chosen = True
-                break
-        if not has_chosen:
-            print("Please choose one of the employees listed.")
+        try:
+            chosen_employee = employees[choice - 1]
+            has_chosen = True
+
+        except KeyError:
+            print("Please choose the number of one of the employees listed.")
 
     return chosen_employee
 
 
 def choose_and_check_quantity(product, store):
     has_chosen = False
-    product_in_stock = store_controller.get_spare_part_in_store_by_store_id_and_product_number(store.store_id,
-                                                                                               product.product_number)
-    quantity_in_stock = product_in_stock.quantity_in_stock
+    quantity_in_stock = 0
+    for product_in_store in store.products:
+        if product_in_store["new_product_id"] == product._id:
+            quantity_in_stock = product_in_store["quantity_in_stock"]
+
     print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_id}, "
-          f"{store.store.address.city_name}")
+          f"{store.city}")
 
     while not has_chosen:
         quantity = int(input(f"How many {product.name} does the customer want?: "))
@@ -296,12 +293,14 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                 while add_more_products:
                     add_more = input("Does the customer want to add another product from this store to their order "
                                      "(Y, N)?: ")
-                    if add_more == "Y":
+                    if add_more.upper() == "Y":
                         quantity, chosen_product = see_products_from_chosen_store(chosen_store)
                         order_details_list = insert_order_details(order_details_list, chosen_product, quantity)
-                    elif add_more == "N":
+                    elif add_more.upper() == "N":
                         place_order(order_details_list, chosen_store, chosen_employee, customer_id)
                         add_more_products = False
+                    else:
+                        print("Please enter Y or N")
                 has_chosen = True
 
         else:
@@ -322,29 +321,29 @@ def product_not_in_stock(chosen_car, chosen_product, customer_id):
 
 
 def see_products_from_chosen_store(store):
-    products_in_store = store_controller.get_spare_parts_by_store_id(store.store_id)
-    product_numbers = []
+    products_in_store = store.products
     has_chosen = False
     chosen_product = None
     quantity = 0
     print(f"The following spare parts are sold in this store ({store.store_id}): ")
-    for product_in_store in products_in_store:
-        print(f"{product_in_store.product_number}.\t{product_in_store.spare_part.name}. Description: "
-              f"{product_in_store.spare_part.description}.\tPrice: €{product_in_store.spare_part.sell_price}")
-        product_numbers.append(product_in_store.product_number)
+    for i, product_in_store in enumerate(products_in_store):
+        product = product_controller.get_spare_part_by_id(product_in_store["new_product_id"])
+        print(f"{i +1}. {product._id}: {product.name}. Description: {product.description}.\tPrice: "
+              f"€{product.sell_price}")
+
     while not has_chosen:
-        product_choice = input(f"Does the customer want to buy one of the products listed "
-                               f"({', '.join([str(i) for i in product_numbers])}, N)?: ")
-        if product_choice.upper() == "N":
+        choice = input(f"Does the customer want to buy one of the products listed (1-{len(products_in_store)}, N)?: ")
+        if choice.upper() == "N":
             break
-        for product_in_store in products_in_store:
-            if product_in_store.product_number == int(product_choice):
-                chosen_product = product_in_store.spare_part
-                quantity = choose_and_check_quantity(chosen_product, store)
-                has_chosen = True
-                break
-        if not has_chosen:
-            print("Please choose one of the products listed, or N to cancel.")
+
+        try:
+            chosen_product_in_store = products_in_store[int(choice) - 1]
+            chosen_product = product_controller.get_spare_part_by_id(chosen_product_in_store["new_product_id"])
+            quantity = choose_and_check_quantity(chosen_product, store)
+            has_chosen = True
+
+        except KeyError:
+            print("Please choose the number of one of the products listed, or N to cancel.")
 
     return quantity, chosen_product
 
@@ -352,38 +351,46 @@ def see_products_from_chosen_store(store):
 def place_order(order_details_list, store, employee, customer_id):
     customer_order = {
         "customer_id": customer_id,
-        "store_id": store.store_id,
-        "employee_id": employee.employee_id,
         "order_date": datetime.now(),
-        "status": "Ordered"
+        "status": "Ordered",
+        "store": {
+            "store_id": store.store_id,
+            "city": store.city,
+            "country": store.country
+            },
+        "sales_contact": {
+            "name": employee["name"],
+            "email": employee["email"]
+            },
+        "order_details": order_details_list
     }
+
     products = []
     for order_details in order_details_list:
         quantity = order_details["quantity_ordered"]
-        product = spare_part_controller.get_spare_part_by_id(order_details["product_number"])
+        product = product_controller.get_spare_part_by_id(order_details["product_id"])
         price_each = product.sell_price
         products.append((quantity, product, price_each, quantity * price_each))
 
-    print("The following product/s has been added to the order:")
+    print("\nThe following product/s has been added to the order:")
     print(50 * "*")
-    for product in products:
-        print(f"{product[1]}. Quantity: {product[0]}. Total price: €{product[3]}")
+    for order_details in order_details_list:
+        product = product_controller.get_spare_part_by_id(order_details["product_id"])
+        quantity = order_details["quantity_ordered"]
+        total_price = quantity * product.sell_price
+        print(f"{product.name}, {product.description}, €{product.sell_price}. Quantity: {quantity}. Total price: "
+              f"€{total_price}")
     print(50 * "*")
-    print(f"Store: {store.store_id}, {store.store.address.city_name}, {store.store.address.country_name}")
-    print(f"Employee: {employee.employee_id}, {employee.first_name} {employee.last_name}")
+    print(f"Store: {store.store_id}, {store.street_address}, {store.country}")
+    print(f"Employee: {employee['name']}")
     print(50 * "*")
 
-    order = input(
-        f"Does the customer want to place the order (Y or N)?: ")
+    order = input(f"Does the customer want to place the order (Y or N)?: ")
 
     if order.upper() == "Y":
         customer_order_controller.create_customer_order(customer_order)
-        order = customer_order_controller.get_customer_orders_by_customer_id(customer_id)[-1]
-        order_number = order.customer_order_number
         for order_details in order_details_list:
-            order_details["customer_order_number"] = order_number
-            customer_order_controller.create_order_details(order_details)
-            store_controller.update_stock_in_store(store.store_id, order_details["product_number"],
+            store_controller.update_stock_in_store(store.store_id, order_details["product_id"],
                                                    -order_details["quantity_ordered"])
         print(f"The order was placed. ")
 
@@ -392,14 +399,10 @@ def place_order(order_details_list, store, employee, customer_id):
 
 
 def insert_order_details(order_details_list, product, quantity):
-    price_each = product.sell_price
-    product_number = product.product_number
-
     order_details = {
-        "customer_order_number": None,
-        "product_number": product_number,
-        "price_each": price_each,
-        "quantity_ordered": quantity
+        "product_id": product._id,
+        "quantity_ordered": quantity,
+        "price_each": product.sell_price,
     }
 
     order_details_list.append(order_details)
@@ -407,9 +410,10 @@ def insert_order_details(order_details_list, product, quantity):
 
 
 def place_order_choices():
-    customer_id = int(input("Please enter customer id: "))
-    customer = customer_controller.get_customer_by_id(customer_id)
-    customer_name = get_customer_name(customer_id)
+    old_customer_id = int(input("Please enter customer id: "))
+    customer = customer_controller.get_customer_by_id(old_customer_id)
+    customer_name = get_customer_name(old_customer_id)
+    customer_id = customer._id
     cars = []
     order_details_list = []
     try:
@@ -419,12 +423,12 @@ def place_order_choices():
 
     while True:
         if cars:
-            car_models = print_customers_cars(cars, customer)
+            car_models = print_customers_cars(cars, customer_name)
             chosen_car = choose_car_model(car_models)
             chosen_product = choose_spare_part(chosen_car)
-            if not chosen_product:
-                print(f"Unfortunately we don't sell any spare parts for {chosen_car.manufacturer} {chosen_car.model}, "
-                      f"{chosen_car.year}")
+            if chosen_product is None:
+                print(f"Unfortunately we don't sell any spare parts for {chosen_car['manufacturer']} "
+                      f"{chosen_car['model']}, {chosen_car['year']}")
                 find_fits_all_choice = input(
                     "Does the customer want to see the assortment for products that works with "
                     "all car models (Y or N)?: ")
@@ -436,7 +440,9 @@ def place_order_choices():
                     print("Ok. Going back to customer menu.")
                     break
 
-            stores = chosen_product.stores
+            available_in_stores = chosen_product.available_in_stores
+            store_ids = [store["store_id"] for store in available_in_stores]
+            stores = store_controller.get_stores_by_ids(store_ids)
             if len(stores) == 0:
                 product_not_in_stock(chosen_car, chosen_product, customer_id)
             else:
@@ -452,7 +458,7 @@ def place_order_choices():
                         quantity, chosen_product = see_products_from_chosen_store(chosen_store)
                         order_details_list = insert_order_details(order_details_list, chosen_product, quantity)
                     elif add_more.upper() == "N":
-                        place_order(order_details_list, chosen_store, chosen_employee, customer_id)
+                        place_order(order_details_list, chosen_store, chosen_employee, old_customer_id)
                         add_more_products = False
                     else:
                         print("Valid inputs are Y and N.")

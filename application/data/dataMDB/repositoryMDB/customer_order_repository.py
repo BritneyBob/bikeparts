@@ -10,8 +10,7 @@ def get_customer_orders_by_customer_id(customer_id):
 
 
 def create_customer_order(customer_order):
-    customer_order = CustomerOrder(**customer_order)
-    customer_order.save()
+    CustomerOrder(customer_order).save()
 
 
 def add_order_details(customer_order, order_details):
