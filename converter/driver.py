@@ -25,6 +25,7 @@ def convert_products():
         for store in product.stores:
             stores.append({
                 "store_id": store.store_id,
+                "new_store_id": mm.Store.find(store_id=store.store_id).first_or_none()._id,
             })
         if len(stores) > 0:
             as_dict["available_in_stores"] = stores
@@ -118,13 +119,19 @@ def convert_customers():
             as_dict["addresses"] = addresses
 
         cars = []
+        compatible_with_products = []
         for car in customer.car_models:
+            # compatible_with_products = [spare_part.product_number for spare_part in car.car_model.spare_parts]
+            for product in car.car_model.spare_parts:
+                product_id = mm.Product.find(product_number=product.product_number).first_or_none()._id
+                compatible_with_products.append(product_id)
             cars.append({
                 "license_number": car.license_number,
                 "manufacturer": car.car_model.manufacturer,
                 "model": car.car_model.model,
                 "year": car.car_model.year,
-                "color": car.color
+                "color": car.color,
+                "compatible_with_products": compatible_with_products
             })
         if len(cars) > 0:
             as_dict["cars"] = cars
@@ -201,7 +208,7 @@ def main():
     pass
     # convert_products()
     # convert_stores()
-    # convert_customers()
+    convert_customers()
     # convert_orders()
 
     # convert_companies()
