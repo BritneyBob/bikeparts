@@ -9,8 +9,8 @@ def get_store_by_id(store_id):
     return store_repository.get_store_by_id(store_id)
 
 
-def view_stores():
-    return store_repository.view_stores()
+def get_stores():
+    return store_repository.get_stores()
 
 
 def update_stock_in_store(store_id, product_number, ordered_quantity):

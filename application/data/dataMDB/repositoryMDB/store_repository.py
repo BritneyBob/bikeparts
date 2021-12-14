@@ -10,8 +10,8 @@ def get_store_by_id(store_id):
     return Store.find(store_id=store_id).first_or_none()
 
 
-def view_stores():
-    return session.query(Store).join(Address).join(AddressType).filter(AddressType.address_type_id == 3).all()
+def get_stores():
+    return Store.all()
 
 
 def update_stock_in_store(store_id, product_id, quantity):
