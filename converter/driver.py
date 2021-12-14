@@ -108,7 +108,6 @@ def convert_customers():
         addresses = []
         for address in customer.addresses:
             addresses.append({
-                "address_id": address.address_id,
                 "address_type": address.address_type.address_type_name,
                 "street_address": address.address_line2,
                 "zipcode": address.zipcode,
@@ -121,7 +120,6 @@ def convert_customers():
         cars = []
         compatible_with_products = []
         for car in customer.car_models:
-            # compatible_with_products = [spare_part.product_number for spare_part in car.car_model.spare_parts]
             for product in car.car_model.spare_parts:
                 product_id = mm.Product.find(product_number=product.product_number).first_or_none()._id
                 compatible_with_products.append(product_id)
