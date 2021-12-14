@@ -31,3 +31,7 @@ def get_company_by_id(company_id):
 
 def update_contact_name(company, new_contact_first_name, new_contact_last_name):
     return company_repository.update_contact_name(company, new_contact_first_name, new_contact_last_name)
+
+
+def get_companies_by_ids(company_ids):
+    return company_repository.get_companies_by_ids(company_ids)

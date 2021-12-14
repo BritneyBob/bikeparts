@@ -55,3 +55,7 @@ def update_contact_name(company, new_contact_first_name, new_contact_last_name):
     company.contact_email = f"{new_contact_first_name.lower()}.{new_contact_last_name.lower()}@" \
                             f"{random.choice(email_hosts)}"
     company.save()
+
+
+def get_companies_by_ids(company_ids):
+    return [get_company_by_id() for company_id in company_ids]

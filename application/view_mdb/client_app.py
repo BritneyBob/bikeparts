@@ -60,6 +60,8 @@ def main():
                             companies.view_companies()
                         case "2":
                             companies.update_company()
+                        case "3":
+                            companies.place_order_from_supplier()
 
                         # case "5":
                         #     auto_order.view_auto_orders()

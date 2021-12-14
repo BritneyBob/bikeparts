@@ -1,4 +1,4 @@
-from application.controllers.controllersMDB import company_controller
+from application.controllers.controllersMDB import company_controller, store_controller, product_controller
 from application.view_mdb import options
 
 
@@ -130,3 +130,39 @@ def update_company():
             print_new_info(company_id)
         case "9":
             options.procurement_menu()
+
+def order_existing_product(store, product, supplier, quantity):
+    pass
+
+
+def order_new_product(store, product, supplier, quantity):
+    pass
+
+
+def place_order_from_supplier():
+    store_id = input("What store are you ordering from (enter store id)?: ")
+    product_id = input("What product do you want to order (enter product number)?: ")
+    store = store_controller.get_store_by_id(store_id)
+    product = product_controller.get_spare_part_by_id(product_id)
+    supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
+    manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
+    suppliers = company_controller.get_companies_by_ids(supplier_ids)
+    manufacturers = company_controller.get_companies_by_ids(manufacturer_ids)
+    for supplier in suppliers:
+        for supplier_product in supplier.sells_product:
+            if supplier_product.product_number == product_id:
+                print(f"Supplier: {supplier.company_name}. {product.name} costs (euro){supplier_product['buy_price']} and takes "
+                      f"{supplier_product['delivery_time']} days to deliver.")
+    supplier = input(f"From what supplier do you want to order {product.name}?: ")
+    quantity = int(input(f"How many {product.name} would you like to order?: "))
+    new_product = True
+    for store_product in store.products:
+        if product_id == store_product.product_number:
+            new_product = False
+            order_existing_product(store, product, supplier, quantity)
+
+    if new_product:
+        order_new_product(store, product, supplier, quantity)
+
+
+
