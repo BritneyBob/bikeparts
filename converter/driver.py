@@ -34,7 +34,7 @@ def convert_products():
         for supplier in product.suppliers:
             suppliers.append({
                 "supplier_id": supplier.supplier_id,
-                "new_supplier_id": None
+                "new_company_id": None
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -43,7 +43,7 @@ def convert_products():
         for manufacturer in product.manufacturers:
             manufacturers.append({
                 "manufacturer_id": manufacturer.manufacturer_id,
-                "new_manufacturer_id": None
+                "new_company_id": None
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
