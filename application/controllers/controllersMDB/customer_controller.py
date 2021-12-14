@@ -29,5 +29,9 @@ def update_contact_phone_number(customer, new_phone_number):
     customer_repository.update_contact_phone_number(customer, new_phone_number)
 
 
-def update_customer_address(customer, new_address_id, old_address_id):
-    customer_repository.update_customer_address(customer, new_address_id, old_address_id)
+# def update_customer_address(customer, new_address_id, old_address_id):
+#     customer_repository.update_customer_address(customer, new_address_id, old_address_id)
+
+
+def get_customers_cars(customer_id):
+    return customer_repository.get_customers_cars(customer_id)

@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
-from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
-    car_model_controller, spare_part_controller, store_controller
+from application.controllers.controllersMDB import customer_controller, customer_order_controller, store_controller, \
+    product_controller
 from application.view import options
 
 
@@ -101,9 +101,10 @@ def update_customer_order():
 
 def get_customer_name(customer_id):
     customer = customer_controller.get_customer_by_id(customer_id)
-    if customer.customer_name:
+    print()
+    try:
         customer_name = customer.customer_name
-    else:
+    except AttributeError:
         customer_name = customer.contact_first_name + " " + customer.contact_last_name
     return customer_name
 
@@ -112,10 +113,9 @@ def print_customers_cars(cars, customer_name):
     car_models = []
     print(f"\nCustomer {customer_name} is the owner of the following car/s:")
     for i, car in enumerate(cars, 1):
-        car_model = car_model_controller.get_car_model_by_id(car.car_model_id)
-        car_models.append(car_model)
-        print(f"{i}. {car.license_number}: {car_model.manufacturer} {car_model.model}, {car_model.year}, "
-              f"{car.color}")
+        car_models.append(car)
+        print(f"{i}. {car['license_number']}: {car['manufacturer']} {car['model']}, {car['year']}, "
+              f"{car['color']}")
 
     return car_models
 
@@ -176,8 +176,8 @@ def choose_store(product, stores):
     chosen_store = None
     print(f"The following stores sells {product.name}:")
     for store in stores:
-        print(f"Store id {store.store_id} at {store.store.address.address_line2} in "
-              f"{store.store.address.city_name}, {store.store.address.country_name}")
+        print(f"Store id {store.store_id} at {store.street_address} in "
+              f"{store.city}, {store.country}")
         store_ids.append(store.store_id)
 
     if len(stores) == 1:
@@ -200,14 +200,14 @@ def choose_store(product, stores):
 
 
 def choose_employee(store):
-    employees = store.store.employees
+    employees = store.employees
     employee_ids = []
     chosen_employee = None
 
     print(f"These are the employees working in store number {store.store_id}:")
     for employee in employees:
-        employee_id = employee.employee_id
-        print(f"{employee_id}. {employee.last_name}, {employee.first_name}")
+        employee_id = employee["employee_id"]
+        print(f"{employee_id}. {employee['name']}")
         employee_ids.append(employee_id)
 
     has_chosen = False
@@ -216,7 +216,7 @@ def choose_employee(store):
                                        f"({', '.join([str(i) for i in employee_ids])})?: "))
 
         for employee in employees:
-            if employee.employee_id == chosen_employee_id:
+            if employee["employee_id"] == chosen_employee_id:
                 chosen_employee = employee
                 has_chosen = True
                 break
@@ -243,17 +243,21 @@ def choose_and_check_quantity(product, store):
 
 
 def print_list_of_fits_all_products():
-    fits_all_spare_parts = []
-    spare_parts_ids = []
-    for spare_part in spare_part_controller.get_spare_parts():
-        if len(spare_part.car_models) == 0:
-            fits_all_spare_parts.append(spare_part)
-            spare_parts_ids.append(spare_part.product_number)
+    fits_all_products = []
+    other_products = []
+    product_ids = []
+    for product in product_controller.get_spare_parts():
+        try:
+            other_products.append(product.compatible_with_cars)
+        except AttributeError:
+            fits_all_products.append(product)
+            product_ids.append(product.product_number)
     print("\nThe following products works with all car models:")
-    for sp in fits_all_spare_parts:
-        print(f"{sp.product_number}.\t{sp.name}. Description: {sp.description}.\tPrice: €{sp.sell_price}")
+    for product in fits_all_products:
+        print(f"{product.product_number}.\t{product.name}. Description: {product.description}.\tPrice: "
+              f"€{product.sell_price}")
 
-    return fits_all_spare_parts, spare_parts_ids
+    return fits_all_products, product_ids
 
 
 def order_spare_part_fits_all(products, product_numbers, customer_id):
@@ -274,11 +278,15 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                     chosen_product = product
                     has_chosen = True
                     break
-            stores = chosen_product.stores
+            available_in_stores = chosen_product.available_in_stores
+            store_ids = [store["store_id"] for store in available_in_stores]
+            stores = store_controller.get_stores_by_ids(store_ids)
+
             if len(stores) == 0:
                 print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: "
                       f"{chosen_product.description} in stock.")
                 print("Going back to main menu.")
+
             else:
                 chosen_store = choose_store(chosen_product, stores)
                 chosen_employee = choose_employee(chosen_store)
@@ -399,10 +407,15 @@ def insert_order_details(order_details_list, product, quantity):
 
 
 def place_order_choices():
-    customer_id = input("Please enter customer id: ")
-    customer = get_customer_name(customer_id)
-    cars = customer_car_controller.get_customers_cars(customer_id)
+    customer_id = int(input("Please enter customer id: "))
+    customer = customer_controller.get_customer_by_id(customer_id)
+    customer_name = get_customer_name(customer_id)
+    cars = []
     order_details_list = []
+    try:
+        cars = customer.cars
+    except AttributeError:
+        pass
 
     while True:
         if cars:
@@ -446,7 +459,7 @@ def place_order_choices():
                 break
 
         else:
-            print(f"The chosen customer {customer} does not own any car.")
+            print(f"The chosen customer {customer_name} does not own any car.")
             find_fits_all_choice = input("Does the customer want to see the assortment for products that works with "
                                          "all car models (Y or N)?: ")
 

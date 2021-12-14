@@ -1,6 +1,4 @@
-from application.data.db import session
-from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
-    Company, Supplier, Manufacturer, spare_parts_have_manufacturers_table
+from application.data.dataMDB.modelsMDB import Product
 
 
 def create_spare_part(spare_part):
@@ -29,7 +27,7 @@ def create_spare_part_manufacturer(spare_part, manufacturer):
 
 
 def get_spare_parts():
-    return session.query(SparePart).all()
+    return Product.all()
 
 
 def get_spare_parts_by_filter(name_filter):
