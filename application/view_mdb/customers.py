@@ -1,5 +1,5 @@
 from application.controllers.controllersMDB import customer_controller
-from application.view_mdb import options
+# from application.view_mdb import options
 
 
 def print_customer_info(customer):
@@ -20,14 +20,6 @@ def show_all_customers():
     print("All customers: ")
     for customer in customers:
         print_customer_info(customer)
-
-
-def get_old_address_id(customer, address_type):
-    old_address_id = None
-    for address in customer.addresses:
-        if address.address_type_id == address_type:
-            old_address_id = address.address_id
-    return old_address_id
 
 
 def insert_new_address_info(address_type, customer):
@@ -105,5 +97,3 @@ def update_customer():
             print_new_info(customer_id)
         case "9":
             pass
-
-

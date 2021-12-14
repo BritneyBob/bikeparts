@@ -97,21 +97,3 @@ def procurement_menu():
             break
         print("Valid options are 1, 2 or 9")
     return choice
-
-
-def store_menu():
-    print()
-    print("*" * 50)
-    print("Store menu")
-    print("*" * 50)
-    print("1. View stores")
-    print("2. Add store")
-    print()
-    print("9. Back to main menu")
-    print()
-    while True:
-        choice = input("Choice: ")
-        if choice in "129" and len(choice) == 1:
-            break
-        print("Valid options are 1, 2 or 9")
-    return choice
