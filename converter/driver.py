@@ -7,26 +7,21 @@ from application.data.models import SparePart, Store, Customer, CustomerOrder, C
 
 
 def convert_companies():
-    companies = session.query(Company).filter(Company.company_id == 21).all()
+    companies = session.query(Company).all()
+
+    manufacturer_id = None
     for company in companies:
         as_dict = company.__dict__
 
         supplier_id = None
-        manufacturer_id = None
 
-        if hasattr(company, 'supplier'):
-            if company.supplier is None:
-                as_dict['is_supplier'] = False
-            else:
-                as_dict['is_supplier'] = True
-                supplier_id = company.supplier.supplier_id
+        if company.supplier and company.manufacturer:
+            as_dict['company_type'] = "Supplier and manufacturer"
+        elif company.supplier:
+            as_dict['company_type'] = "Supplier"
+        else:
+            as_dict['company_type'] = "Manufacturer"
 
-        if hasattr(company, 'manufacturer'):
-            if company.manufacturer is None:
-                as_dict['is_manufacturer'] = False
-            else:
-                as_dict['is_manufacturer'] = True
-                manufacturer_id = company.manufacturer.manufacturer_id
 
         as_dict['contact'] = {
             'last_name': company.contact,
@@ -56,26 +51,31 @@ def convert_companies():
                     'city': address.city_name,
                     'country': address.country_name
                 }
-        supplier_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
+
         sell_products = []
-        for product in supplier_products:
-            sell_products.append({
-                'product_number': product.product_number,
-                'buy_price': float(product.buy_price),
-                'delivery_time': product.delivery_time
-            })
+        if company.supplier:
+            # supplier_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
+            products = company.supplier.spare_parts
+            for product in products:
+                sell_products.append({
+                    'product_number': product.product_number,
+                    'buy_price': float(product.buy_price),
+                    'delivery_time': product.delivery_time
+                })
         if len(sell_products) > 0:
             as_dict["supplies_products"] = sell_products
 
-        product = f'select product_number from spare_parts_have_manufacturers where manufacturer_id = {manufacturer_id}'
-        result = engine.connect().execute(product)
         manufacturer_products = []
-        for product in result:
-            manufacturer_products.append({
-                'product_number': product[0]
-            })
+        if company.manufacturer:
+            products = company.manufacturer.spare_parts
+
+            for product in products:
+                manufacturer_products.append({
+                    'product_number': product.product_number
+                })
         if len(manufacturer_products) > 0:
             as_dict["manufactures_products"] = manufacturer_products
+
         del as_dict["_sa_instance_state"]
         del as_dict["manufacturer"]
         del as_dict["contact_email"]
@@ -118,7 +118,7 @@ def convert_products():
         for supplier in product.suppliers:
             suppliers.append({
                 "supplier_id": supplier.supplier_id,
-                "new_company_id": None
+                "new_company_id": mm.Company.find(company_id=supplier.supplier.company_id).first_or_none()._id
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -127,7 +127,7 @@ def convert_products():
         for manufacturer in product.manufacturers:
             manufacturers.append({
                 "manufacturer_id": manufacturer.manufacturer_id,
-                "new_company_id": None
+                "new_company_id": mm.Company.find(company_id=manufacturer.company_id).first_or_none()._id
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
@@ -161,7 +161,8 @@ def convert_stores():
         for product in store.spare_parts:
             products.append({
                 "product_number": product.product_number,
-                "new_product_id": mm.Product.find(product_number=product.product_number).first_or_none()._id,
+                "new_product_id": None,
+                # "new_product_id": mm.Product.find(product_number=product.product_number).first_or_none()._id,
                 "shelf_number": product.shelf_number,
                 "quantity_in_stock": product.quantity_in_stock
             })
@@ -287,14 +288,13 @@ def convert_orders():
 
 
 def main():
-    convert_companies()
-    # convert_products()
+    # convert_companies()
     # convert_stores()
+    convert_products()
+
     # convert_customers()
     # convert_orders()
 
-    # convert_companies()
-    # convert_supplier_orders()
 
     # fix_orders()
 
