@@ -1,4 +1,4 @@
-import test
+import datetime
 
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
@@ -242,9 +242,9 @@ def convert_orders():
     orders = session.query(CustomerOrder).all()
     for order in orders:
         as_dict = order.__dict__
-        as_dict["order_date"] = test.test(order.order_date.year, order.order_date.month, order.order_date.day)
+        as_dict["order_date"] = datetime.datetime(order.order_date.year, order.order_date.month, order.order_date.day)
         if order.shipped_date is not None:
-            as_dict["shipped_date"] = test.test(order.shipped_date.year, order.shipped_date.month,
+            as_dict["shipped_date"] = datetime.datetime(order.shipped_date.year, order.shipped_date.month,
                                                 order.shipped_date.day)
         else:
             del as_dict["shipped_date"]
