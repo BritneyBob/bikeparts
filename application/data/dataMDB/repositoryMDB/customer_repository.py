@@ -1,21 +1,23 @@
-from application.data.dataMDB import modelsMDB as mm
+from application.data.dataMDB.modelsMDB import Customer
 
 
 def create_customer(customer):
-    customer = mm.Customer(**customer)
-    customer.save()
+    Customer(customer).save()
 
 
-def create_customer_address(customer, address):
-    customer.address
+def create_customer_address(customer, new_address):
+    for address in customer.addresses:
+        if new_address["address_type"] == address["address_type"]:
+            address = new_address
+            customer.save()
 
 
 def get_customers():
-    return mm.Customer.all()
+    return Customer.all()
 
 
 def get_customer_by_id(customer_id):
-    return mm.Customer.find(customer_id=customer_id).first_or_none()
+    return Customer.find(customer_id=customer_id).first_or_none()
 
 
 def update_customer_name(customer, new_customer_name):

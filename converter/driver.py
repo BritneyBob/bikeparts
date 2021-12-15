@@ -112,7 +112,7 @@ def convert_products():
         for supplier in product.suppliers:
             suppliers.append({
                 "supplier_id": supplier.supplier_id,
-                "new_supplier_id": None
+                "new_company_id": None
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -121,7 +121,7 @@ def convert_products():
         for manufacturer in product.manufacturers:
             manufacturers.append({
                 "manufacturer_id": manufacturer.manufacturer_id,
-                "new_manufacturer_id": None
+                "new_company_id": None
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
@@ -186,7 +186,6 @@ def convert_customers():
         addresses = []
         for address in customer.addresses:
             addresses.append({
-                "address_id": address.address_id,
                 "address_type": address.address_type.address_type_name,
                 "street_address": address.address_line2,
                 "zipcode": address.zipcode,
@@ -197,13 +196,18 @@ def convert_customers():
             as_dict["addresses"] = addresses
 
         cars = []
+        compatible_with_products = []
         for car in customer.car_models:
+            for product in car.car_model.spare_parts:
+                product_id = mm.Product.find(product_number=product.product_number).first_or_none()._id
+                compatible_with_products.append(product_id)
             cars.append({
                 "license_number": car.license_number,
                 "manufacturer": car.car_model.manufacturer,
                 "model": car.car_model.model,
                 "year": car.car_model.year,
-                "color": car.color
+                "color": car.color,
+                "compatible_with_products": compatible_with_products
             })
         if len(cars) > 0:
             as_dict["cars"] = cars

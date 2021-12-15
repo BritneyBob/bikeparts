@@ -1,5 +1,5 @@
 from application.controllers.controllersMDB import customer_controller
-from application.view_mdb import options
+# from application.view_mdb import options
 
 
 def print_customer_info(customer):
@@ -22,26 +22,19 @@ def show_all_customers():
         print_customer_info(customer)
 
 
-def get_old_address_id(customer, address_type):
-    old_address_id = None
-    for address in customer.addresses:
-        if address.address_type_id == address_type:
-            old_address_id = address.address_id
-    return old_address_id
-
-
-def insert_new_address_info(address_type, customer_id, customer):
+def insert_new_address_info(address_type, customer):
     new_address_line2 = input("Please enter new street address: ")
     new_zipcode = input("Please enter new zipcode: ")
     new_city = input("Please enter new city: ")
     new_country = input("Please enter new country: ")
     address = {
         "address_type": address_type,
-        "address_line2": new_address_line2,
+        "street_address": new_address_line2,
         "zipcode": new_zipcode,
-        "city_name": new_city,
-        "country_name": new_country
+        "city": new_city,
+        "country": new_country
     }
+    # TODO: This doesn't work. Ask for help!
     customer_controller.create_customer_address(customer, address)
 
 
@@ -77,7 +70,7 @@ def update_customer():
     print("9. Back to customer menu")
     print()
     while True:
-        choice = input("What would you like to change (1-4): ")
+        choice = input("What would you like to change (1-5): ")
         if choice in "123459" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3, 4, 5 or 9")
@@ -93,10 +86,10 @@ def update_customer():
             customer_controller.update_contact_name(customer, new_contact_first_name, new_contact_last_name)
             print_new_info(customer_id)
         case "3":
-            insert_new_address_info("delivery address", customer_id, customer)
+            insert_new_address_info("delivery address", customer)
             print_new_info(customer_id)
         case "4":
-            insert_new_address_info("billing address", customer_id, customer)
+            insert_new_address_info("billing address", customer)
             print_new_info(customer_id)
         case "5":
             new_phone_number = input("Please enter new phone number: ")
@@ -104,5 +97,3 @@ def update_customer():
             print_new_info(customer_id)
         case "9":
             pass
-
-

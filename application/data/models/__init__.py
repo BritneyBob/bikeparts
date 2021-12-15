@@ -74,16 +74,6 @@ class CarModel(Base):
     spare_parts = relationship("SparePart", secondary=car_models_have_spare_parts_table, back_populates="car_models")
 
 
-# Should this rather be an association table, and not a class?
-# class CarModelSparePart(Base):
-#     __tablename__ = "car_models_have_spare_parts"
-#
-#     car_model_id = Column(Integer, ForeignKey('car_models.car_model_id'), primary_key=True, nullable=False)
-#     product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
-#     car_models = relationship("CarModel", back_populates="spare_parts")
-#     spare_parts = relationship("SparePart", back_populates="car_models")
-
-
 class Company(Base):
     __tablename__ = "companies"  # den här håller koll på vilken tabell vi matchar
 
@@ -118,16 +108,6 @@ class Customer(Base):
     def __repr__(self):
         return f"Customer id: {self.customer_id}\tCompany name (if company): {self.customer_name}\t" \
                f"Contact: {self.contact_first_name} {self.contact_last_name}\tPhone number: {self.phonenumber}" \
-
-
-# Should this be an association table instead of a class?
-# class CustomerAddress(Base):
-#     __tablename__ = "customers_have_addresses"
-#
-#     customer_id = Column(Integer, ForeignKey('customers.customer_id'), primary_key=True, nullable=False)
-#     address_id = Column(Integer, ForeignKey('addresses.address_id'), primary_key=True, nullable=False)
-#     customers = relationship("Customer", back_populates="addresses")
-#     addresses = relationship("Address", back_populates="customers")
 
 
 class CustomerCar(Base):
@@ -237,15 +217,6 @@ class SparePartInStore(Base):
 
     spare_part = relationship("SparePart", back_populates="stores")
     store = relationship("Store", back_populates="spare_parts")
-
-
-# class SparePartManufacturer(Base):
-#     __tablename__ = "spare_parts_have_manufacturers"
-#
-#     product_number = Column(Integer, ForeignKey('spare_parts.product_number'), primary_key=True, nullable=False)
-#     manufacturer_id = Column(Integer, ForeignKey('manufacturers.manufacturer_id'), primary_key=True, nullable=False)
-#     spare_part = relationship("SparePart", back_populates="manufacturers")
-#     manufacturer = relationship("Manufacturer", back_populates="spare_parts")
 
 
 class SparePartSupplier(Base):

@@ -9,7 +9,7 @@ def main_menu():
     print("1. View or update products")
     print("2. Update prices")
     print("3. Handle customers and customer orders")
-    print("4. Handle vendors and auto orders")
+    print("4. Handle suppliers/manufacturers")
     print("5. View stores")
     print()
     print("9. Quit")
@@ -86,30 +86,8 @@ def procurement_menu():
     print("*" * 50)
     print("Procurement menu")
     print("*" * 50)
-    print("1. View supplier information")
-    print("2. Update supplier information")
-    print("3. View manufacturer information")
-    print("4. Update manufacturer information")
-    print("5. View auto order")
-    print("6. Update auto order")
-    print()
-    print("9. Back to main menu")
-    print()
-    while True:
-        choice = input("Choice: ")
-        if choice in "1234569" and len(choice) == 1:
-            break
-        print("Valid options are 1, 2, 3, 4, 5, 6 or 9")
-    return choice
-
-
-def store_menu():
-    print()
-    print("*" * 50)
-    print("Store menu")
-    print("*" * 50)
-    print("1. View stores")
-    print("2. Add store")
+    print("1. View company information")
+    print("2. Update company information")
     print()
     print("9. Back to main menu")
     print()
