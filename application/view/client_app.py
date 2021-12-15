@@ -70,7 +70,7 @@ def main():
                             print("<This string will be replaced with method to redirect user>")
                         case "6":
                             print("<This string will be replaced with method to redirect user>")
-                            # auto_order.evaluate_stock_level(12, 48)
+                            auto_order.evaluate_stock_level(12, 48)
                         case "9":
                             print("Going back to main menu")
                             break

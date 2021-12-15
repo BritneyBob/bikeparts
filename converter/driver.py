@@ -3,7 +3,8 @@ import datetime
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
 from application.data.db import session
-from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier
+from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier, Manufacturer, \
+    spare_parts_have_manufacturers_table
 
 
 def convert_companies():
@@ -26,7 +27,7 @@ def convert_companies():
                 as_dict['is_manufacturer'] = False
             else:
                 as_dict['is_manufacturer'] = True
-            manufacturer_id = company.manufacturer.manufacturer_id
+                manufacturer_id = company.manufacturer.manufacturer_id
 
         as_dict['contact'] = {
             'last_name': company.contact,
@@ -67,7 +68,16 @@ def convert_companies():
         if len(sell_products) > 0:
             as_dict["sell_products"] = sell_products
 
-        manufacturer_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
+        mp = session.query(spare_parts_have_manufacturers_table).\
+            filter(spare_parts_have_manufacturers_table.manufacturer_id == manufacturer_id).all()
+        manufacturer_products = []
+        for product in mp:
+            manufacturer_products.append({
+                'number': product.product_number
+            })
+
+
+        # return session.query(Company).join(Manufacturer).filter(Manufacturer.manufacturer_id == manufacturer_id).all()
         # Get rid of filter on query line 10 before save to db!!!!!
         print()
 

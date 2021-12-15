@@ -3,6 +3,7 @@ from datetime import datetime, date
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
 from application.view import options
+from application.view.auto_order import evaluate_stock_level
 
 
 def print_customer_order(customer_order):
@@ -441,6 +442,7 @@ def place_order_choices():
                     elif add_more.upper() == "N":
                         place_order(order_details_list, chosen_store, chosen_employee, customer_id)
                         add_more_products = False
+                        evaluate_stock_level(chosen_store.store_id, chosen_product.product_number)
                     else:
                         print("Valid inputs are Y and N.")
                 break

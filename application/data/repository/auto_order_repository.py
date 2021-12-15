@@ -23,8 +23,13 @@ def create_auto_order(store_id, product_number, supplier_id):
         filter(SparePartInStore.product_number == product_number).first()
     ordered_quantity = spis_object.quantity_to_order
 
-    new_auto_order = AutoOrder(product_number=product_number, store_id=store_id, supplier_id=supplier_id,
-                               arrival_date=arrival_date, ordered_quantity=ordered_quantity, price_each=price_each)
+    new_auto_order = AutoOrder()
+    new_auto_order.product_number = product_number
+    new_auto_order.store_id = store_id
+    new_auto_order.arrival_date = arrival_date
+    new_auto_order.ordered_quantity = ordered_quantity
+    new_auto_order.price_each = price_each
+
     session.add(new_auto_order)
     session.commit()
     # move row below to where the function create_auto_order is called?
