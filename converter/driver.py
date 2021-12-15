@@ -2,13 +2,13 @@ import datetime
 
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
-from application.data.db import session
+from application.data.db import session, engine
 from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier, Manufacturer, \
     spare_parts_have_manufacturers_table
 
 
 def convert_companies():
-    companies = session.query(Company).filter(Company.company_id == 21).all()
+    companies = session.query(Company).all()
     for company in companies:
         as_dict = company.__dict__
 
@@ -68,12 +68,12 @@ def convert_companies():
         if len(sell_products) > 0:
             as_dict["sell_products"] = sell_products
 
-        mp = session.query(spare_parts_have_manufacturers_table).\
-            filter(spare_parts_have_manufacturers_table.manufacturer_id == manufacturer_id).all()
+        product = f'select product_number from spare_parts_have_manufacturers where manufacturer_id = {manufacturer_id}'
+        result = engine.connect().execute(product)
         manufacturer_products = []
-        for product in mp:
+        for product in result:
             manufacturer_products.append({
-                'number': product.product_number
+                'number': product[0]
             })
 
 
