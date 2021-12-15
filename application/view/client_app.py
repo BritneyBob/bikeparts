@@ -60,16 +60,10 @@ def main():
                             companies.view_companies()
                         case "2":
                             companies.update_company()
-
-                        # case "5":
-                        #     auto_order.view_auto_orders()
-                        #     print("<This string will be replaced with method to redirect user>")
-                        # case "6":
-                        #     print("<This string will be replaced with method to redirect user>")
-                        #     # auto_order.evaluate_stock_level(12, 48)
                         case "9":
                             print("Going back to main menu")
                             break
+
             case "5":
                 stores.view_all_stores()
 
