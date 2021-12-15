@@ -1,4 +1,4 @@
-from application.data.dataMDB.modelsMDB import Store
+from application.dataMDB.modelsMDB import Store
 
 
 def create_store(store):

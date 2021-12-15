@@ -1,7 +1,7 @@
 import decimal
 import random
 
-from application.data.dataMDB.modelsMDB import Company
+from application.dataMDB.modelsMDB import Company
 
 
 def create_company(company):
