@@ -1,4 +1,4 @@
-import datetime
+import test
 
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
@@ -8,12 +8,8 @@ from application.data.models import SparePart, Store, Customer, CustomerOrder, C
 
 def convert_companies():
     companies = session.query(Company).all()
-
-    manufacturer_id = None
     for company in companies:
         as_dict = company.__dict__
-
-        supplier_id = None
 
         if company.supplier and company.manufacturer:
             as_dict['company_type'] = "Supplier and manufacturer"
@@ -22,35 +18,46 @@ def convert_companies():
         else:
             as_dict['company_type'] = "Manufacturer"
 
-
         as_dict['contact'] = {
             'last_name': company.contact,
             'phone_number': company.contact_phonenumber,
             'email': company.contact_email
         }
 
+        addresses = []
         for address in company.addresses:
-            if address.address_type_id == 1:
-                as_dict['delivery_address'] = {
-                    'address_line': address.address_line2,
-                    'zip_code': address.zipcode,
-                    'city': address.city_name,
-                    'country': address.country_name
-                }
-            if address.address_type_id == 2:
-                as_dict['billing_address'] = {
-                    'address_line': address.address_line2,
-                    'zip_code': address.zipcode,
-                    'city': address.city_name,
-                    'country': address.country_name
-                }
-            if address.address_type_id == 3:
-                as_dict['visiting_address'] = {
-                    'address_line': address.address_line2,
-                    'zip_code': address.zipcode,
-                    'city': address.city_name,
-                    'country': address.country_name
-                }
+            addresses.append({
+                "address_type": address.address_type.address_type_name,
+                "street_address": address.address_line2,
+                "zipcode": address.zipcode,
+                "city": address.city_name,
+                "country": address.country_name
+            })
+        if len(addresses) > 0:
+            as_dict["addresses"] = addresses
+
+        # for address in company.addresses:
+        #     if address.address_type_id == 1:
+        #         as_dict['delivery_address'] = {
+        #             'address_line': address.address_line2,
+        #             'zip_code': address.zipcode,
+        #             'city': address.city_name,
+        #             'country': address.country_name
+        #         }
+        #     if address.address_type_id == 2:
+        #         as_dict['billing_address'] = {
+        #             'address_line': address.address_line2,
+        #             'zip_code': address.zipcode,
+        #             'city': address.city_name,
+        #             'country': address.country_name
+        #         }
+        #     if address.address_type_id == 3:
+        #         as_dict['visiting_address'] = {
+        #             'address_line': address.address_line2,
+        #             'zip_code': address.zipcode,
+        #             'city': address.city_name,
+        #             'country': address.country_name
+        #         }
 
         sell_products = []
         if company.supplier:
@@ -85,9 +92,6 @@ def convert_companies():
         print()
         mongo_product = mm.Company(as_dict)
         mongo_product.save()
-
-
-
 
 
 def convert_products():
@@ -196,8 +200,8 @@ def convert_customers():
                 "address_type": address.address_type.address_type_name,
                 "street_address": address.address_line2,
                 "zipcode": address.zipcode,
-                "city_name": address.city_name,
-                "country_name": address.country_name
+                "city": address.city_name,
+                "country": address.country_name
             })
         if len(addresses) > 0:
             as_dict["addresses"] = addresses
@@ -238,10 +242,10 @@ def convert_orders():
     orders = session.query(CustomerOrder).all()
     for order in orders:
         as_dict = order.__dict__
-        as_dict["order_date"] = datetime.datetime(order.order_date.year, order.order_date.month, order.order_date.day)
+        as_dict["order_date"] = test.test(order.order_date.year, order.order_date.month, order.order_date.day)
         if order.shipped_date is not None:
-            as_dict["shipped_date"] = datetime.datetime(order.shipped_date.year, order.shipped_date.month,
-                                                        order.shipped_date.day)
+            as_dict["shipped_date"] = test.test(order.shipped_date.year, order.shipped_date.month,
+                                                order.shipped_date.day)
         else:
             del as_dict["shipped_date"]
         as_dict["customer_id"] = mm.Customer.find(customer_id=order.customer_id).first_or_none()._id
@@ -282,21 +286,24 @@ def convert_orders():
         mongo_order.save()
 
 
-# def fix_orders():
-#     for order in mm.Order.all():
-#         order.delete_field('customerNumber')
+def fix_customers():
+    for i, customer in enumerate(mm.Customer.all()):
+        if hasattr(customer, 'orders'):
+            for order in customer.orders:
+                order["customer_order_id"] = mm.CustomerOrder.find(customer_order_number=order['customer_order_number']).first_or_none()._id
+                del order["customer_order_number"]
+                del order["new_customer_order_number"]
+        customer.save()
 
 
 def main():
     # convert_companies()
     # convert_stores()
-    convert_products()
-
+    # convert_products()
     # convert_customers()
     # convert_orders()
 
-
-    # fix_orders()
+    fix_customers()
 
 
 if __name__ == "__main__":

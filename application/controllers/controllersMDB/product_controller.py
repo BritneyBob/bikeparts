@@ -25,6 +25,10 @@ def get_spare_part_by_id(product_no):
     return pr.get_spare_part_by_id(product_no)
 
 
+def get_spare_part_by_product_number(product_no):
+    return pr.get_spare_part_by_product_number(product_no)
+
+
 def get_spare_parts_by_filter(name_filter):
     return pr.get_spare_parts_by_filter(name_filter)
 

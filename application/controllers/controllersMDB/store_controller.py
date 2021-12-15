@@ -27,3 +27,7 @@ def get_spare_parts_by_store_id(store_id):
 
 def get_stores_by_ids(store_ids):
     return store_repository.get_stores_by_ids(store_ids)
+
+
+def add_product_to_store(store, product):
+    store_repository.add_product_to_store(store, product)
