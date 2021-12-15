@@ -8,11 +8,16 @@ def create_company(company):
     Company(company).save()
 
 
-def create_company_address(company, new_address):
-    for address in company.addresses:
-        if new_address["address_type"] == address["address_type"]:
-            address = new_address
-            company.save()
+def get_all_companies():
+    return Company.all()
+
+
+def get_company_by_id(company_id):
+    return Company.find(_id=company_id).first_or_none()
+
+
+def get_companies_by_ids(company_ids):
+    return [get_company_by_id(company_id) for company_id in company_ids]
 
 
 def negotiation(id_and_buy_price, comp_and_supp_id):
@@ -31,22 +36,21 @@ def negotiation(id_and_buy_price, comp_and_supp_id):
     return new_buy_prices
 
 
-def get_all_companies():
-    return Company.all()
-
-
 def update_company_name(company, new_company_name):
     company.company_name = new_company_name
     company.save()
 
 
+def update_company_address(company, new_address):
+    for i, address in enumerate(company.addresses):
+        if new_address["address_type"] == address["address_type"]:
+            company.addresses[i] = new_address
+            company.save()
+
+
 def update_contact_phone_number(company, new_phone_number):
     company.contact_phonenumber = new_phone_number
     company.save()
-
-
-def get_company_by_id(company_id):
-    return Company.find(_id=company_id).first_or_none()
 
 
 def update_contact_name(company, new_contact_first_name, new_contact_last_name):
@@ -55,7 +59,3 @@ def update_contact_name(company, new_contact_first_name, new_contact_last_name):
     company.contact_email = f"{new_contact_first_name.lower()}.{new_contact_last_name.lower()}@" \
                             f"{random.choice(email_hosts)}"
     company.save()
-
-
-def get_companies_by_ids(company_ids):
-    return [get_company_by_id() for company_id in company_ids]

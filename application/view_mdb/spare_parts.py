@@ -1,14 +1,11 @@
-from mysql.connector import errors
-from sqlalchemy.exc import DataError
-
-from application.controllers import spare_part_controller, company_controller
+from application.controllers.controllersMDB import product_controller, company_controller
 from application.controllers.spare_part_controller import adjust_price, update_product
 from application.controllers.store_controller import view_stores, get_spare_part_in_store_by_store_id_and_product_number
 
 
 def search_spare_parts():
     name_filter = input("Which product are you looking for? Enter name/part of name. Leave blank to show all: ")
-    search_hits = spare_part_controller.get_spare_parts_by_filter(name_filter)
+    search_hits = product_controller.get_spare_parts_by_filter(name_filter)
     for spare_part in search_hits:
         print(f"Product number: {spare_part.product_number}\t\tProduct name: {spare_part.name}\t\t"
               f"Description: {spare_part.description}\t\tPrice to customer: {spare_part.sell_price} EUR")
@@ -16,7 +13,7 @@ def search_spare_parts():
 
 def show_all_spare_parts():
     print("List of available spare parts: ")
-    spare_parts = spare_part_controller.get_spare_parts()
+    spare_parts = product_controller.get_spare_parts()
     for spare_part in spare_parts:
         print(f"Product number: {spare_part.product_number}\t\tName: {spare_part.name}"
               f"\t\tDescription: {spare_part.description}\t\tPrice: {spare_part.sell_price} EUR")
@@ -33,34 +30,34 @@ def show_one_spare_part():
 
 
 def print_spare_part_info(product_no):
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
+    spare_part = product_controller.get_spare_part_by_id(product_no)
     print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
     print(f"Description: {spare_part.description}")
     print(f"Customer price: {spare_part.sell_price} EUR")
 
 
 def print_supplier(product_no):
-    suppliers = spare_part_controller.get_spare_part_suppliers(product_no)
+    suppliers = product_controller.get_spare_part_suppliers(product_no)
     print(f"Available from the following suppliers: ")
     for supplier in suppliers:
-        supplier_company = spare_part_controller.get_spare_part_supplier_company(supplier.supplier_id)
+        supplier_company = product_controller.get_spare_part_supplier_company(supplier.supplier_id)
         for company in supplier_company:
             print(f"\tCompany name: {company.company_name}\tBuy price: {supplier.buy_price} EUR")
 
 
 def print_manufacturer(product_no):
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
+    spare_part = product_controller.get_spare_part_by_id(product_no)
     manufacturer_id_s = [manufacturer.manufacturer_id for manufacturer in spare_part.manufacturers]
     print(f"Manufactured by: ")
     for manufacturer_id in manufacturer_id_s:
-        manufacturer_company = spare_part_controller.get_spare_part_manufacturer_company(manufacturer_id)
+        manufacturer_company = product_controller.get_spare_part_manufacturer_company(manufacturer_id)
         for company in manufacturer_company:
             print(f"\tCompany name: {company.company_name}")
 
 
 def print_stock_info(product_no):
     sorted_stores = sorted(view_stores(), key=lambda x: x.store_id)
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
+    spare_part = product_controller.get_spare_part_by_id(product_no)
     print(f"Items in stock in the following stores: ")
     for store in sorted_stores:
         if spare_part.quantity_in_stock == 0:
@@ -78,7 +75,7 @@ def print_stock_info(product_no):
 def update_a_product():
     search_spare_parts()
     product_no = input("\nEnter product number to update: ")
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
+    spare_part = product_controller.get_spare_part_by_id(product_no)
     print("*" * 50)
     print_spare_part_info(product_no)
     print("*" * 50)
@@ -118,8 +115,8 @@ def add_product():
         "description": description,
         "sell_price": sell_price
     }
-    spare_part_controller.create_spare_part(new_product)
-    added_product = spare_part_controller.get_spare_parts_by_filter(name)
+    product_controller.create_spare_part(new_product)
+    added_product = product_controller.get_spare_parts_by_filter(name)
     # TODO what if there is a double? Is there a way to get the recently added product no?
     print(f"Added new product: ")
     for product in added_product:
@@ -140,7 +137,7 @@ def add_product():
 
 def adjust_sell_margins():
     name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
-    search_hits = spare_part_controller.get_spare_parts_by_filter(name_filter)
+    search_hits = product_controller.get_spare_parts_by_filter(name_filter)
     for hit in search_hits:
         print(hit)
     product_no = input('\nEnter Product number for the product you want to adjust sell margins on: ')
