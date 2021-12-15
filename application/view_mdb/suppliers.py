@@ -1,4 +1,4 @@
-from application.controllers.supplier_controller import get_suppliers, negotiation  # , show_products_from_company
+from application.controllers.company_controller import get_suppliers, negotiation  # , show_products_from_company
 
 
 def negotiate_supplier_prices():

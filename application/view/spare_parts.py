@@ -1,4 +1,4 @@
-from application.controllers import spare_part_controller, supplier_controller, manufacturer_controller
+from application.controllers import spare_part_controller, company_controller
 from application.controllers.spare_part_controller import adjust_price, update_product
 from application.controllers.store_controller import view_stores, get_spare_part_in_store_by_store_id_and_product_number
 
@@ -142,7 +142,7 @@ def add_supplier_to_product(product):
     adding_suppliers = True
     while adding_suppliers:
         print("Available suppliers: ")
-        all_suppliers = supplier_controller.get_suppliers()
+        all_suppliers = company_controller.get_suppliers()
         for supplier in all_suppliers:
             print(f"Id: {supplier.supplier_id} Company name: {supplier.company.company_name}")
         chosen_supplier_id = input("Enter a supplier id from the list: ")
@@ -164,7 +164,7 @@ def add_manufacturer_to_product(product):
     adding_manufacturers = True
     while adding_manufacturers:
         print("Available manufacturers: ")
-        all_manufacturers = manufacturer_controller.get_manufacturers()
+        all_manufacturers = company_controller.get_manufacturers()
         for manufacturer in all_manufacturers:
             print(f"Id: {manufacturer.manufacturer_id} Company name: {manufacturer.company.company_name}")
         chosen_manufacturer_id = input("Enter a manufacturer id from the list: ")
