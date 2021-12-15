@@ -1,6 +1,3 @@
-from mysql.connector import errors
-from sqlalchemy.exc import DataError
-
 from application.controllers import spare_part_controller, company_controller
 from application.controllers.spare_part_controller import adjust_price, update_product
 from application.controllers.store_controller import view_stores, get_spare_part_in_store_by_store_id_and_product_number
@@ -60,19 +57,14 @@ def print_manufacturer(product_no):
 
 def print_stock_info(product_no):
     sorted_stores = sorted(view_stores(), key=lambda x: x.store_id)
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
     print(f"Items in stock in the following stores: ")
     for store in sorted_stores:
-        if spare_part.quantity_in_stock == 0:
+        product_in_stock = get_spare_part_in_store_by_store_id_and_product_number(store.store_id, product_no)
+        if product_in_stock is None:
             continue
         else:
             print((f"\t{store.store_id} {store.address.city_name}\t "
-                   f"Stock: {spare_part.quantity_in_stock}\tShelf number: {spare_part.shelf_number}"))
-        # try:
-        #     print(f"\t{store.store_id} {store.address.city_name}\t "
-        #           f"Stock: {stock_info.quantity_in_stock}\tShelf number: {stock_info.shelf_number}")
-        # except:
-        #     continue
+                   f"Stock: {product_in_stock.quantity_in_stock}\tShelf number: {product_in_stock.shelf_number}"))
 
 
 def update_a_product():
@@ -119,23 +111,93 @@ def add_product():
         "sell_price": sell_price
     }
     spare_part_controller.create_spare_part(new_product)
+    adding_info = True
     added_product = spare_part_controller.get_spare_parts_by_filter(name)
-    # TODO what if there is a double? Is there a way to get the recently added product no?
-    print(f"Added new product: ")
     for product in added_product:
-        print_spare_part_info(product.product_number)
-    print("Do you want to add suppliers? Y/N: ")
+        # TODO what if there is a double? Is there a way to get the recently added product no?
+        while adding_info:
+            print("Product details for the new product: ")
+            print_spare_part_info(product.product_number)
+            print_supplier(product.product_number)
+            print_manufacturer(product.product_number)
+            print_stock_info(product.product_number)
+
+            add_info = input("Do you want to add more product info? Y/N: ")
+            if add_info.lower() == "n":
+                adding_info = False
+            else:
+                choice = input("Which info do you want to add? S = suppliers, M = manufacturers, T = store: ")
+                match choice.lower():
+                    case "s":
+                        add_supplier_to_product(product)
+                    case "m":
+                        add_manufacturer_to_product(product)
+                    case "t":
+                        add_stores_to_product(product)
+                    case "_":
+                        print("Please try again! The valid choices are S, M or T")
 
 
-# def add_supplier_to_product(product_number):
-#     product_number = product_number
-    print("Available suppliers: ")
-    all_suppliers = company_controller.get_suppliers()
-    for supplier in all_suppliers:
-        # supplier_companies = spare_part_controller.get_spare_part_supplier_company()
-        # for company in supplier_companies:
-        print(f"Id: {supplier.supplier_id} Company name: {supplier.company}")
-    # supplier_id = input("Enter a supplier id from the list: ")
+def add_supplier_to_product(product):
+    adding_suppliers = True
+    while adding_suppliers:
+        print("Available suppliers: ")
+        all_suppliers = company_controller.get_suppliers()
+        for supplier in all_suppliers:
+            print(f"Id: {supplier.supplier_id} Company name: {supplier.company.company_name}")
+        chosen_supplier_id = input("Enter a supplier id from the list: ")
+        price = input("Enter the agreed buy price (EUR): ")
+        delivery_time = input("Enter the number of days to deliver from this supplier: ")
+        spare_part_supplier = {
+            "product_number": product.product_number,
+            "supplier_id": chosen_supplier_id,
+            "buy_price": price,
+            "delivery_time": delivery_time
+        }
+        spare_part_controller.create_spare_part_supplier(spare_part_supplier)
+        add_more = input("Do you want to add another supplier? Y/N: ")
+        if add_more.lower() == "n":
+            adding_suppliers = False
+
+
+def add_manufacturer_to_product(product):
+    adding_manufacturers = True
+    while adding_manufacturers:
+        print("Available manufacturers: ")
+        all_manufacturers = company_controller.get_manufacturers()
+        for manufacturer in all_manufacturers:
+            print(f"Id: {manufacturer.manufacturer_id} Company name: {manufacturer.company.company_name}")
+        chosen_manufacturer_id = input("Enter a manufacturer id from the list: ")
+        spare_part_controller.create_spare_part_manufacturer(product.product_number, chosen_manufacturer_id)
+        add_more = input("Do you want to add another manufacturer? Y/N: ")
+        if add_more.lower() == "n":
+            adding_manufacturers = False
+
+
+def add_stores_to_product(product):
+    adding_stores = True
+    while adding_stores:
+        print("Available manufacturers: ")
+        all_stores = view_stores()
+        for store in all_stores:
+            print(f"Id: {store.store_id} City: {store.address.city_name}")
+        chosen_store_id = input("Enter a store id from the list: ")
+        shelf_number = input("Enter shelf number: ")
+        quantity_in_stock = input("Enter actual quantity in stock: ")
+        lowest_index = input("Enter stock value for autoorder: ")
+        quantity_to_order = input("Enter order quantity for autoorder: ")
+        spare_part_in_store = {
+            "product_number": product.product_number,
+            "store_id": chosen_store_id,
+            "shelf_number": shelf_number,
+            "quantity_in_stock": quantity_in_stock,
+            "lowest_index": lowest_index,
+            "quantity_to_order": quantity_to_order
+        }
+        spare_part_controller.create_spare_part_in_store(spare_part_in_store)
+        add_more = input("Do you want to add the product to another store? Y/N: ")
+        if add_more.lower() == "n":
+            adding_stores = False
 
 
 def adjust_sell_margins():

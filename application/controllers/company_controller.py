@@ -5,6 +5,10 @@ def create_company(company):
     company_repository.create_company(company)
 
 
+def create_manufacturer(manufacturer):
+    company_repository.create_manufacturer(manufacturer)
+
+
 def create_company_address(company, address):
     company_repository.create_company_address(company, address)
 
@@ -15,6 +19,10 @@ def create_supplier(supplier):
 
 def get_suppliers():
     return company_repository.get_suppliers()
+
+
+def get_manufacturers():
+    return company_repository.get_manufacturers()
 
 
 def negotiation(id_and_buy_price, comp_and_supp_id):

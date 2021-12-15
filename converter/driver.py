@@ -206,7 +206,7 @@ def main():
     pass
     # convert_products()
     # convert_stores()
-    convert_customers()
+    # convert_customers()
     # convert_orders()
 
     # convert_companies()
