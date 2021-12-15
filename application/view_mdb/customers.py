@@ -35,7 +35,7 @@ def insert_new_address_info(address_type, customer):
         "country": new_country
     }
     # TODO: This doesn't work. Ask for help!
-    customer_controller.create_customer_address(customer, address)
+    customer_controller.update_customer_address(customer, address)
 
 
 def print_new_info(customer_id):

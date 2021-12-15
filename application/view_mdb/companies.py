@@ -67,7 +67,7 @@ def insert_new_address_info(address_type, company):
         "country": new_country
     }
     # TODO: This doesn't work. Ask for help!
-    company_controller.create_company_address(company, address)
+    company_controller.update_company_address(company, address)
 
 
 def print_new_info(company_id):
