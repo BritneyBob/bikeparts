@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from abc import ABC
-from application.data.dataMDB.dbMDB.db_config import *
+from application.dataMDB.dbMDB.db_config import *
 
 client = MongoClient(f'{DATABASE}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}')
 db = client.parts

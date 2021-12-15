@@ -1,6 +1,6 @@
 from datetime import datetime, date
 
-from application.controllers.controllersMDB import customer_controller, customer_order_controller, store_controller, \
+from application.controllersMDB import customer_controller, customer_order_controller, store_controller, \
     product_controller
 from application.view import options
 

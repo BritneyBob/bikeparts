@@ -1,4 +1,6 @@
-from application.data.dataMDB.modelsMDB import Product
+from application.data.db import session
+from application.data.models import SparePartSupplier, SparePart, SparePartInStore, \
+    Company, Supplier, Manufacturer, spare_parts_have_manufacturers_table
 
 
 def create_spare_part(spare_part):
@@ -27,19 +29,15 @@ def create_spare_part_manufacturer(spare_part, manufacturer):
 
 
 def get_spare_parts():
-    return Product.all()
+    return session.query(SparePart).all()
 
 
 def get_spare_parts_by_filter(name_filter):
     return session.query(SparePart).filter(SparePart.name.like(f'%{name_filter}%')).all()
 
 
-def get_spare_part_by_id(product_id):
-    return Product.find(_id=product_id).first_or_none()
-
-
-def get_spare_part_by_product_number(product_number):
-    return Product.find(product_number=product_number).first_or_none()
+def get_spare_part_by_id(product_no):
+    return session.query(SparePart).filter(SparePart.product_number == product_no).first()
 
 
 # returns a bunch of supplier id's based on the selected product

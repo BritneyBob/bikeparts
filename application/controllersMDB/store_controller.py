@@ -1,4 +1,4 @@
-from application.data.dataMDB.repositoryMDB import store_repository
+from application.dataMDB.repositoryMDB import store_repository
 
 
 def create_store(store):

@@ -1,4 +1,4 @@
-from application.data.dataMDB.modelsMDB import Customer
+from application.dataMDB.modelsMDB import Customer
 
 
 def create_customer(customer):

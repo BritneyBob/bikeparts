@@ -1,4 +1,4 @@
-from application.controllers.controllersMDB import customer_controller
+from application.controllersMDB import customer_controller
 # from application.view_mdb import options
 
 

@@ -1,7 +1,7 @@
 import datetime
 
 from application.controllers import customer_order_controller
-from application.data.dataMDB import modelsMDB as mm
+from application.dataMDB import modelsMDB as mm
 from application.data.db import session, engine
 from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier
 
@@ -297,13 +297,14 @@ def fix_customers():
 
 
 def main():
+    pass
     # convert_companies()
     # convert_stores()
     # convert_products()
     # convert_customers()
     # convert_orders()
 
-    fix_customers()
+    # fix_customers()
 
 
 if __name__ == "__main__":

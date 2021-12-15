@@ -1,4 +1,4 @@
-from application.data.dataMDB.repositoryMDB import product_repository as pr
+from application.dataMDB.repositoryMDB import product_repository as pr
 
 
 def create_spare_part(spare_part):
