@@ -3,12 +3,11 @@ import datetime
 from application.controllers import customer_order_controller
 from application.data.dataMDB import modelsMDB as mm
 from application.data.db import session, engine
-from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier, Manufacturer, \
-    spare_parts_have_manufacturers_table
+from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier
 
 
 def convert_companies():
-    companies = session.query(Company).all()
+    companies = session.query(Company).filter(Company.company_id == 21).all()
     for company in companies:
         as_dict = company.__dict__
 
@@ -36,21 +35,21 @@ def convert_companies():
         }
 
         for address in company.addresses:
-            if address.address_type == 1:
+            if address.address_type_id == 1:
                 as_dict['delivery_address'] = {
                     'address_line': address.address_line2,
                     'zip_code': address.zipcode,
                     'city': address.city_name,
                     'country': address.country_name
                 }
-            if address.address_type == 2:
+            if address.address_type_id == 2:
                 as_dict['billing_address'] = {
                     'address_line': address.address_line2,
                     'zip_code': address.zipcode,
                     'city': address.city_name,
                     'country': address.country_name
                 }
-            if address.address_type == 3:
+            if address.address_type_id == 3:
                 as_dict['visiting_address'] = {
                     'address_line': address.address_line2,
                     'zip_code': address.zipcode,
@@ -61,25 +60,32 @@ def convert_companies():
         sell_products = []
         for product in supplier_products:
             sell_products.append({
-                'number': product.product_number,
-                'buy_price': product.buy_price,
+                'product_number': product.product_number,
+                'buy_price': float(product.buy_price),
                 'delivery_time': product.delivery_time
             })
         if len(sell_products) > 0:
-            as_dict["sell_products"] = sell_products
+            as_dict["supplies_products"] = sell_products
 
         product = f'select product_number from spare_parts_have_manufacturers where manufacturer_id = {manufacturer_id}'
         result = engine.connect().execute(product)
         manufacturer_products = []
         for product in result:
             manufacturer_products.append({
-                'number': product[0]
+                'product_number': product[0]
             })
-
-
-        # return session.query(Company).join(Manufacturer).filter(Manufacturer.manufacturer_id == manufacturer_id).all()
-        # Get rid of filter on query line 10 before save to db!!!!!
+        if len(manufacturer_products) > 0:
+            as_dict["manufactures_products"] = manufacturer_products
+        del as_dict["_sa_instance_state"]
+        del as_dict["manufacturer"]
+        del as_dict["contact_email"]
+        del as_dict["contact_phonenumber"]
+        del as_dict["supplier"]
+        del as_dict["addresses"]
         print()
+        mongo_product = mm.Company(as_dict)
+        mongo_product.save()
+
 
 
 
