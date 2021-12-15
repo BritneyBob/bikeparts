@@ -1,4 +1,4 @@
-from application.data.dataMDB.repositoryMDB import supplier_order_repository
+from application.dataMDB.repositoryMDB import supplier_order_repository
 
 
 def low_index(store_id, product_number):

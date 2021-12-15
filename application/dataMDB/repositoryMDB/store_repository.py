@@ -1,10 +1,5 @@
-<<<<<<< HEAD:application/data/dataMDB/repositoryMDB/store_repository.py
 import random
-
-from application.data.dataMDB.modelsMDB import Store
-=======
 from application.dataMDB.modelsMDB import Store
->>>>>>> master:application/dataMDB/repositoryMDB/store_repository.py
 
 
 def create_store(store):
