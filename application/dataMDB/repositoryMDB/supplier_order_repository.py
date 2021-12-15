@@ -1,7 +1,5 @@
 from application.controllers import store_controller
-from application.data.dataMDB.modelsMDB import SupplierOrder
-from application.data.db import session
-from application.data.models import SparePartInStore, SparePartSupplier, AutoOrder
+from application.dataMDB.modelsMDB import SupplierOrder
 from datetime import datetime, date, timedelta
 
 
