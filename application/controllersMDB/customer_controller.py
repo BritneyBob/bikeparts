@@ -1,4 +1,4 @@
-from application.data.dataMDB.repositoryMDB import customer_repository
+from application.dataMDB.repositoryMDB import customer_repository
 
 
 def create_customer(customer):

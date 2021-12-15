@@ -1,4 +1,4 @@
-from application.data.dataMDB.repositoryMDB import company_repository
+from application.dataMDB.repositoryMDB import company_repository
 
 
 def create_company(company):

@@ -1,4 +1,4 @@
-from application.controllers.controllersMDB.store_controller import get_stores
+from application.controllersMDB.store_controller import get_stores
 
 
 def view_all_stores():

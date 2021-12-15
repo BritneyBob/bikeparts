@@ -1,4 +1,4 @@
-from application.data.dataMDB.base_documentMDB import Document, db
+from application.dataMDB.base_documentMDB import Document, db
 
 
 class Product(Document):

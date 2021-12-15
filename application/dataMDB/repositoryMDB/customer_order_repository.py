@@ -1,4 +1,4 @@
-from application.data.dataMDB.modelsMDB import CustomerOrder
+from application.dataMDB.modelsMDB import CustomerOrder
 
 
 def get_customer_orders():

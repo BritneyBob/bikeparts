@@ -1,4 +1,4 @@
-from application.controllers.controllersMDB import company_controller, store_controller, product_controller
+from application.controllersMDB import company_controller, store_controller, product_controller
 from application.view_mdb import options
 
 
