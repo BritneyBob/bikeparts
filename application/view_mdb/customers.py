@@ -11,7 +11,7 @@ def print_customer_info(customer):
         print(f"Name: {customer.contact_last_name}, {customer.contact_first_name}\t", end="")
     for address in customer.addresses:
         print(f"{address['address_type'].capitalize()}: {address['street_address']}, {address['zipcode']} "
-              f"{address['city_name']}, {address['country_name']}\t", end="")
+              f"{address['city']}, {address['country']}\t", end="")
     print(f"Phone number: {customer.phonenumber}\t")
 
 
@@ -34,7 +34,7 @@ def insert_new_address_info(address_type, customer):
         "city": new_city,
         "country": new_country
     }
-    # TODO: This doesn't work. Ask for help!
+
     customer_controller.update_customer_address(customer, address)
 
 

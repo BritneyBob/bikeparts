@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from test import test, date
 
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
@@ -347,7 +347,7 @@ def place_order(order_details_list, store, employee, customer_id):
         "customer_id": customer_id,
         "store_id": store.store_id,
         "employee_id": employee.employee_id,
-        "order_date": datetime.now(),
+        "order_date": test.now(),
         "status": "Ordered"
     }
     products = []

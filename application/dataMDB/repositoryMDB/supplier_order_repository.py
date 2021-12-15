@@ -1,16 +1,6 @@
 from application.controllers import store_controller
-from application.data.db import session
-from application.data.models import SparePartInStore, SparePartSupplier, AutoOrder
+from application.dataMDB.modelsMDB import SupplierOrder
 from datetime import datetime, date, timedelta
-
-
-def low_index(store_id, product_number):
-    return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id).\
-        filter(SparePartInStore.product_number == product_number).all()
-
-
-def lowest_buy_price(product_number):
-    return session.query(SparePartSupplier).filter(SparePartSupplier.product_number == product_number).all()
 
 
 def create_auto_order(store_id, product_number, supplier_id):
@@ -31,5 +21,5 @@ def create_auto_order(store_id, product_number, supplier_id):
     store_controller.update_stock_in_store(store_id, product_number, ordered_quantity)
 
 
-def get_auto_orders():
-    auto_orders = session.query(AutoOrder).all()
+def create_order(supplier_order):
+    SupplierOrder(supplier_order).save()

@@ -1,4 +1,7 @@
-from application.controllersMDB import company_controller, store_controller, product_controller
+import datetime
+
+from application.controllersMDB import company_controller, store_controller, product_controller, supplier_order_controller
+
 from application.view_mdb import options
 
 
@@ -66,7 +69,6 @@ def insert_new_address_info(address_type, company):
         "city": new_city,
         "country": new_country
     }
-    # TODO: This doesn't work. Ask for help!
     company_controller.update_company_address(company, address)
 
 
@@ -131,38 +133,78 @@ def update_company():
         case "9":
             options.procurement_menu()
 
-def order_existing_product(store, product, supplier, quantity):
-    pass
 
+def create_order_dict(store, product, supplier, quantity, manufacturers, price, delivery_days):
+    today = datetime.datetime.now()
+    supplier_order = {
+        "store": {
+            "store_number": store.store_id,
+            "city": store.city,
+            "country": store.country
+        },
+        "product": {
+                "product_id": product._id,
+                "name": product.name
+            },
+        "order_date": today,
+        "ordered_quantity": quantity,
+        "price_each": price,
+        "arrival_date": today + datetime.timedelta(days=delivery_days),
+        "supplier": {
+            "company_id": supplier._id,
+            "name": supplier.company_name
+            }
+    }
 
-def order_new_product(store, product, supplier, quantity):
-    pass
+    product_manufacturers = []
+    try:
+        for manufacturer in manufacturers:
+            product_manufacturers.append({
+                "company_id": manufacturer._id,
+                "name": manufacturer.company_name
+            })
+            supplier_order["manufacturers"] = product_manufacturers
+    except AttributeError:
+        pass
+
+    return supplier_order
 
 
 def place_order_from_supplier():
-    store_id = input("What store are you ordering from (enter store id)?: ")
-    product_id = input("What product do you want to order (enter product number)?: ")
+    store_id = int(input("What store are you ordering from (enter store id)?: "))
+    product_number = int(input("What product would you like to order (enter product number)?: "))
     store = store_controller.get_store_by_id(store_id)
-    product = product_controller.get_spare_part_by_id(product_id)
+    product = product_controller.get_spare_part_by_product_number(product_number)
     supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
     manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
     suppliers = company_controller.get_companies_by_ids(supplier_ids)
     manufacturers = company_controller.get_companies_by_ids(manufacturer_ids)
+    count = 1
+    supplier_product_info = []
     for supplier in suppliers:
-        for supplier_product in supplier.sells_product:
-            if supplier_product.product_number == product_id:
-                print(f"Supplier: {supplier.company_name}. {product.name} costs (euro){supplier_product['buy_price']} and takes "
-                      f"{supplier_product['delivery_time']} days to deliver.")
-    supplier = input(f"From what supplier do you want to order {product.name}?: ")
-    quantity = int(input(f"How many {product.name} would you like to order?: "))
+        for supplier_product in supplier.supplies_products:
+            if supplier_product["product_number"] == product_number:
+                print(f"{count}. Supplier: {supplier.company_name}.\t{product.name} costs €"
+                      f"{supplier_product['buy_price']} and takes {supplier_product['delivery_time']} days to deliver.")
+                supplier_product_info.append((supplier._id, supplier_product["buy_price"],
+                                              supplier_product["delivery_time"]))
+                count += 1
+    supplier_choice = int(input(f"From what supplier would you like to order {product.name} "
+                                f"(1-{count-1})?: "))
+
+    supplier_id, price, delivery_days = supplier_product_info[supplier_choice - 1]
+    chosen_supplier = company_controller.get_company_by_id(supplier_id)
+
+    chosen_quantity = int(input(f"How many {product.name} would you like to order?: "))
     new_product = True
+    supplier_order = create_order_dict(store, product, chosen_supplier, chosen_quantity, manufacturers, price,
+                                       delivery_days)
     for store_product in store.products:
-        if product_id == store_product.product_number:
+        if store_product["product_number"] == product_number:
             new_product = False
-            order_existing_product(store, product, supplier, quantity)
 
     if new_product:
-        order_new_product(store, product, supplier, quantity)
+        store_controller.add_product_to_store(store, product)
 
-
-
+    supplier_order_controller.create_order(supplier_order)
+    store_controller.update_stock_in_store(store.store_id, product.product_number, chosen_quantity)

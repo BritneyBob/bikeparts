@@ -44,7 +44,7 @@ def update_product(product, new_name, new_description):
 #     session.commit()
 #
 #
-# # returns a bunch of supplier companies's based on the selected product
+# # returns a bunch of supplier companies based on the selected product
 # def get_product_suppliers(product_no):
 #     pass
 #
