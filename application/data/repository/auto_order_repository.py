@@ -1,4 +1,5 @@
 from application.controllers import store_controller
+from application.data import db
 from application.data.db import session
 from application.data.models import SparePartInStore, SparePartSupplier, AutoOrder
 from datetime import datetime, date, timedelta
@@ -34,7 +35,15 @@ def create_auto_order(store_id, product_number, supplier_id):
     session.commit()
     # move row below to where the function create_auto_order is called?
     store_controller.update_stock_in_store(store_id, product_number, ordered_quantity)
+    delete_auto_order()
 
 
 def get_auto_orders():
     auto_orders = session.query(AutoOrder).all()
+
+
+def delete_auto_order():
+    delete_q = AutoOrder.__table__.delete().where(AutoOrder.order_id > 0)
+    db.session.execute(delete_q)
+    db.session.commit()
+
