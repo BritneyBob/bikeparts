@@ -1,7 +1,5 @@
 import datetime
 
-import test
-
 from application.controllers.controllersMDB import company_controller, store_controller, product_controller, \
     supplier_order_controller
 from application.view_mdb import options
