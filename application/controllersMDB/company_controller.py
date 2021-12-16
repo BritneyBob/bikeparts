@@ -17,8 +17,8 @@ def get_companies_by_ids(company_ids):
     return company_repository.get_companies_by_ids(company_ids)
 
 
-def negotiation(id_and_buy_price, comp_and_supp_id):
-    return company_repository.negotiation(id_and_buy_price, comp_and_supp_id)
+def negotiation(prod_name_price, supplier_name):
+    return company_repository.negotiation(prod_name_price, supplier_name)
 
 
 def update_company_name(company, new_company_name):

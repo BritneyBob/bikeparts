@@ -1,4 +1,4 @@
-import test
+# import test
 
 from application.controllers.customer_controller import create_customer
 

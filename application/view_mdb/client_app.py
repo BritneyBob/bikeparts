@@ -30,7 +30,7 @@ def main():
                             companies.negotiate_supplier_prices()
                         case "2":
                             pass
-                            # products.adjust_sell_margins()
+                            products.adjust_sell_margins()
                         case "9":
                             print("Going back to main menu")
                             break
@@ -63,13 +63,6 @@ def main():
                             companies.update_company()
                         case "3":
                             companies.place_order_from_supplier()
-
-                        # case "5":
-                        #     auto_order.view_auto_orders()
-                        #     print("<This string will be replaced with method to redirect user>")
-                        # case "6":
-                        #     print("<This string will be replaced with method to redirect user>")
-                        #     # auto_order.evaluate_stock_level(12, 48)
                         case "9":
                             print("Going back to main menu")
                             break

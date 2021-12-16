@@ -29,8 +29,8 @@ def show_one_spare_part():
     print("*" * 50)
 
 
-def print_spare_part_info(product_no):
-    spare_part = spare_part_controller.get_spare_part_by_id(product_no)
+def print_spare_part_info(_id):
+    spare_part = spare_part_controller.get_spare_part_by_id(_id)
     print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
     print(f"Description: {spare_part.description}")
     print(f"Customer price: {spare_part.sell_price} EUR")
