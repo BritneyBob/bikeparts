@@ -1,7 +1,7 @@
 import decimal
 import random
 
-from application.dataMDB.modelsMDB import Company
+from application.dataMDB.modelsMDB import Company, SupplierOrder
 
 
 def create_company(company):
@@ -10,6 +10,10 @@ def create_company(company):
 
 def get_all_companies():
     return Company.all()
+
+
+def get_company_by_old_id(company_id):
+    return Company.find(company_id=company_id).first_or_none()
 
 
 def get_company_by_id(company_id):
@@ -67,6 +71,10 @@ def get_suppliers():
     companies = Company.all()
     suppliers = [company for company in companies if company.company_type != "Manufacturer"]
     return suppliers
+
+
+def create_order(supplier_order):
+    SupplierOrder(supplier_order).save()
 
 
 

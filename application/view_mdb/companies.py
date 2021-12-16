@@ -2,7 +2,7 @@ import datetime
 
 from bson import ObjectId
 
-from application.controllersMDB import company_controller, store_controller, product_controller, supplier_order_controller
+from application.controllersMDB import company_controller, store_controller, product_controller
 from application.controllersMDB.product_controller import get_products
 
 from application.view_mdb import options
@@ -86,7 +86,7 @@ def insert_new_address_info(address_type, company):
 
 def print_new_info(company_id):
     print("The company was updated with the new information: ")
-    updated_company = company_controller.get_company_by_id(company_id)
+    updated_company = company_controller.get_company_by_old_id(company_id)
     print_company_info(updated_company)
 
 
@@ -99,7 +99,7 @@ def update_company():
         if company_id > len(company_controller.get_all_companies()):
             print("Company does not exist. Please enter another id.")
         else:
-            company = company_controller.get_company_by_id(company_id)
+            company = company_controller.get_company_by_old_id(company_id)
             print_company_info(company)
             valid_id = True
 
@@ -186,7 +186,7 @@ def place_order_from_supplier():
     store_id = int(input("What store are you ordering from (enter store id)?: "))
     product_number = int(input("What product would you like to order (enter product number)?: "))
     store = store_controller.get_store_by_id(store_id)
-    product = product_controller.get_spare_part_by_product_number(product_number)
+    product = product_controller.get_product_by_product_number(product_number)
     supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
     manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
     suppliers = company_controller.get_companies_by_ids(supplier_ids)
@@ -218,6 +218,5 @@ def place_order_from_supplier():
     if new_product:
         store_controller.add_product_to_store(store, product)
 
-    supplier_order_controller.create_order(supplier_order)
+    company_controller.create_order(supplier_order)
     store_controller.update_stock_in_store(store.store_id, product.product_number, chosen_quantity)
-

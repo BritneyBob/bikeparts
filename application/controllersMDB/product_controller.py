@@ -25,6 +25,10 @@ def get_product_by_id(product_id):
     return pr.get_product_by_id(product_id)
 
 
+def get_product_by_product_number(product_number):
+    return pr.get_product_by_product_number(product_number)
+
+
 def get_products_by_filter(name_filter):
     return pr.get_products_by_filter(name_filter)
 
