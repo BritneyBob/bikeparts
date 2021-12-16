@@ -6,26 +6,16 @@ from application.view import options
 
 
 def print_customer_order(customer_order):
-    # order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
-    #                                                                             customer_order_number)
     print("*" * 50)
     print(f"Order number {customer_order.customer_order_number}:")
     for order_detail in customer_order.order_details:
         print("*" * 50)
-        print(f"Product: {order_detail.spare_part.product_number}, {order_detail.spare_part.name}. Description: "
-              f"{order_detail.spare_part.description}")
-        print(f"Price per product: €{order_detail.price_each}")
-        print(f"Quantity: {order_detail.quantity_ordered}")
-        print(f"Total price: €{order_detail.price_each * order_detail.quantity_ordered}")
+        print(f"Product: {order_detail['product_id']}, {order_detail['product_name']}.")
+        print(f"Price per product: €{order_detail['price_each']}")
+        print(f"Quantity: {order_detail['quantity_ordered']}")
+        print(f"Total price: €{order_detail['price_each'] * order_detail['quantity_ordered']}")
     print("*" * 50)
-    print(f"Customer: {customer_order.customer.customer_id}, ", end='')
-    if customer_order.customer.customer_name:
-        print(f"{customer_order.customer.customer_name}\t", end='')
-        print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
-              f", {customer_order.customer.phonenumber}")
-    else:
-        print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
-              f"{customer_order.customer.phonenumber}")
+    print(f"Customer id: {customer_order.customer_id}")
     print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
           f"{customer_order.store.address.city_name}")
     print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
