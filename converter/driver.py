@@ -324,10 +324,12 @@ def fix_products():
         product.save()
 
 
-# def fix_customer_orders():
-#     for order in mm.CustomerOrder.all():
-#         del order.customer_order_number
-#         order.save()
+def fix_customer_orders():
+    for order in mm.CustomerOrder.all():
+        # del order.customer_order_number
+        order.store["store_number"] = order.store["store_id"]
+        del order.store["store_id"]
+        order.save()
 
 
 def main():
@@ -341,6 +343,7 @@ def main():
     # fix_customers()
     # fix_stores()
     # fix_products()
+    fix_customer_orders()
 
 
 if __name__ == "__main__":
