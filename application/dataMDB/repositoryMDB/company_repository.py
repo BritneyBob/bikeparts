@@ -79,9 +79,11 @@ def get_suppliers():
     return suppliers
 
 
+def get_manufacturers():
+    companies = Company.all()
+    manufacturers = [company for company in companies if company.company_type != "Supplier"]
+    return manufacturers
+
+
 def create_order(supplier_order):
     SupplierOrder(supplier_order).save()
-
-
-
-

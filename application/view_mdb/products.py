@@ -19,12 +19,12 @@ def search_products():
 
 def show_all_products():
     print("List of available spare parts: ")
-    spare_parts = prc.get_products()
+    products = prc.get_products()
     count = 0
-    for spare_part in spare_parts:
+    for product in products:
         count += 1
-        print(f"{count}.\t\tName: {spare_part.name}"
-              f"\t\tDescription: {spare_part.description}\t\tPrice: {spare_part.sell_price} EUR")
+        print(f"{count}.\t\tProduct number: {product.product_number}\t\tName: {product.name}"
+              f"\t\tDescription: {product.description}\t\tPrice: {product.sell_price} EUR")
 
 
 def show_one_product():
@@ -38,41 +38,52 @@ def show_one_product():
 
 
 def print_product_info(product_no):
-    spare_part = prc.get_product_by_id(product_no)
-    print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
-    print(f"Description: {spare_part.description}")
-    print(f"Customer price: {spare_part.sell_price} EUR")
+    products = prc.get_products()
+    for product in products:
+        if product.product_number == int(product_no):
+            print(f"Product number and name: {product.product_number} {product.name}")
+            print(f"Description: {product.description}")
+            print(f"Customer price: {product.sell_price} EUR")
+        else:
+            continue
 
 
 def print_supplier(product_no):
-    suppliers = prc.get_spare_part_suppliers(product_no)
+    suppliers = cc.get_suppliers()
     print(f"Available from the following suppliers: ")
     for supplier in suppliers:
-        supplier_company = prc.get_spare_part_supplier_company(supplier.supplier_id)
-        for company in supplier_company:
-            print(f"\tCompany name: {company.company_name}\tBuy price: {supplier.buy_price} EUR")
+        products = [product for product in supplier.supplies_products]
+        for product in products:
+            if product["product_number"] == int(product_no):
+                print(f"\tCompany name: {supplier.company_name}\tBuy price: {product['buy_price']} EUR")
+            else:
+                continue
 
 
 def print_manufacturer(product_no):
-    spare_part = prc.get_product_by_id(product_no)
-    manufacturer_id_s = [manufacturer.manufacturer_id for manufacturer in spare_part.manufacturers]
+    manufacturers = cc.get_manufacturers()
     print(f"Manufactured by: ")
-    for manufacturer_id in manufacturer_id_s:
-        manufacturer_company = prc.get_spare_part_manufacturer_company(manufacturer_id)
-        for company in manufacturer_company:
-            print(f"\tCompany name: {company.company_name}")
+    for manufacturer in manufacturers:
+        products = [product for product in manufacturer.manufactures_products]
+        for product in products:
+            if product["product_number"] == int(product_no):
+                print(f"\tCompany name: {manufacturer.company_name}")
+            else:
+                continue
 
 
 def print_stock_info(product_no):
-    sorted_stores = sorted(stc.get_stores(), key=lambda x: x.store_id)
+    stores = stc.get_stores()
     print(f"Items in stock in the following stores: ")
-    for store in sorted_stores:
-        product_in_stock = stc.get_spare_part_in_store_by_store_id_and_product_number(store.store_id, product_no)
-        if product_in_stock is None:
-            continue
-        else:
-            print((f"\t{store.store_id} {store.address.city_name}\t "
-                   f"Stock: {product_in_stock.quantity_in_stock}\tShelf number: {product_in_stock.shelf_number}"))
+    for store in stores:
+        products = [product for product in store.products]
+        for product in products:
+            if product["product_id"] == int(product_no):
+                print("Found store!")
+            else:
+                continue
+            # print((f"\t{store.store_id} {store.address.city_name}\t "
+            #        f"Stock: {product_in_stock.quantity_in_stock}\tShelf number: {product_in_stock.shelf_number}"))
 
 
 def update_a_product():
