@@ -53,8 +53,8 @@ def print_company_info(company):
     print(f"\nCompany contact mail: {company.contact['email']}")
     print(f"Company contact phone number: {company.contact['phone_number']}\n")
     for address in company.addresses:
-        print(f"{address['address_type'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
-              f"{address.city}\t {address.country}")
+        print(f"{address['address_type']}: {address['street_address']}\t {address['zipcode']} "
+              f"{address['city']}\t {address['country']}")
 
 
 def view_companies():
@@ -63,14 +63,15 @@ def view_companies():
     for company in companies:
         print(f"Company id: {company._id}, Company name: {company.company_name}, Company type: {company.company_type}")
 
-    while True:
-        company_name = input("Please enter the company name for the company you want to see information about: ")
+    valid_company = False
+    while not valid_company:
+        company_name = input("Please enter the name of the company you want to see more information about: ")
         for company in companies:
             if company.company_name.lower() == company_name.lower():
                 print_company_info(company)
-                break
-        print(f"There is no company named {company_name}. Please try again.")
-
+                valid_company = True
+        if not valid_company:
+            print(f"There is no company named {company_name}. Please try again.")
 
 
 def insert_new_address_info(address_type, company):
@@ -90,22 +91,22 @@ def insert_new_address_info(address_type, company):
 
 def print_new_info(company_id):
     print("The company was updated with the new information: ")
-    updated_company = company_controller.get_company_by_old_id(company_id)
+    updated_company = company_controller.get_company_by_id(company_id)
     print_company_info(updated_company)
 
 
 def update_company():
-    valid_id = False
-    company_id = 0
+    companies = company_controller.get_all_companies()
     company = None
-    while not valid_id:
-        company_id = int(input("Please enter the company id of the company you would like to update information for: "))
-        if company_id > len(company_controller.get_all_companies()):
-            print("Company does not exist. Please enter another id.")
-        else:
-            company = company_controller.get_company_by_old_id(company_id)
-            print_company_info(company)
-            valid_id = True
+    valid_company = False
+    while not valid_company:
+        company_name = input("Please enter the name of the company you would like to update information for: ")
+        for company in companies:
+            if company.company_name.lower() == company_name.lower():
+                print_company_info(company)
+                valid_company = True
+        if not valid_company:
+            print(f"There is no company named {company_name}. Please try again.")
 
     print(50 * "*")
     print("1. Name of company")
@@ -127,25 +128,25 @@ def update_company():
         case "1":
             new_company_name = input("Please enter new name: ")
             company_controller.update_company_name(company, new_company_name)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "2":
             insert_new_address_info("visiting address", company)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "3":
             insert_new_address_info("delivery address", company)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "4":
             insert_new_address_info("billing address", company)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "5":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
             company_controller.update_contact_name(company, new_contact_first_name, new_contact_last_name)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "6":
             new_phone_number = input("Please enter new phone number: ")
             company_controller.update_contact_phone_number(company, new_phone_number)
-            print_new_info(company_id)
+            print_new_info(company._id)
         case "9":
             options.procurement_menu()
 
@@ -154,7 +155,7 @@ def create_order_dict(store, product, supplier, quantity, manufacturers, price, 
     today = datetime.datetime.now()
     supplier_order = {
         "store": {
-            "store_number": store.store_id,
+            "store_number": store.store_number,
             "city": store.city,
             "country": store.country
         },
@@ -191,15 +192,16 @@ def place_order_from_supplier():
     product_number = int(input("What product would you like to order (enter product number)?: "))
     store = store_controller.get_store_by_number(store_number)
     product = product_controller.get_product_by_product_number(product_number)
-    supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
-    manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
+    supplier_ids = [supplier["company_id"] for supplier in product.suppliers]
+    manufacturer_ids = [manufacturer["company_id"] for manufacturer in product.manufacturers]
     suppliers = company_controller.get_companies_by_ids(supplier_ids)
     manufacturers = company_controller.get_companies_by_ids(manufacturer_ids)
     count = 1
     supplier_product_info = []
     for supplier in suppliers:
         for supplier_product in supplier.supplies_products:
-            if supplier_product["product_number"] == product_number:
+            product_object = product_controller.get_product_by_id(supplier_product["product_number"])
+            if product_object.product_number == product_number:
                 print(f"{count}. Supplier: {supplier.company_name}.\t{product.name} costs €"
                       f"{supplier_product['buy_price']} and takes {supplier_product['delivery_time']} days to deliver.")
                 supplier_product_info.append((supplier._id, supplier_product["buy_price"],
@@ -216,11 +218,12 @@ def place_order_from_supplier():
     supplier_order = create_order_dict(store, product, chosen_supplier, chosen_quantity, manufacturers, price,
                                        delivery_days)
     for store_product in store.products:
-        if store_product["product_number"] == product_number:
+        product_object2 = product_controller.get_product_by_id(store_product["product_id"])
+        if product_object2.product_number == product_number:
             new_product = False
 
     if new_product:
         store_controller.add_product_to_store(store, product)
 
     company_controller.create_order(supplier_order)
-    store_controller.update_stock_in_store(store.store_id, product.product_number, chosen_quantity)
+    store_controller.update_stock_in_store(store.store_number, product._id, chosen_quantity)
