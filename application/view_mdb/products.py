@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
 from application.controllersMDB.product_controller import adjust_price, get_products, get_products_by_filter
 
@@ -28,12 +26,7 @@ def show_all_products():
 
 
 def show_one_product():
-    number = input("Enter product number to show one product: ")  # TODO Error handling of input!
-    all_products = get_products()
-    product_no = None
-    for product in all_products:
-        if product["product_number"] == number:
-            product_no = product._id
+    product_no = input("Enter product number to show one product: ")  # TODO Error handling of input!
     print("*" * 50)
     print_product_info(product_no)
     print_supplier(product_no)

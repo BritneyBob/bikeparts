@@ -309,16 +309,17 @@ def fix_customer_orders():
 
 
 def main():
-#     convert_stores()
-#     convert_products()
-#     convert_companies()
-#     convert_customers()
-#     convert_orders()
-
-#     fix_customers()
-#     fix_stores()
-#     fix_products()
-#     fix_customer_orders()
+    pass
+    # convert_stores()
+    # convert_products()
+    # convert_companies()
+    # convert_customers()
+    # convert_orders()
+    #
+    # fix_customers()
+    # fix_stores()
+    # fix_products()
+    # fix_customer_orders()
 
 
 if __name__ == "__main__":
