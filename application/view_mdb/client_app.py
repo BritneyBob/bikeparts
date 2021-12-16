@@ -1,4 +1,4 @@
-from application.view_mdb import options, spare_parts, customers, stores, customer_orders, companies
+from application.view_mdb import options, products, customers, stores, customer_orders, companies
 
 
 def main():
@@ -11,13 +11,13 @@ def main():
                     sub_choice = options.product_menu()
                     match sub_choice:
                         case "1":
-                            spare_parts.search_spare_parts()
+                            products.search_products()
                         case "2":
-                            spare_parts.show_one_spare_part()
+                            products.show_one_product()
                         case "3":
-                            spare_parts.update_a_product()
+                            products.update_a_product()
                         case "4":
-                            spare_parts.add_product()
+                            products.add_product()
                         case "9":
                             print("Going back to main menu")
                             break
@@ -29,7 +29,8 @@ def main():
                         case "1":
                             companies.negotiate_supplier_prices()
                         case "2":
-                            spare_parts.adjust_sell_margins()
+                            pass
+                            # products.adjust_sell_margins()
                         case "9":
                             print("Going back to main menu")
                             break

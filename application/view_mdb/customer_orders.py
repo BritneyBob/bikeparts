@@ -225,7 +225,7 @@ def choose_and_check_quantity(product, store):
     has_chosen = False
     quantity_in_stock = 0
     for product_in_store in store.products:
-        if product_in_store["new_product_id"] == product._id:
+        if product_in_store["product_number"] == product.product_number:
             quantity_in_stock = product_in_store["quantity_in_stock"]
 
     print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_id}, "
