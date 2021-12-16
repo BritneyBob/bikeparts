@@ -17,12 +17,8 @@ def get_customer_orders_by_customer_id(customer_id):
     return CustomerOrder.find(_id=customer_id).first_or_none()
 
 
-def get_customer_orders_by_order_number(order_number):
+def get_customer_order_by_order_number(order_number):
     return CustomerOrder.find(customer_order_number=order_number).first_or_none()
-
-
-def add_order_details(customer_order, order_details):
-    customer_order.order_details(order_details)
 
 
 def add_shipped_date(order, shipped_date):
@@ -38,6 +34,10 @@ def update_status(order, new_status):
 def update_comments(order, comments):
     order.comments = comments
     order.save()
+
+
+# def add_order_details(customer_order, order_details):
+#     customer_order.order_details(order_details)
 
 
 # def get_order_details_by_order_number(order_number):

@@ -27,7 +27,7 @@ def convert_companies():
         addresses = []
         for address in company.addresses:
             addresses.append({
-                "address_type": address.address_type.address_type_name,
+                "address_type": address.address_type.address_type_name.capitalize(),
                 "street_address": address.address_line2,
                 "zipcode": address.zipcode,
                 "city": address.city_name,
@@ -87,9 +87,8 @@ def convert_companies():
         del as_dict["contact_email"]
         del as_dict["contact_phonenumber"]
         del as_dict["supplier"]
-        del as_dict["addresses"]
-        mongo_product = mm.Company(as_dict)
-        mongo_product.save()
+        mongo_company = mm.Company(as_dict)
+        mongo_company.save()
 
 
 def convert_products():
@@ -333,17 +332,17 @@ def fix_customer_orders():
 
 
 def main():
-    pass
+    # pass
     # convert_stores()
     # convert_products()
-    # convert_companies()
+    convert_companies()
     # convert_customers()
     # convert_orders()
 
     # fix_customers()
     # fix_stores()
     # fix_products()
-    fix_customer_orders()
+    # fix_customer_orders()
 
 
 if __name__ == "__main__":

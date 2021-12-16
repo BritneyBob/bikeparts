@@ -47,13 +47,12 @@ def negotiate_supplier_prices():
 
 
 def print_company_info(company):
-
     print(f"\nCompany name: {company.company_name}")
     print(f"Company id: {company._id}")
-    print(f"\nCompany contact mail: {company.contact_email}")
-    print(f"Company contact phone number: {company.contact_phonenumber}\n")
+    print(f"\nCompany contact mail: {company.contact['email']}")
+    print(f"Company contact phone number: {company.contact['phone_number']}\n")
     for address in company.addresses:
-        print(f"{address['address_tye'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
+        print(f"{address['address_type'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
               f"{address.city}\t {address.country}")
 
 
@@ -63,10 +62,14 @@ def view_companies():
     for company in companies:
         print(f"Company id: {company._id}, Company name: {company.company_name}, Company type: {company.company_type}")
 
-    company_id = int(input("Please choose the company id for the company you want to see information about: "))
-    for company in companies:
-        if company.company_id == company_id:
-            print_company_info(company)
+    while True:
+        company_name = input("Please enter the company name for the company you want to see information about: ")
+        for company in companies:
+            if company.company_name.lower() == company_name.lower():
+                print_company_info(company)
+                break
+        print(f"There is no company named {company_name}. Please try again.")
+
 
 
 def insert_new_address_info(address_type, company):
@@ -183,9 +186,9 @@ def create_order_dict(store, product, supplier, quantity, manufacturers, price, 
 
 
 def place_order_from_supplier():
-    store_id = int(input("What store are you ordering from (enter store id)?: "))
+    store_number = int(input("What store are you ordering from (enter store number)?: "))
     product_number = int(input("What product would you like to order (enter product number)?: "))
-    store = store_controller.get_store_by_id(store_id)
+    store = store_controller.get_store_by_number(store_number)
     product = product_controller.get_product_by_product_number(product_number)
     supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
     manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
