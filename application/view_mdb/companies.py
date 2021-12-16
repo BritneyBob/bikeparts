@@ -2,7 +2,7 @@ import datetime
 
 from bson import ObjectId
 
-from application.controllersMDB import company_controller, store_controller, product_controller, supplier_order_controller
+from application.controllersMDB import company_controller, store_controller, product_controller
 from application.controllersMDB.product_controller import get_products
 
 from application.view_mdb import options
@@ -48,13 +48,12 @@ def negotiate_supplier_prices():
 
 
 def print_company_info(company):
-
     print(f"\nCompany name: {company.company_name}")
     print(f"Company id: {company._id}")
-    print(f"\nCompany contact mail: {company.contact_email}")
-    print(f"Company contact phone number: {company.contact_phonenumber}\n")
+    print(f"\nCompany contact mail: {company.contact['email']}")
+    print(f"Company contact phone number: {company.contact['phone_number']}\n")
     for address in company.addresses:
-        print(f"{address['address_tye'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
+        print(f"{address['address_type'].capitalize()}: {address['street_address']}\t {address['zipcode']} "
               f"{address.city}\t {address.country}")
 
 
@@ -64,10 +63,14 @@ def view_companies():
     for company in companies:
         print(f"Company id: {company._id}, Company name: {company.company_name}, Company type: {company.company_type}")
 
-    company_id = int(input("Please choose the company id for the company you want to see information about: "))
-    for company in companies:
-        if company.company_id == company_id:
-            print_company_info(company)
+    while True:
+        company_name = input("Please enter the company name for the company you want to see information about: ")
+        for company in companies:
+            if company.company_name.lower() == company_name.lower():
+                print_company_info(company)
+                break
+        print(f"There is no company named {company_name}. Please try again.")
+
 
 
 def insert_new_address_info(address_type, company):
@@ -87,7 +90,7 @@ def insert_new_address_info(address_type, company):
 
 def print_new_info(company_id):
     print("The company was updated with the new information: ")
-    updated_company = company_controller.get_company_by_id(company_id)
+    updated_company = company_controller.get_company_by_old_id(company_id)
     print_company_info(updated_company)
 
 
@@ -100,7 +103,7 @@ def update_company():
         if company_id > len(company_controller.get_all_companies()):
             print("Company does not exist. Please enter another id.")
         else:
-            company = company_controller.get_company_by_id(company_id)
+            company = company_controller.get_company_by_old_id(company_id)
             print_company_info(company)
             valid_id = True
 
@@ -184,10 +187,10 @@ def create_order_dict(store, product, supplier, quantity, manufacturers, price, 
 
 
 def place_order_from_supplier():
-    store_id = int(input("What store are you ordering from (enter store id)?: "))
+    store_number = int(input("What store are you ordering from (enter store number)?: "))
     product_number = int(input("What product would you like to order (enter product number)?: "))
-    store = store_controller.get_store_by_id(store_id)
-    product = product_controller.get_spare_part_by_product_number(product_number)
+    store = store_controller.get_store_by_number(store_number)
+    product = product_controller.get_product_by_product_number(product_number)
     supplier_ids = [supplier["new_company_id"] for supplier in product.suppliers]
     manufacturer_ids = [manufacturer["new_company_id"] for manufacturer in product.manufacturers]
     suppliers = company_controller.get_companies_by_ids(supplier_ids)
@@ -219,6 +222,5 @@ def place_order_from_supplier():
     if new_product:
         store_controller.add_product_to_store(store, product)
 
-    supplier_order_controller.create_order(supplier_order)
+    company_controller.create_order(supplier_order)
     store_controller.update_stock_in_store(store.store_id, product.product_number, chosen_quantity)
-

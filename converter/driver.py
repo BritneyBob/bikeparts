@@ -2,8 +2,8 @@ import datetime
 
 from application.controllers import customer_order_controller
 from application.dataMDB import modelsMDB as mm
-from application.data.db import session, engine
-from application.data.models import SparePart, Store, Customer, CustomerOrder, Company, SparePartSupplier
+from application.data.db import session
+from application.data.models import SparePart, Store, Customer, CustomerOrder, Company
 
 
 def convert_companies():
@@ -27,7 +27,7 @@ def convert_companies():
         addresses = []
         for address in company.addresses:
             addresses.append({
-                "address_type": address.address_type.address_type_name,
+                "address_type": address.address_type.address_type_name.capitalize(),
                 "street_address": address.address_line2,
                 "zipcode": address.zipcode,
                 "city": address.city_name,
@@ -61,7 +61,6 @@ def convert_companies():
 
         sell_products = []
         if company.supplier:
-            # supplier_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id == supplier_id).all()
             products = company.supplier.spare_parts
             for product in products:
                 sell_products.append({
@@ -88,10 +87,8 @@ def convert_companies():
         del as_dict["contact_email"]
         del as_dict["contact_phonenumber"]
         del as_dict["supplier"]
-        del as_dict["addresses"]
-        print()
-        mongo_product = mm.Company(as_dict)
-        mongo_product.save()
+        mongo_company = mm.Company(as_dict)
+        mongo_company.save()
 
 
 def convert_products():
@@ -121,8 +118,8 @@ def convert_products():
         suppliers = []
         for supplier in product.suppliers:
             suppliers.append({
+                "company_id": None,
                 "supplier_id": supplier.supplier_id,
-                "new_company_id": mm.Company.find(company_id=supplier.supplier.company_id).first_or_none()._id
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -130,8 +127,8 @@ def convert_products():
         manufacturers = []
         for manufacturer in product.manufacturers:
             manufacturers.append({
-                "manufacturer_id": manufacturer.manufacturer_id,
-                "new_company_id": mm.Company.find(company_id=manufacturer.company_id).first_or_none()._id
+                "company_id": None,
+                "manufacturer_id": manufacturer.manufacturer_id
             })
         if len(manufacturers) > 0:
             as_dict["manufacturers"] = manufacturers
@@ -229,7 +226,6 @@ def convert_customers():
             orders.append({
                 "customer_order_number": order.customer_order_number,
                 "new_customer_order_number": None
-                # "new_customer_order_number": mm.CustomerOrder.find(customer_order_number=order.customer_order_number).first_or_none()._id
             })
         if len(orders) > 0:
             as_dict["orders"] = orders
@@ -245,7 +241,7 @@ def convert_orders():
         as_dict["order_date"] = datetime.datetime(order.order_date.year, order.order_date.month, order.order_date.day)
         if order.shipped_date is not None:
             as_dict["shipped_date"] = datetime.datetime(order.shipped_date.year, order.shipped_date.month,
-                                                order.shipped_date.day)
+                                                        order.shipped_date.day)
         else:
             del as_dict["shipped_date"]
         as_dict["customer_id"] = mm.Customer.find(customer_id=order.customer_id).first_or_none()._id
@@ -287,23 +283,66 @@ def convert_orders():
 
 
 def fix_customers():
-    for i, customer in enumerate(mm.Customer.all()):
+    for customer in mm.Customer.all():
         if hasattr(customer, 'orders'):
             for order in customer.orders:
-                order["customer_order_id"] = mm.CustomerOrder.find(customer_order_number=order['customer_order_number']).first_or_none()._id
+                order["customer_order_id"] = \
+                    mm.CustomerOrder.find(customer_order_number=order['customer_order_number']).first_or_none()._id
                 del order["customer_order_number"]
                 del order["new_customer_order_number"]
         customer.save()
 
 
+def fix_stores():
+    for store in mm.Store.all():
+        store.store_number = store.store_id
+        del store.store_id
+        for product in store.products:
+            product["product_id"] = mm.Product.find(product_number=product["product_number"]).first_or_none()._id
+            del product["product_number"]
+            del product["new_product_id"]
+        store.save()
+
+
+def fix_products():
+    for product in mm.Product.all():
+        if hasattr(product, "available_in_stores"):
+            for store in product.available_in_stores:
+                store["store_number"] = store["store_id"]
+                store["store_id"] = store["new_store_id"]
+                del store["new_store_id"]
+        if hasattr(product, "suppliers"):
+            for supplier in product.suppliers:
+                supplier["company_id"] = mm.Company.find(company_id=supplier["supplier_id"]).first_or_none()._id
+                del supplier["supplier_id"]
+        if hasattr(product, "manufacturers"):
+            for manufacturer in product.manufacturers:
+                manufacturer["company_id"] = \
+                    mm.Company.find(company_id=manufacturer["manufacturer_id"]).first_or_none()._id
+                del manufacturer["manufacturer_id"]
+        product.save()
+
+
+def fix_customer_orders():
+    for order in mm.CustomerOrder.all():
+        # del order.customer_order_number
+        order.store["store_number"] = order.store["store_id"]
+        del order.store["store_id"]
+        order.save()
+
+
 def main():
-    convert_companies()
+    # pass
     # convert_stores()
     # convert_products()
+    convert_companies()
     # convert_customers()
     # convert_orders()
 
     # fix_customers()
+    # fix_stores()
+    # fix_products()
+    # fix_customer_orders()
 
 
 if __name__ == "__main__":

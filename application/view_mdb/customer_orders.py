@@ -6,35 +6,25 @@ from application.view import options
 
 
 def print_customer_order(customer_order):
-    order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
-                                                                                customer_order_number)
     print("*" * 50)
     print(f"Order number {customer_order.customer_order_number}:")
-    for order_detail in order_details:
+    for order_detail in customer_order.order_details:
         print("*" * 50)
-        print(f"Product: {order_detail.spare_part.product_number}, {order_detail.spare_part.name}. Description: "
-              f"{order_detail.spare_part.description}")
-        print(f"Price per product: €{order_detail.price_each}")
-        print(f"Quantity: {order_detail.quantity_ordered}")
-        print(f"Total price: €{order_detail.price_each * order_detail.quantity_ordered}")
+        print(f"Product: {order_detail['product_id']}, {order_detail['product_name']}.")
+        print(f"Price per product: €{order_detail['price_each']}")
+        print(f"Quantity: {order_detail['quantity_ordered']}")
+        print(f"Total price: €{order_detail['price_each'] * order_detail['quantity_ordered']}")
     print("*" * 50)
-    print(f"Customer: {customer_order.customer.customer_id}, ", end='')
-    if customer_order.customer.customer_name:
-        print(f"{customer_order.customer.customer_name}\t", end='')
-        print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
-              f", {customer_order.customer.phonenumber}")
-    else:
-        print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
-              f"{customer_order.customer.phonenumber}")
-    print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
-          f"{customer_order.store.address.city_name}")
-    print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
-          f"{customer_order.employee.first_name}")
+    print(f"Customer id: {customer_order.customer_id}")
+    print(f"Store: {customer_order.store['store_number']}, {customer_order.store['city']}, "
+          f"{customer_order.store['country']}")
+    print(f"Sales contact: {customer_order.sales_contact['name']}, {customer_order.sales_contact['email']}")
     print(f"Order date: {customer_order.order_date}")
-    if customer_order.shipped_date:
+    if hasattr(customer_order, "shipped_date"):
         print(f"Shipped date: {customer_order.shipped_date}")
     print(f"Status: {customer_order.status}")
-    print(f"Comments: {customer_order.comments}")
+    if hasattr(customer_order, "comments"):
+        print(f"Comments: {customer_order.comments}")
     print()
 
 
@@ -66,8 +56,8 @@ def change_order_menu():
 
 
 def update_customer_order():
-    order_number = input("Please enter the id of the order you would like to update: ")
-    order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    order_number = int(input("Please enter the id of the order you would like to update: "))
+    order = customer_order_controller.get_customer_order_by_order_number(order_number)
 
     print_customer_order(order)
     choice = change_order_menu()
@@ -76,7 +66,7 @@ def update_customer_order():
         case "1":
             is_shipped = input("Has the order been shipped (Y, N)?: ")
             if is_shipped.upper() == "Y":
-                shipped_date = date.today()
+                shipped_date = datetime.now()
                 customer_order_controller.add_shipped_date(order, shipped_date)
             else:
                 print("Ok. No shipped date was added.")
@@ -87,7 +77,7 @@ def update_customer_order():
 
         case "3":
             new_comments = input("Please enter new comments: ")
-            if order.comments:
+            if hasattr(order, "comments"):
                 new_comments = order.comments + new_comments
             customer_order_controller.update_comments(order, new_comments)
 
@@ -95,7 +85,7 @@ def update_customer_order():
             options.customer_menu()
 
     print("The order was updated with the new information: ")
-    updated_order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    updated_order = customer_order_controller.get_customer_order_by_order_number(order_number)
     print_customer_order(updated_order)
 
 
@@ -147,12 +137,12 @@ def choose_spare_part(chosen_car_model):
     print(f"\nWe have the following product/s for {chosen_car_model['manufacturer']} {chosen_car_model['model']}, "
           f"{chosen_car_model['year']}:")
     for i, product_id in enumerate(product_ids):
-        product = product_controller.get_spare_part_by_id(product_id)
+        product = product_controller.get_product_by_id(product_id)
         print(f"{i + 1}. {product._id}: {product.name}. Description: {product.description}.\tPrice: "
               f"€{product.sell_price}")
 
     if len(product_ids) == 1:
-        chosen_product = product_controller.get_spare_part_by_id(product_ids[0])
+        chosen_product = product_controller.get_product_by_id(product_ids[0])
 
     else:
         has_chosen = False
@@ -160,7 +150,7 @@ def choose_spare_part(chosen_car_model):
             choice = int(input(f"\nWhich spare part does the customer want to buy (1-{len(product_ids)})?: "))
             try:
                 chosen_product_id = product_ids[choice - 1]
-                chosen_product = product_controller.get_spare_part_by_id(chosen_product_id)
+                chosen_product = product_controller.get_product_by_id(chosen_product_id)
                 has_chosen = True
 
             except KeyError:
@@ -170,13 +160,13 @@ def choose_spare_part(chosen_car_model):
 
 
 def choose_store(product, stores):
-    store_ids = []
+    store_numbers = []
     chosen_store = None
     print(f"The following stores sells {product.name}:")
     for store in stores:
-        print(f"Store id {store.store_id} at {store.street_address} in "
+        print(f"Store id {store.store_number} at {store.street_address} in "
               f"{store.city}, {store.country}")
-        store_ids.append(store.store_id)
+        store_numbers.append(store.store_number)
 
     if len(stores) == 1:
         chosen_store = stores[0]
@@ -184,10 +174,10 @@ def choose_store(product, stores):
     else:
         has_chosen = False
         while not has_chosen:
-            chosen_store_id = int(input(f"Which store does the customer want to be teleported to "
-                                        f"({', '.join([str(i) for i in store_ids])})?: "))
+            chosen_store_number = int(input(f"Which store does the customer want to be teleported to "
+                                            f"({', '.join([str(i) for i in store_numbers])})?: "))
             for store in stores:
-                if store.store_id == chosen_store_id:
+                if store.store_number == chosen_store_number:
                     chosen_store = store
                     has_chosen = True
                     break
@@ -202,7 +192,7 @@ def choose_employee(store):
     chosen_employee = None
     temporary_ids = []
 
-    print(f"These are the employees working in store number {store.store_id}:")
+    print(f"These are the employees working in store number {store.store_number}:")
     for i, employee in enumerate(employees):
         print(f"{i + 1}. {employee['name']}")
         temporary_ids.append(str(i + 1))
@@ -225,10 +215,10 @@ def choose_and_check_quantity(product, store):
     has_chosen = False
     quantity_in_stock = 0
     for product_in_store in store.products:
-        if product_in_store["product_number"] == product.product_number:
+        if product_in_store["product_id"] == product._id:
             quantity_in_stock = product_in_store["quantity_in_stock"]
 
-    print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_id}, "
+    print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_number}, "
           f"{store.city}")
 
     while not has_chosen:
@@ -243,7 +233,7 @@ def print_list_of_fits_all_products():
     fits_all_products = []
     other_products = []
     product_ids = []
-    for product in product_controller.get_spare_parts():
+    for product in product_controller.get_products():
         try:
             other_products.append(product.compatible_with_cars)
         except AttributeError:
@@ -276,8 +266,8 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                     has_chosen = True
                     break
             available_in_stores = chosen_product.available_in_stores
-            store_ids = [store["store_id"] for store in available_in_stores]
-            stores = store_controller.get_stores_by_ids(store_ids)
+            store_numbers = [store["store_number"] for store in available_in_stores]
+            stores = store_controller.get_stores_by_numbers(store_numbers)
 
             if len(stores) == 0:
                 print(f"Unfortunately we don't have a/an {chosen_product.name}. Description: "
@@ -325,9 +315,9 @@ def see_products_from_chosen_store(store):
     has_chosen = False
     chosen_product = None
     quantity = 0
-    print(f"The following spare parts are sold in this store ({store.store_id}): ")
+    print(f"The following spare parts are sold in this store ({store.store_number}): ")
     for i, product_in_store in enumerate(products_in_store):
-        product = product_controller.get_spare_part_by_id(product_in_store["new_product_id"])
+        product = product_controller.get_product_by_id(product_in_store["product_id"])
         print(f"{i +1}. {product._id}: {product.name}. Description: {product.description}.\tPrice: "
               f"€{product.sell_price}")
 
@@ -338,7 +328,7 @@ def see_products_from_chosen_store(store):
 
         try:
             chosen_product_in_store = products_in_store[int(choice) - 1]
-            chosen_product = product_controller.get_spare_part_by_id(chosen_product_in_store["new_product_id"])
+            chosen_product = product_controller.get_product_by_id(chosen_product_in_store["product_id"])
             quantity = choose_and_check_quantity(chosen_product, store)
             has_chosen = True
 
@@ -354,7 +344,7 @@ def place_order(order_details_list, store, employee, customer_id):
         "order_date": datetime.now(),
         "status": "Ordered",
         "store": {
-            "store_id": store.store_id,
+            "store_number": store.store_number,
             "city": store.city,
             "country": store.country
             },
@@ -368,20 +358,20 @@ def place_order(order_details_list, store, employee, customer_id):
     products = []
     for order_details in order_details_list:
         quantity = order_details["quantity_ordered"]
-        product = product_controller.get_spare_part_by_id(order_details["product_id"])
+        product = product_controller.get_product_by_id(order_details["product_id"])
         price_each = product.sell_price
         products.append((quantity, product, price_each, quantity * price_each))
 
     print("\nThe following product/s has been added to the order:")
     print(50 * "*")
     for order_details in order_details_list:
-        product = product_controller.get_spare_part_by_id(order_details["product_id"])
+        product = product_controller.get_product_by_id(order_details["product_id"])
         quantity = order_details["quantity_ordered"]
         total_price = quantity * product.sell_price
         print(f"{product.name}, {product.description}, €{product.sell_price}. Quantity: {quantity}. Total price: "
               f"€{total_price}")
     print(50 * "*")
-    print(f"Store: {store.store_id}, {store.street_address}, {store.country}")
+    print(f"Store: {store.store_number}, {store.street_address}, {store.country}")
     print(f"Employee: {employee['name']}")
     print(50 * "*")
 
@@ -390,7 +380,7 @@ def place_order(order_details_list, store, employee, customer_id):
     if order.upper() == "Y":
         customer_order_controller.create_customer_order(customer_order)
         for order_details in order_details_list:
-            store_controller.update_stock_in_store(store.store_id, order_details["product_id"],
+            store_controller.update_stock_in_store(store.store_number, order_details["product_id"],
                                                    -order_details["quantity_ordered"])
         print(f"The order was placed. ")
 
@@ -401,6 +391,7 @@ def place_order(order_details_list, store, employee, customer_id):
 def insert_order_details(order_details_list, product, quantity):
     order_details = {
         "product_id": product._id,
+        "product_name": product.name,
         "quantity_ordered": quantity,
         "price_each": product.sell_price,
     }
@@ -441,8 +432,8 @@ def place_order_choices():
                     break
 
             available_in_stores = chosen_product.available_in_stores
-            store_ids = [store["store_id"] for store in available_in_stores]
-            stores = store_controller.get_stores_by_ids(store_ids)
+            store_numbers = [store["store_number"] for store in available_in_stores]
+            stores = store_controller.get_stores_by_numbers(store_numbers)
             if len(stores) == 0:
                 product_not_in_stock(chosen_car, chosen_product, customer_id)
             else:

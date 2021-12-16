@@ -9,6 +9,10 @@ def get_all_companies():
     return company_repository.get_all_companies()
 
 
+def get_company_by_old_id(company_id):
+    return company_repository.get_company_by_old_id(company_id)
+
+
 def get_company_by_id(company_id):
     return company_repository.get_company_by_id(company_id)
 
@@ -39,3 +43,7 @@ def update_contact_name(company, new_contact_first_name, new_contact_last_name):
 
 def get_suppliers():
     return company_repository.get_suppliers()
+
+
+def create_order(supplier_order):
+    return company_repository.create_order(supplier_order)

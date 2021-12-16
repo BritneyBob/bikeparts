@@ -32,6 +32,10 @@ def get_product_by_id(product_id):
     return Product.find(_id=product_id).first_or_none()
 
 
+def get_product_by_product_number(product_number):
+    return Product.find(product_number=product_number).first_or_none()
+
+
 def update_product(product, new_name, new_description):
     product.name = new_name
     product.description = new_description
