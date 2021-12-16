@@ -53,6 +53,12 @@ def update_company_address(company, new_address):
             company.addresses[i] = new_address
             company.save()
 
+def update_customer_address(customer, new_address):
+    for i, address in enumerate(customer.addresses):
+        if new_address["address_type"] == address["address_type"]:
+            customer.addresses[i] = new_address
+            customer.save()
+
 
 def update_contact_phone_number(company, new_phone_number):
     company.contact_phonenumber = new_phone_number
