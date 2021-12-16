@@ -6,35 +6,25 @@ from application.view import options
 
 
 def print_customer_order(customer_order):
-    # order_details = customer_order_controller.get_order_details_by_order_number(customer_order.
-    #                                                                             customer_order_number)
     print("*" * 50)
     print(f"Order number {customer_order.customer_order_number}:")
     for order_detail in customer_order.order_details:
         print("*" * 50)
-        print(f"Product: {order_detail.spare_part.product_number}, {order_detail.spare_part.name}. Description: "
-              f"{order_detail.spare_part.description}")
-        print(f"Price per product: €{order_detail.price_each}")
-        print(f"Quantity: {order_detail.quantity_ordered}")
-        print(f"Total price: €{order_detail.price_each * order_detail.quantity_ordered}")
+        print(f"Product: {order_detail['product_id']}, {order_detail['product_name']}.")
+        print(f"Price per product: €{order_detail['price_each']}")
+        print(f"Quantity: {order_detail['quantity_ordered']}")
+        print(f"Total price: €{order_detail['price_each'] * order_detail['quantity_ordered']}")
     print("*" * 50)
-    print(f"Customer: {customer_order.customer.customer_id}, ", end='')
-    if customer_order.customer.customer_name:
-        print(f"{customer_order.customer.customer_name}\t", end='')
-        print(f"Contact: {customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}"
-              f", {customer_order.customer.phonenumber}")
-    else:
-        print(f"{customer_order.customer.contact_last_name}, {customer_order.customer.contact_first_name}, "
-              f"{customer_order.customer.phonenumber}")
-    print(f"Store: {customer_order.store.store_id}, {customer_order.store.address.address_line2}, "
-          f"{customer_order.store.address.city_name}")
-    print(f"Employee: {customer_order.employee.employee_id}, {customer_order.employee.last_name}, "
-          f"{customer_order.employee.first_name}")
+    print(f"Customer id: {customer_order.customer_id}")
+    print(f"Store: {customer_order.store['store_number']}, {customer_order.store['city']}, "
+          f"{customer_order.store['country']}")
+    print(f"Sales contact: {customer_order.sales_contact['name']}, {customer_order.sales_contact['email']}")
     print(f"Order date: {customer_order.order_date}")
-    if customer_order.shipped_date:
+    if hasattr(customer_order, "shipped_date"):
         print(f"Shipped date: {customer_order.shipped_date}")
     print(f"Status: {customer_order.status}")
-    print(f"Comments: {customer_order.comments}")
+    if hasattr(customer_order, "comments"):
+        print(f"Comments: {customer_order.comments}")
     print()
 
 
@@ -66,8 +56,8 @@ def change_order_menu():
 
 
 def update_customer_order():
-    order_number = input("Please enter the id of the order you would like to update: ")
-    order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    order_number = int(input("Please enter the id of the order you would like to update: "))
+    order = customer_order_controller.get_customer_order_by_order_number(order_number)
 
     print_customer_order(order)
     choice = change_order_menu()
@@ -76,7 +66,7 @@ def update_customer_order():
         case "1":
             is_shipped = input("Has the order been shipped (Y, N)?: ")
             if is_shipped.upper() == "Y":
-                shipped_date = date.today()
+                shipped_date = datetime.now()
                 customer_order_controller.add_shipped_date(order, shipped_date)
             else:
                 print("Ok. No shipped date was added.")
@@ -87,7 +77,7 @@ def update_customer_order():
 
         case "3":
             new_comments = input("Please enter new comments: ")
-            if order.comments:
+            if hasattr(order, "comments"):
                 new_comments = order.comments + new_comments
             customer_order_controller.update_comments(order, new_comments)
 
@@ -95,7 +85,7 @@ def update_customer_order():
             options.customer_menu()
 
     print("The order was updated with the new information: ")
-    updated_order = customer_order_controller.get_customer_orders_by_order_number(order_number)
+    updated_order = customer_order_controller.get_customer_order_by_order_number(order_number)
     print_customer_order(updated_order)
 
 
@@ -187,7 +177,7 @@ def choose_store(product, stores):
             chosen_store_number = int(input(f"Which store does the customer want to be teleported to "
                                             f"({', '.join([str(i) for i in store_numbers])})?: "))
             for store in stores:
-                if store.store_numbers == chosen_store_number:
+                if store.store_number == chosen_store_number:
                     chosen_store = store
                     has_chosen = True
                     break
@@ -225,7 +215,7 @@ def choose_and_check_quantity(product, store):
     has_chosen = False
     quantity_in_stock = 0
     for product_in_store in store.products:
-        if product_in_store["product_number"] == product.product_number:
+        if product_in_store["product_id"] == product._id:
             quantity_in_stock = product_in_store["quantity_in_stock"]
 
     print(f"There are {quantity_in_stock} {product.name} in stock in store {store.store_number}, "
@@ -401,6 +391,7 @@ def place_order(order_details_list, store, employee, customer_id):
 def insert_order_details(order_details_list, product, quantity):
     order_details = {
         "product_id": product._id,
+        "product_name": product.name,
         "quantity_ordered": quantity,
         "price_each": product.sell_price,
     }

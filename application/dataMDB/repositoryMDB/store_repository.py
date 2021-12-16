@@ -18,13 +18,13 @@ def get_stores():
 def update_stock_in_store(store_number, product_id, quantity):
     store = get_store_by_number(store_number)
     for product in store.products:
-        if product_id == product["product_number"]:
+        if product_id == product["product_id"]:
             product["quantity_in_stock"] += quantity
             store.save()
 
     updated_product_in_stock = None
     for product in store.products:
-        if product_id == product["product_number"]:
+        if product_id == product["product_id"]:
             updated_product_in_stock = product
     if quantity > 0:
         print(f"Ordered {quantity} items of product number {product_id}.")
