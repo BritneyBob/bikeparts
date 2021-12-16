@@ -25,6 +25,10 @@ def get_product_by_id(product_id):
     return pr.get_product_by_id(product_id)
 
 
+def get_product_by_product_number(product_number):
+    return pr.get_product_by_product_number(product_number)
+
+
 def get_products_by_filter(name_filter):
     return pr.get_products_by_filter(name_filter)
 
@@ -33,8 +37,8 @@ def update_product(product_no, new_name, new_description):
     return pr.update_product(product_no, new_name, new_description)
 
 
-# def adjust_price(product_no, new_price):
-#     return pr.adjust_price(product_no, new_price)
+def adjust_price(_id, new_price):
+    return pr.adjust_price(_id, new_price)
 #
 #
 # def get_spare_part_suppliers(product_no):

@@ -1,12 +1,17 @@
 from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
+from application.controllersMDB.product_controller import adjust_price
+
+from application.view.spare_parts import print_spare_part_info
 
 
 def search_products():
     name_filter = input("Which product are you looking for? Enter name/part of name. Leave blank to show all: ")
     products = prc.get_products()
+    count = 0
     for product in products:
         if name_filter.lower() in str(product.name).lower():
-            print(f"Product number: {product.product_number}\t\tProduct name: {product.name}\t\t"
+            count += 1
+            print(f"{count}.\t\tProduct name: {product.name}\t\t"
                   f"Description: {product.description}\t\tPrice to customer: {product.sell_price} EUR")
         else:
             continue
@@ -14,10 +19,12 @@ def search_products():
 
 def show_all_products():
     print("List of available spare parts: ")
-    products = prc.get_products()
-    for product in products:
-        print(f"Product number: {product.product_number}\t\tProduct name: {product.name}\t\t"
-              f"Description: {product.description}\t\tPrice to customer: {product.sell_price} EUR")
+    spare_parts = prc.get_products()
+    count = 0
+    for spare_part in spare_parts:
+        count += 1
+        print(f"{count}.\t\tName: {spare_part.name}"
+              f"\t\tDescription: {spare_part.description}\t\tPrice: {spare_part.sell_price} EUR")
 
 
 def show_one_product():
@@ -203,13 +210,33 @@ def add_stores_to_product(product):
             adding_stores = False
 
 
-# def adjust_sell_margins():
-#     name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
-#     search_hits = prc.get_products_by_filter(name_filter)
-#     for hit in search_hits:
-#         print(hit)
-#     product_no = input('\nEnter Product number for the product you want to adjust sell margins on: ')
-#     print_spare_part_info(product_no)
-#     new_price = input('Enter new sell price, EUR: ')
-#     stc.adjust_price(product_no, new_price)
-#     print('Sell price has been updated.')
+def adjust_sell_margins():
+    name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
+    search_hits = [prc.get_products_by_filter(name_filter)]  # Get rid of [] when .all() is working on get_product_by_filter
+    count = 0
+    for hit in search_hits:
+        count += 1
+        print(f"{count}.\t{hit.name}\t{hit.sell_price}")
+
+    _id = None
+    running = True
+    while running:
+        choice = int(input("\nEnter number for the product you want to adjust sell margins on: "))  # Check if user has chosed some other value
+        if choice > len(search_hits) or choice < 1:
+            print(f"Please choose a product number, 1 to {count}.\n")
+        else:
+            _id = search_hits[choice - 1]._id
+            running = False
+
+    print_spare_part_info(_id)
+    new_price = input("Enter new sell price, EUR: ")
+    adjust_price(_id, new_price)
+    print("Sell price has been updated.")
+
+
+def main():
+    adjust_sell_margins()
+
+
+if __name__ == "__main__":
+        main()
