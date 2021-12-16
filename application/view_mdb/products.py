@@ -38,10 +38,10 @@ def show_one_product():
 
 
 def print_product_info(product_no):
-    spare_part = prc.get_product_by_id(product_no)
-    print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
-    print(f"Description: {spare_part.description}")
-    print(f"Customer price: {spare_part.sell_price} EUR")
+    product = prc.get_product_by_id(product_no)
+    print(f"Product number and name: {product.product_number} {product.name}")
+    print(f"Description: {product.description}")
+    print(f"Customer price: {product.sell_price} EUR")
 
 
 def print_supplier(product_no):
