@@ -32,15 +32,6 @@ def update_stock_in_store(store_number, product_id, quantity):
           f"{updated_product_in_stock['quantity_in_stock']} items.")
 
 
-# def get_spare_part_in_store_by_store_id_and_product_number(store_id, product_number):
-#     return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id). \
-#         filter(SparePartInStore.product_number == product_number).first()
-#
-#
-# def get_spare_parts_by_store_id(store_id):
-#     return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id).all()
-
-
 def get_stores_by_numbers(store_numbers):
     return [get_store_by_number(store_number) for store_number in store_numbers]
 

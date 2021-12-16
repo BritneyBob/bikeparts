@@ -36,29 +36,6 @@ def convert_companies():
         if len(addresses) > 0:
             as_dict["addresses"] = addresses
 
-        # for address in company.addresses:
-        #     if address.address_type_id == 1:
-        #         as_dict['delivery_address'] = {
-        #             'address_line': address.address_line2,
-        #             'zip_code': address.zipcode,
-        #             'city': address.city_name,
-        #             'country': address.country_name
-        #         }
-        #     if address.address_type_id == 2:
-        #         as_dict['billing_address'] = {
-        #             'address_line': address.address_line2,
-        #             'zip_code': address.zipcode,
-        #             'city': address.city_name,
-        #             'country': address.country_name
-        #         }
-        #     if address.address_type_id == 3:
-        #         as_dict['visiting_address'] = {
-        #             'address_line': address.address_line2,
-        #             'zip_code': address.zipcode,
-        #             'city': address.city_name,
-        #             'country': address.country_name
-        #         }
-
         sell_products = []
         if company.supplier:
             products = company.supplier.spare_parts
@@ -118,8 +95,8 @@ def convert_products():
         suppliers = []
         for supplier in product.suppliers:
             suppliers.append({
-                "company_id": None,
-                "supplier_id": supplier.supplier_id,
+                "company_id": supplier.supplier.company_id,
+                "supplier_id": supplier.supplier_id
             })
         if len(suppliers) > 0:
             as_dict["suppliers"] = suppliers
@@ -127,7 +104,7 @@ def convert_products():
         manufacturers = []
         for manufacturer in product.manufacturers:
             manufacturers.append({
-                "company_id": None,
+                "company_id": manufacturer.company_id,
                 "manufacturer_id": manufacturer.manufacturer_id
             })
         if len(manufacturers) > 0:
@@ -175,8 +152,8 @@ def convert_stores():
         del as_dict["address_id"]
         del as_dict["spare_parts"]
 
-        mongo_office = mm.Store(as_dict)
-        mongo_office.save()
+        mongo_store = mm.Store(as_dict)
+        mongo_store.save()
 
 
 def convert_customers():
@@ -313,12 +290,12 @@ def fix_products():
                 del store["new_store_id"]
         if hasattr(product, "suppliers"):
             for supplier in product.suppliers:
-                supplier["company_id"] = mm.Company.find(company_id=supplier["supplier_id"]).first_or_none()._id
+                supplier["company_id"] = mm.Company.find(company_id=supplier["company_id"]).first_or_none()._id
                 del supplier["supplier_id"]
         if hasattr(product, "manufacturers"):
             for manufacturer in product.manufacturers:
                 manufacturer["company_id"] = \
-                    mm.Company.find(company_id=manufacturer["manufacturer_id"]).first_or_none()._id
+                    mm.Company.find(company_id=manufacturer["company_id"]).first_or_none()._id
                 del manufacturer["manufacturer_id"]
         product.save()
 
@@ -332,17 +309,16 @@ def fix_customer_orders():
 
 
 def main():
-    # pass
-    convert_stores()
-    convert_products()
-    convert_companies()
-    convert_customers()
-    convert_orders()
+#     convert_stores()
+#     convert_products()
+#     convert_companies()
+#     convert_customers()
+#     convert_orders()
 
-    fix_customers()
-    fix_stores()
-    fix_products()
-    fix_customer_orders()
+#     fix_customers()
+#     fix_stores()
+#     fix_products()
+#     fix_customer_orders()
 
 
 if __name__ == "__main__":
