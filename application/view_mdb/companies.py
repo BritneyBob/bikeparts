@@ -1,37 +1,49 @@
 import datetime
 
+from bson import ObjectId
+
 from application.controllersMDB import company_controller, store_controller, product_controller, supplier_order_controller
+from application.controllersMDB.product_controller import get_products
 
 from application.view_mdb import options
 
 
 def negotiate_supplier_prices():
-    id_and_buy_price = []
-    comp_and_supp_id = {"company_id": 0, "supplier_id": 0}
     print("List of our suppliers:")
     suppliers = company_controller.get_suppliers()
+    count = 0
+    supplier_list = []
     for supplier in suppliers:
-        print(f"Company id: {supplier.company_id}, Company name: {supplier.company.company_name}")
+        count += 1
+        print(f"{count}. {supplier.company_name}")
+        supplier_list.append(supplier.company_name)
 
-    _id = int(input("Please choose the company id for the company you want to negotiate with: "))  # Validate company_id
-    comp_and_supp_id["company_id"] = _id
+    supplier_name = None
+    running = True
+    while running:
+        choice = int(input("Enter the number for the supplier you want to negotiate with: "))
+        if choice > len(suppliers) or choice < 1:
+            print(f"Please choose a supplier number, 1 to {count}.\n")
+        else:
+            supplier_name = supplier_list[choice - 1]
+            running = False
+
+    prod_name_price = []
+    all_products = get_products()
+    print(f"\nThese are the products that the supplier {supplier_name} sells to you: ")
     for supplier in suppliers:
-        if supplier.company_id == _id:
-            company_name = supplier.company.company_name
-            comp_and_supp_id["supplier_id"] = supplier.supplier_id
-            print(f"\nThese are the products that the company {company_name} sells to you: ")
-            for spare_part in supplier.spare_parts:
-                print(f"Product id: {spare_part.product_number}, Product name: {spare_part.spare_part.name}, "
-                      f"Current buy price: {spare_part.buy_price}")
-                id_and_buy_price.append({"product_number: ": spare_part.product_number,
-                                         "name: ": spare_part.spare_part.name, "buy_price: ": spare_part.buy_price})
-            break
+        if supplier.company_name == supplier_name:
+            for product in supplier.supplies_products:
+                for p in all_products:
+                    if p._id == ObjectId(product["product_number"]):
+                        print(f"Product name: {p.name}\tCurrent buy price: {product['buy_price']}")
+                        prod_name_price.append({"name": p.name, "buy_price": product['buy_price']})
 
-    new_buy_prices = company_controller.negotiation(id_and_buy_price, comp_and_supp_id)
-    print("List with updated prices:")
-    for i in range(len(id_and_buy_price)):
-        print(f"Product id: {id_and_buy_price[i]['product_number: ']}, Product name: {id_and_buy_price[i]['name: ']}, "
-              f"New buy price: {new_buy_prices[i]}")
+    new_buy_prices = company_controller.negotiation(prod_name_price, supplier_name)
+    print("*" * 60)
+    print("Product list with updated prices:")
+    for i in range(len(prod_name_price)):
+        print(f"Product name: {prod_name_price[i]['name']}\t New buy price: {new_buy_prices[i]}")
 
 
 def print_company_info(company):
@@ -208,3 +220,4 @@ def place_order_from_supplier():
 
     supplier_order_controller.create_order(supplier_order)
     store_controller.update_stock_in_store(store.store_id, product.product_number, chosen_quantity)
+

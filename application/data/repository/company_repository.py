@@ -51,7 +51,6 @@ def negotiation(id_and_buy_price, comp_and_supp_id):
     for i in range(len(id_and_buy_price)):
         supplier_products[i].buy_price = new_buy_prices[i]
     session.commit()
-    print()
     return new_buy_prices
 
 

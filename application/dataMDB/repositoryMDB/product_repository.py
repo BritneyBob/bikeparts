@@ -25,7 +25,7 @@ def get_products():
 
 
 def get_products_by_filter(name_filter):
-    return Product.find(name=name_filter).all()
+    return Product.find(name=name_filter).first_or_none()
 
 
 def get_product_by_id(product_id):
@@ -37,11 +37,15 @@ def update_product(product, new_name, new_description):
     product.description = new_description
     product.save()
 
-# def adjust_price(product_no, new_price):
-#     product = session.query(SparePart).filter(SparePart.product_number == product_no).first()
-#     product.sell_price = new_price
-#     print()
-#     session.commit()
+
+def adjust_price(_id, new_price):
+    product = Product.find(_id=_id).first_or_none()
+    product.sell_price = new_price
+    product.save()
+    # product = session.query(SparePart).filter(SparePart.product_number == product_no).first()
+    # product.sell_price = new_price
+    # print()
+    # session.commit()
 #
 #
 # # returns a bunch of supplier companies based on the selected product

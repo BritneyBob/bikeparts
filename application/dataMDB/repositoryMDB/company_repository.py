@@ -20,19 +20,21 @@ def get_companies_by_ids(company_ids):
     return [get_company_by_id(company_id) for company_id in company_ids]
 
 
-def negotiation(id_and_buy_price, comp_and_supp_id):
-    id_and_buy_price = id_and_buy_price
+def negotiation(prod_name_price, supplier_name):
+    name_and_price = prod_name_price
     price_changes = [0.8, 0.9, 1.1, 1.2]
     # price_changes is float values but buy_price decimal values so price_changes has to be converted before operation
-    new_change = round(decimal.Decimal(random.choice(price_changes)), 1)
+    new_change = round(random.choice(price_changes), 1)
 
-    new_buy_prices = [i['buy_price: '] * new_change for i in id_and_buy_price]
-    supplier_products = session.query(SparePartSupplier).filter(SparePartSupplier.supplier_id ==
-                                                                comp_and_supp_id['supplier_id']).all()
-    for i in range(len(id_and_buy_price)):
-        supplier_products[i].buy_price = new_buy_prices[i]
-    session.commit()
-    print()
+    # TODO: Change supplier_id to something else, enums?
+    new_buy_prices = [i["buy_price"] * new_change for i in name_and_price]
+    for price in new_buy_prices:
+        price = round(price, 1)  # Make round() work!
+    supplier = Company.find(company_name=supplier_name).first_or_none()
+
+    for i in range(len(prod_name_price)):
+        supplier.supplies_products[i]["buy_price"] = new_buy_prices[i]
+    supplier.save()
     return new_buy_prices
 
 
@@ -59,3 +61,13 @@ def update_contact_name(company, new_contact_first_name, new_contact_last_name):
     company.contact_email = f"{new_contact_first_name.lower()}.{new_contact_last_name.lower()}@" \
                             f"{random.choice(email_hosts)}"
     company.save()
+
+
+def get_suppliers():
+    companies = Company.all()
+    suppliers = [company for company in companies if company.company_type != "Manufacturer"]
+    return suppliers
+
+
+
+
