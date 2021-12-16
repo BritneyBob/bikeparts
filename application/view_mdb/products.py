@@ -14,10 +14,10 @@ def search_products():
 
 def show_all_products():
     print("List of available spare parts: ")
-    spare_parts = prc.get_products()
-    for spare_part in spare_parts:
-        print(f"Product number: {spare_part.product_number}\t\tName: {spare_part.name}"
-              f"\t\tDescription: {spare_part.description}\t\tPrice: {spare_part.sell_price} EUR")
+    products = prc.get_products()
+    for product in products:
+        print(f"Product number: {product.product_number}\t\tProduct name: {product.name}\t\t"
+              f"Description: {product.description}\t\tPrice to customer: {product.sell_price} EUR")
 
 
 def show_one_product():
@@ -31,10 +31,10 @@ def show_one_product():
 
 
 def print_product_info(product_no):
-    spare_part = prc.get_product_by_id(product_no)
-    print(f"Product number and name: {spare_part.product_number} {spare_part.name}")
-    print(f"Description: {spare_part.description}")
-    print(f"Customer price: {spare_part.sell_price} EUR")
+    product = prc.get_product_by_id(product_no)
+    print(f"Product number and name: {product.product_number} {product.name}")
+    print(f"Description: {product.description}")
+    print(f"Customer price: {product.sell_price} EUR")
 
 
 def print_supplier(product_no):
