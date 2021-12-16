@@ -40,6 +40,7 @@ def negotiate_supplier_prices():
                         prod_name_price.append({"name": p.name, "buy_price": product['buy_price']})
 
     new_buy_prices = company_controller.negotiation(prod_name_price, supplier_name)
+    print()
     print("*" * 60)
     print("Product list with updated prices:")
     for i in range(len(prod_name_price)):

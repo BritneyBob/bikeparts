@@ -5,6 +5,7 @@ from application.data.models import SparePartInStore, SparePartSupplier, AutoOrd
 from datetime import datetime, date, timedelta
 
 
+
 def low_index(store_id, product_number):
     return session.query(SparePartInStore).filter(SparePartInStore.store_id == store_id).\
         filter(SparePartInStore.product_number == product_number).all()

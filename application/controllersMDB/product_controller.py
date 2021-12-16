@@ -39,6 +39,10 @@ def update_product(product_no, new_name, new_description):
 
 def adjust_price(_id, new_price):
     return pr.adjust_price(_id, new_price)
+
+
+def print_spare_part_info(_id):
+    return
 #
 #
 # def get_spare_part_suppliers(product_no):
