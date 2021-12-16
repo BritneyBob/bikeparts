@@ -3,7 +3,7 @@ from application.controllersMDB import customer_controller
 
 
 def print_customer_info(customer):
-    print(f"{customer.customer_id}:\t", end='')
+    print(f"{customer._id}:\t", end='')
     try:
         print(f"Name: {customer.customer_name}\t", end='')
         print(f"Contact: {customer.contact_last_name}, {customer.contact_first_name}\t", end="")
@@ -77,9 +77,13 @@ def update_customer():
 
     match choice:
         case "1":
-            new_customer_name = input("Please enter new name: ")
-            customer_controller.update_customer_name(customer, new_customer_name)
-            print_new_info(customer_id)
+            try:
+                if customer.customer_name:
+                    new_customer_name = input("Please enter new name: ")
+                    customer_controller.update_customer_name(customer, new_customer_name)
+                    print_new_info(customer_id)
+            except AttributeError:
+                print("Can't change name of company of private customer!")
         case "2":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
