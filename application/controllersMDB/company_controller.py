@@ -45,5 +45,9 @@ def get_suppliers():
     return company_repository.get_suppliers()
 
 
+def get_manufacturers():
+    return company_repository.get_manufacturers()
+
+
 def create_order(supplier_order):
     return company_repository.create_order(supplier_order)
