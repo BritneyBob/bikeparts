@@ -1,4 +1,4 @@
-from test import test, date
+from datetime import datetime, date
 
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
@@ -289,10 +289,10 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
                 while add_more_products:
                     add_more = input("Does the customer want to add another product from this store to their order "
                                      "(Y, N)?: ")
-                    if add_more == "Y":
+                    if add_more.upper() == "Y":
                         quantity, chosen_product = see_products_from_chosen_store(chosen_store)
                         order_details_list = insert_order_details(order_details_list, chosen_product, quantity)
-                    elif add_more == "N":
+                    elif add_more.upper() == "N":
                         place_order(order_details_list, chosen_store, chosen_employee, customer_id)
                         add_more_products = False
                 has_chosen = True
@@ -347,7 +347,7 @@ def place_order(order_details_list, store, employee, customer_id):
         "customer_id": customer_id,
         "store_id": store.store_id,
         "employee_id": employee.employee_id,
-        "order_date": test.now(),
+        "order_date": datetime.now(),
         "status": "Ordered"
     }
     products = []
