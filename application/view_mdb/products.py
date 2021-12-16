@@ -1,5 +1,5 @@
 from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
-from application.controllersMDB.product_controller import adjust_price, get_products
+from application.controllersMDB.product_controller import adjust_price, get_products, get_products_by_filter
 
 
 def search_products():
@@ -209,13 +209,15 @@ def add_stores_to_product(product):
 
 
 def adjust_sell_margins():
+    filter = 'Sticker, Flames'
+    testing = get_products_by_filter(filter)
     all_products = get_products()
     name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
     search_hits = []
     for product in all_products:
         if name_filter.lower() in product.name.lower():
             search_hits.append(product)
-    print()
+
     count = 0
     for hit in search_hits:
         count += 1
