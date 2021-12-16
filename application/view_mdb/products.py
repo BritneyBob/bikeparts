@@ -1,7 +1,5 @@
 from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
-from application.controllersMDB.product_controller import adjust_price
-
-from application.view.spare_parts import print_spare_part_info
+from application.controllersMDB.product_controller import adjust_price, get_products, get_products_by_filter
 
 
 def search_products():
@@ -222,8 +220,13 @@ def add_stores_to_product(product):
 
 
 def adjust_sell_margins():
+    all_products = get_products()
     name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
-    search_hits = [prc.get_products_by_filter(name_filter)]  # Get rid of [] when .all() is working on get_product_by_filter
+    search_hits = []
+    for product in all_products:
+        if name_filter.lower() in product.name.lower():
+            search_hits.append(product)
+
     count = 0
     for hit in search_hits:
         count += 1
@@ -239,7 +242,7 @@ def adjust_sell_margins():
             _id = search_hits[choice - 1]._id
             running = False
 
-    print_spare_part_info(_id)
+    print_product_info(_id)
     new_price = input("Enter new sell price, EUR: ")
     adjust_price(_id, new_price)
     print("Sell price has been updated.")

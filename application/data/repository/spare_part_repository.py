@@ -38,8 +38,7 @@ def get_spare_parts_by_filter(name_filter):
 
 
 def get_spare_part_by_id(_id):
-    return Product.find(_id=_id).first_or_none()
-    #return session.query(SparePart).filter(SparePart.product_number == product_no).first()
+    return session.query(SparePart).filter(SparePart.product_number == _id).first()
 
 
 # returns a bunch of supplier id's based on the selected product

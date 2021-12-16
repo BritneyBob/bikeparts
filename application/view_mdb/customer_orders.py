@@ -1,5 +1,7 @@
 from datetime import datetime, date
 
+from bson import ObjectId
+
 from application.controllersMDB import customer_controller, customer_order_controller, store_controller, \
     product_controller
 from application.view import options
@@ -258,6 +260,7 @@ def order_spare_part_fits_all(products, product_numbers, customer_id):
 
         if fits_all_product_choice.upper() == "N":
             print("Ok. Going back to customer menu.")
+            has_chosen = True
 
         elif int(fits_all_product_choice) in product_numbers:
             for product in products:
