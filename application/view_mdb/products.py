@@ -11,7 +11,7 @@ def search_products():
     for product in products:
         if name_filter.lower() in str(product.name).lower():
             count += 1
-            print(f"{count}.\t\tProduct number: {product.product_number}\t\tProduct name: {product.name}\t\t"
+            print(f"{count}.\t\tProduct name: {product.name}\t\t"
                   f"Description: {product.description}\t\tPrice to customer: {product.sell_price} EUR")
         else:
             continue
@@ -78,7 +78,7 @@ def print_stock_info(product_no):
     for store in stores:
         products = [product for product in store.products]
         for product in products:
-            if product["product_number"] == int(product_no):
+            if product["product_id"] == int(product_no):
                 print("Found store!")
             else:
                 continue
