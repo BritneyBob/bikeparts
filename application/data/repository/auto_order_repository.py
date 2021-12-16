@@ -33,7 +33,7 @@ def create_auto_order(store_id, product_number, supplier_id):
 
     session.add(new_auto_order)
     session.commit()
-    # move row below to where the function create_auto_order is called?
+
     store_controller.update_stock_in_store(store_id, product_number, ordered_quantity)
     delete_auto_order()
 

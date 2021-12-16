@@ -16,7 +16,7 @@ def convert_companies():
         supplier_id = None
 
         if company.supplier and company.manufacturer:
-            as_dict['company_type'] = "Supplier and manufacturer"
+            as_dict['company_type'] = ["Supplier", "Manufacturer"]
         elif company.supplier:
             as_dict['company_type'] = "Supplier"
         else:
@@ -58,7 +58,7 @@ def convert_companies():
             products = company.supplier.spare_parts
             for product in products:
                 sell_products.append({
-                    'product_number': product.product_number,
+                    'product_number': mm.Product.find(product_number=product.product_number).first_or_none()._id,
                     'buy_price': float(product.buy_price),
                     'delivery_time': product.delivery_time
                 })
@@ -71,7 +71,7 @@ def convert_companies():
 
             for product in products:
                 manufacturer_products.append({
-                    'product_number': product.product_number
+                    'product_number': mm.Product.find(product_number=product.product_number).first_or_none()._id
                 })
         if len(manufacturer_products) > 0:
             as_dict["manufactures_products"] = manufacturer_products
@@ -288,7 +288,8 @@ def convert_orders():
 
 
 def main():
-    # convert_companies()
+
+    convert_companies()
     # convert_stores()
     # convert_products()
     #

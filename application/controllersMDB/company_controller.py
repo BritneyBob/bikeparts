@@ -35,3 +35,7 @@ def update_company_address(company, address):
 
 def update_contact_name(company, new_contact_first_name, new_contact_last_name):
     return company_repository.update_contact_name(company, new_contact_first_name, new_contact_last_name)
+
+
+def get_suppliers():
+    return company_repository.get_suppliers()
