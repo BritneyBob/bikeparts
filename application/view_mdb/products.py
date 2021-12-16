@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
 from application.controllersMDB.product_controller import adjust_price, get_products, get_products_by_filter
 
@@ -26,7 +28,12 @@ def show_all_products():
 
 
 def show_one_product():
-    product_no = input("Enter product number to show one product: ")  # TODO Error handling of input!
+    number = input("Enter product number to show one product: ")  # TODO Error handling of input!
+    all_products = get_products()
+    product_no = None
+    for product in all_products:
+        if product["product_number"] == number:
+            product_no = product._id
     print("*" * 50)
     print_product_info(product_no)
     print_supplier(product_no)
@@ -220,8 +227,6 @@ def add_stores_to_product(product):
 
 
 def adjust_sell_margins():
-    filter = 'Sticker, Flames'
-    testing = get_products_by_filter(filter)
     all_products = get_products()
     name_filter = input("Which products sell margin do you want to adjust? Enter name/part of name: ")
     search_hits = []

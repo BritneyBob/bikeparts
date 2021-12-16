@@ -1,4 +1,4 @@
-# from test import test, date
+from datetime import date, datetime
 
 from application.controllers import customer_controller, customer_order_controller, customer_car_controller, \
     car_model_controller, spare_part_controller, store_controller
@@ -162,7 +162,15 @@ def choose_spare_part(chosen_car_model):
             chosen_product_number = int(input(f"\nWhich spare part does the customer want to buy"
                                               f" ({', '.join([str(i) for i in product_numbers])})?: "))
             for spare_part in spare_parts:
-                if spare_part.product_number == chosen_product_number:
+                if spare_part.product_number == 74:
+                    print("We are very sorry but this product is out of stock at the moment. \nOur store in Visby, "
+                          "Sweden has got an order on 2000 zebra stickers from:")
+                    print("Customer_id: 1\nContact first name: Wokie\nContact last name: Wassberg")
+                    print("Contact_email: the_savannah_is_my_second_home@arthead.se")
+                    print(
+                        "We apologise for the inconvenience and wonder if you might consider the heart stickers BFF "
+                        "(going strong this season!) instead.")
+                elif spare_part.product_number == chosen_product_number:
                     chosen_product = spare_part
                     has_chosen = True
                     break
@@ -347,7 +355,7 @@ def place_order(order_details_list, store, employee, customer_id):
         "customer_id": customer_id,
         "store_id": store.store_id,
         "employee_id": employee.employee_id,
-        "order_date": test.now(),
+        "order_date": datetime.now(),
         "status": "Ordered"
     }
     products = []
