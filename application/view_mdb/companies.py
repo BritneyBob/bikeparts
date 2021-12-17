@@ -97,13 +97,14 @@ def print_new_info(company_id):
 
 def update_company():
     companies = company_controller.get_all_companies()
-    company = None
     valid_company = False
+    chosen_company = None
     while not valid_company:
         company_name = input("Please enter the name of the company you would like to update information for: ")
         for company in companies:
             if company.company_name.lower() == company_name.lower():
                 print_company_info(company)
+                chosen_company = company
                 valid_company = True
         if not valid_company:
             print(f"There is no company named {company_name}. Please try again.")
@@ -120,33 +121,33 @@ def update_company():
     print()
     while True:
         choice = input("What would you like to change (1-6): ")
-        if choice in "123459" and len(choice) == 1:
+        if choice in "1234569" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3, 4, 5, 6 or 9")
 
     match choice:
         case "1":
             new_company_name = input("Please enter new name: ")
-            company_controller.update_company_name(company, new_company_name)
-            print_new_info(company._id)
+            company_controller.update_company_name(chosen_company, new_company_name)
+            print_new_info(chosen_company._id)
         case "2":
-            insert_new_address_info("visiting address", company)
-            print_new_info(company._id)
+            insert_new_address_info("Visiting address", chosen_company)
+            print_new_info(chosen_company._id)
         case "3":
-            insert_new_address_info("delivery address", company)
-            print_new_info(company._id)
+            insert_new_address_info("Delivery address", chosen_company)
+            print_new_info(chosen_company._id)
         case "4":
-            insert_new_address_info("billing address", company)
-            print_new_info(company._id)
+            insert_new_address_info("Billing address", chosen_company)
+            print_new_info(chosen_company._id)
         case "5":
             new_contact_first_name = input("Please enter new first name: ")
             new_contact_last_name = input("Please enter new last name: ")
-            company_controller.update_contact_name(company, new_contact_first_name, new_contact_last_name)
-            print_new_info(company._id)
+            company_controller.update_contact_name(chosen_company, new_contact_first_name, new_contact_last_name)
+            print_new_info(chosen_company._id)
         case "6":
             new_phone_number = input("Please enter new phone number: ")
-            company_controller.update_contact_phone_number(company, new_phone_number)
-            print_new_info(company._id)
+            company_controller.update_contact_phone_number(chosen_company, new_phone_number)
+            print_new_info(chosen_company._id)
         case "9":
             options.procurement_menu()
 

@@ -53,23 +53,17 @@ def update_company_address(company, new_address):
             company.addresses[i] = new_address
             company.save()
 
-def update_customer_address(customer, new_address):
-    for i, address in enumerate(customer.addresses):
-        if new_address["address_type"] == address["address_type"]:
-            customer.addresses[i] = new_address
-            customer.save()
-
 
 def update_contact_phone_number(company, new_phone_number):
-    company.contact_phonenumber = new_phone_number
+    company.contact["phone_number"] = new_phone_number
     company.save()
 
 
 def update_contact_name(company, new_contact_first_name, new_contact_last_name):
-    company.contact_name = new_contact_last_name
+    company.contact["last_name"] = new_contact_last_name
     email_hosts = ["gmail.com", "hotmail.com", "outlook.com", "live.se", "yahoo.com"]
-    company.contact_email = f"{new_contact_first_name.lower()}.{new_contact_last_name.lower()}@" \
-                            f"{random.choice(email_hosts)}"
+    company.contact["email"] = f"{new_contact_first_name.lower()}.{new_contact_last_name.lower()}@" \
+                               f"{random.choice(email_hosts)}"
     company.save()
 
 

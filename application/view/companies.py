@@ -154,7 +154,7 @@ def update_company():
     print()
     while True:
         choice = input("What would you like to change (1-6): ")
-        if choice in "123459" and len(choice) == 1:
+        if choice in "1234569" and len(choice) == 1:
             break
         print("Valid options are 1, 2, 3, 4, 5, 6 or 9")
 

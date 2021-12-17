@@ -2,7 +2,8 @@ from application.controllers import store_controller
 from application.data import db
 from application.data.db import session
 from application.data.models import SparePartInStore, SparePartSupplier, AutoOrder
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
+
 
 
 def low_index(store_id, product_number):
