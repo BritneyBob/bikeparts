@@ -55,8 +55,7 @@ def negotiation(id_and_buy_price, comp_and_supp_id):
 
 
 def get_all_companies():
-    return Company.all()
-    #return session.query(Company).all()
+    return session.query(Company).all()
 
 
 def update_company_address(company_id, new_address_id, old_address_id):
