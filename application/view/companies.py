@@ -25,7 +25,8 @@ def negotiate_supplier_prices():
             break
 
     new_buy_prices = company_controller.negotiation(id_and_buy_price, comp_and_supp_id)
-    print("List with updated prices:")
+    print('*' * 75)
+    print("\nList with updated prices:")
     for i in range(len(id_and_buy_price)):
         print(f"Product id: {id_and_buy_price[i]['product_number: ']}, Product name: {id_and_buy_price[i]['name: ']}, "
               f"New buy price: {new_buy_prices[i]}")

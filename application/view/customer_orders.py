@@ -164,12 +164,11 @@ def choose_spare_part(chosen_car_model):
             for spare_part in spare_parts:
                 if spare_part.product_number == 74:
                     print("We are very sorry but this product is out of stock at the moment. \nOur store in Visby, "
-                          "Sweden has got an order on 2000 zebra stickers from:")
-                    print("Customer_id: 1\nContact first name: Wokie\nContact last name: Wassberg")
+                          "Sweden, has got an order on 2000 zebra stickers from:")
+                    print("\nCustomer_id: 1\nContact first name: Wokie\nContact last name: Wassberg")
                     print("Contact_email: the_savannah_is_my_second_home@arthead.se")
-                    print(
-                        "We apologise for the inconvenience and wonder if you might consider the heart stickers BFF "
-                        "(going strong this season!) instead.")
+                    print("\nWe apologise for the inconvenience and wonder if you might consider the heart stickers "
+                          "BFF (going strong this season!) instead.")
                 elif spare_part.product_number == chosen_product_number:
                     chosen_product = spare_part
                     has_chosen = True
