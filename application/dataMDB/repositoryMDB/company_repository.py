@@ -1,4 +1,3 @@
-import decimal
 import random
 
 from application.dataMDB.modelsMDB import Company, SupplierOrder
@@ -46,6 +45,11 @@ def update_company_name(company, new_company_name):
     company.company_name = new_company_name
     company.save()
 
+
+# def update_company_supplies_products(company, supplied_product):
+#     company.supplies_products.append(supplied_product)
+#     company.save()
+#
 
 def update_company_address(company, new_address):
     for i, address in enumerate(company.addresses):

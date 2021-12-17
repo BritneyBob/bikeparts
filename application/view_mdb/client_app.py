@@ -29,7 +29,6 @@ def main():
                         case "1":
                             companies.negotiate_supplier_prices()
                         case "2":
-                            pass
                             products.adjust_sell_margins()
                         case "9":
                             print("Going back to main menu")

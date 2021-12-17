@@ -29,6 +29,10 @@ def update_company_name(company, new_company_name):
     return company_repository.update_company_name(company, new_company_name)
 
 
+# def update_company_supplies_products(company, supplied_product):
+#     return company_repository.update_company_supplies_products(company, supplied_product)
+#
+
 def update_contact_phone_number(company, new_phone_number):
     return company_repository.update_contact_phone_number(company, new_phone_number)
 
