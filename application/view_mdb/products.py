@@ -1,4 +1,5 @@
-from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc
+from application.controllersMDB import product_controller as prc, company_controller as cc, store_controller as stc, \
+    product_controller
 from application.controllersMDB.product_controller import adjust_price, get_products, get_products_by_filter
 
 
@@ -26,12 +27,15 @@ def show_all_products():
 
 
 def show_one_product():
-    product_no = input("Enter product number to show one product: ")  # TODO Error handling of input!
+    product_no = int(input("Enter product number to show one product: "))  # TODO Error handling of input!
+    product = product_controller.get_product_by_product_number(product_no)
+    product_id = product._id
+    # product_no = None
     print("*" * 50)
     print_product_info(product_no)
-    print_supplier(product_no)
-    print_manufacturer(product_no)
-    print_stock_info(product_no)
+    print_supplier(product_id)
+    print_manufacturer(product_id)
+    print_stock_info(product_id)
     print("*" * 50)
 
 
@@ -52,7 +56,7 @@ def print_supplier(product_no):
     for supplier in suppliers:
         products = [product for product in supplier.supplies_products]
         for product in products:
-            if product["product_number"] == int(product_no):
+            if product["product_number"] == product_no:
                 print(f"\tCompany name: {supplier.company_name}\tBuy price: {product['buy_price']} EUR")
             else:
                 continue
@@ -64,7 +68,7 @@ def print_manufacturer(product_no):
     for manufacturer in manufacturers:
         products = [product for product in manufacturer.manufactures_products]
         for product in products:
-            if product["product_number"] == int(product_no):
+            if product["product_number"] == product_no:
                 print(f"\tCompany name: {manufacturer.company_name}")
             else:
                 continue
@@ -76,8 +80,8 @@ def print_stock_info(product_no):
     for store in stores:
         products = [product for product in store.products]
         for product in products:
-            if product["product_id"] == int(product_no):
-                print("Found store!")
+            if product["product_id"] == product_no:
+                print(f"\t{store.street_address}\t{store.zipcode}\t{store.city}\t{store.country}")
             else:
                 continue
             # print((f"\t{store.store_id} {store.address.city_name}\t "
@@ -249,7 +253,7 @@ def adjust_sell_margins():
 
 
 def main():
-    adjust_sell_margins()
+    show_one_product()
 
 
 if __name__ == "__main__":
