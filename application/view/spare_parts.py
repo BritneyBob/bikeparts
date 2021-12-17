@@ -177,7 +177,7 @@ def add_manufacturer_to_product(product):
 def add_stores_to_product(product):
     adding_stores = True
     while adding_stores:
-        print("Available manufacturers: ")
+        print("Available stores: ")
         all_stores = view_stores()
         for store in all_stores:
             print(f"Id: {store.store_id} City: {store.address.city_name}")
